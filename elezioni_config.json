@@ -75,6 +75,42 @@
         {"id":"ninfe",   "nome":"Ninfe",                 "votanti":2000, "peso":0.112},
         {"id":"vento",   "nome":"Spiriti del Vento",     "votanti":15,   "peso":0.056},
         {"id":"ciclopi", "nome":"Ciclopi",               "votanti":50,   "peso":0.011}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D1-A","nome":"Vetta del Pantheon (Mytikas)","descrizione":"Il trono di pietra originario. Vi salgono solo gli dei più antichi.",
+          "votanti":130,"peso_politico":35375,"dei_favoriti":["zeus","era"],
+          "categorie":[
+            {"id":"olimpici","nome":"Dei Olimpici/Maggiori","votanti":4,   "peso":0.90},
+            {"id":"titani",  "nome":"Titani Liberati",       "votanti":1,   "peso":0.08},
+            {"id":"ninfe",   "nome":"Ninfe",                 "votanti":125, "peso":0.02}
+          ]
+        },
+        {
+          "id":"D1-B","nome":"Gola dell'Enipeo","descrizione":"Valle fluviale fittissima di naiadi.",
+          "votanti":1500,"peso_politico":4500,"dei_favoriti":["poseidone","demetra"],
+          "categorie":[
+            {"id":"ninfe","nome":"Ninfe","votanti":1500,"peso":1.00}
+          ]
+        },
+        {
+          "id":"D1-C","nome":"Caverne di Efesto (Stefani)","descrizione":"Antiche fucine sotto la roccia.",
+          "votanti":177,"peso_politico":6975,"dei_favoriti":["efesto"],
+          "categorie":[
+            {"id":"titani", "nome":"Titani Liberati","votanti":2,  "peso":0.86},
+            {"id":"ciclopi","nome":"Ciclopi",        "votanti":50, "peso":0.09},
+            {"id":"ninfe",  "nome":"Ninfe",          "votanti":125,"peso":0.05}
+          ]
+        },
+        {
+          "id":"D1-D","nome":"Crinale dei Venti","descrizione":"Cresta battuta dalle correnti, sede di anemoi antichi.",
+          "votanti":266,"peso_politico":6750,"dei_favoriti":["zeus"],
+          "categorie":[
+            {"id":"vento",  "nome":"Spiriti del Vento","votanti":15, "peso":0.44},
+            {"id":"titani", "nome":"Titani Liberati",  "votanti":1,  "peso":0.45},
+            {"id":"ninfe",  "nome":"Ninfe",            "votanti":250,"peso":0.11}
+          ]
+        }
       ]
     },
     {
@@ -85,6 +121,44 @@
         {"id":"ninfe",     "nome":"Ninfe",         "votanti":1000, "peso":0.444},
         {"id":"semidei_gr","nome":"Semidei Greci", "votanti":8,    "peso":0.047},
         {"id":"satiri",    "nome":"Satiri Adulti", "votanti":30,   "peso":0.036}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D2-A","nome":"Acropoli Sacra","descrizione":"Il Partenone vivente. Cuore della saggezza.",
+          "votanti":114,"peso_politico":2924,"dei_favoriti":["atena"],
+          "categorie":[
+            {"id":"minori",    "nome":"Dei Minori",   "votanti":6,  "peso":0.82},
+            {"id":"ninfe",     "nome":"Ninfe",        "votanti":100,"peso":0.10},
+            {"id":"semidei_gr","nome":"Semidei Greci","votanti":5,  "peso":0.07},
+            {"id":"satiri",    "nome":"Satiri Adulti","votanti":3,  "peso":0.01}
+          ]
+        },
+        {
+          "id":"D2-B","nome":"Agorà","descrizione":"Mercato e dibattito, dominio di Ermes.",
+          "votanti":211,"peso_politico":1568,"dei_favoriti":["hermes","atena"],
+          "categorie":[
+            {"id":"minori",    "nome":"Dei Minori",   "votanti":2,  "peso":0.51},
+            {"id":"ninfe",     "nome":"Ninfe",        "votanti":200,"peso":0.38},
+            {"id":"semidei_gr","nome":"Semidei Greci","votanti":3,  "peso":0.08},
+            {"id":"satiri",    "nome":"Satiri Adulti","votanti":6,  "peso":0.03}
+          ]
+        },
+        {
+          "id":"D2-C","nome":"Colle delle Muse (Filopappo)","descrizione":"Boschetti poetici e oratori.",
+          "votanti":412,"peso_politico":1296,"dei_favoriti":["apollo"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":400,"peso":0.93},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":12, "peso":0.07}
+          ]
+        },
+        {
+          "id":"D2-D","nome":"Rive dell'Ilisso","descrizione":"Naiadi e satiri lungo il fiume.",
+          "votanti":309,"peso_politico":972,"dei_favoriti":["dioniso"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":300,"peso":0.93},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":9,  "peso":0.07}
+          ]
+        }
       ]
     },
     {
@@ -94,6 +168,33 @@
         {"id":"ninfe",  "nome":"Ninfe",       "votanti":800, "peso":0.577},
         {"id":"minori", "nome":"Dei Minori",  "votanti":4,   "peso":0.385},
         {"id":"satiri", "nome":"Satiri Adulti","votanti":20, "peso":0.038}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D3-A","nome":"Acropoli di Sparta","descrizione":"Severa cittadella militare.",
+          "votanti":86,"peso_politico":1856,"dei_favoriti":["ares","artemide"],
+          "categorie":[
+            {"id":"minori","nome":"Dei Minori",   "votanti":4, "peso":0.86},
+            {"id":"ninfe", "nome":"Ninfe",        "votanti":80,"peso":0.13},
+            {"id":"satiri","nome":"Satiri Adulti","votanti":2, "peso":0.01}
+          ]
+        },
+        {
+          "id":"D3-B","nome":"Valle dell'Eurota","descrizione":"Naiadi fluviali, canneti sacri.",
+          "votanti":492,"peso_politico":1536,"dei_favoriti":["artemide"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":480,"peso":0.94},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":12, "peso":0.06}
+          ]
+        },
+        {
+          "id":"D3-C","nome":"Monte Taigeto","descrizione":"Oreadi e satiri delle alture.",
+          "votanti":246,"peso_politico":768,"dei_favoriti":["artemide","apollo"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":240,"peso":0.94},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":6,  "peso":0.06}
+          ]
+        }
       ]
     },
     {
@@ -103,6 +204,33 @@
         {"id":"ninfe",  "nome":"Ninfe",        "votanti":800, "peso":0.625},
         {"id":"minori", "nome":"Dei Minori",   "votanti":3,   "peso":0.312},
         {"id":"satiri", "nome":"Satiri Adulti","votanti":30,  "peso":0.063}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D4-A","nome":"Altis (recinto sacro)","descrizione":"Il santuario dei giochi.",
+          "votanti":95,"peso_politico":1491,"dei_favoriti":["zeus","era"],
+          "categorie":[
+            {"id":"minori","nome":"Dei Minori",   "votanti":3, "peso":0.80},
+            {"id":"ninfe", "nome":"Ninfe",        "votanti":89,"peso":0.18},
+            {"id":"satiri","nome":"Satiri Adulti","votanti":3, "peso":0.02}
+          ]
+        },
+        {
+          "id":"D4-B","nome":"Stadio e Ginnasio","descrizione":"Satiri atletici, spiriti agonistici.",
+          "votanti":277,"peso_politico":881,"dei_favoriti":["hermes","apollo","ares"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":267,"peso":0.91},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":10, "peso":0.09}
+          ]
+        },
+        {
+          "id":"D4-C","nome":"Boschi dell'Alfeo","descrizione":"Naiadi del fiume sacro.",
+          "votanti":461,"peso_politico":1468,"dei_favoriti":["poseidone"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":444,"peso":0.91},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":17, "peso":0.09}
+          ]
+        }
       ]
     },
     {
@@ -113,6 +241,35 @@
         {"id":"ninfe",   "nome":"Ninfe",                "votanti":2000, "peso":0.366},
         {"id":"minori",  "nome":"Dei Minori",            "votanti":5,    "peso":0.122},
         {"id":"satiri",  "nome":"Satiri Adulti",         "votanti":50,   "peso":0.024}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D5-A","nome":"Tempio dell'Oracolo","descrizione":"L'ombelico del mondo. Apollo in persona.",
+          "votanti":209,"peso_politico":9840,"dei_favoriti":["apollo"],
+          "categorie":[
+            {"id":"olimpici","nome":"Dei Olimpici/Maggiori","votanti":1,  "peso":0.81},
+            {"id":"minori",  "nome":"Dei Minori",            "votanti":3,  "peso":0.12},
+            {"id":"ninfe",   "nome":"Ninfe",                "votanti":200,"peso":0.06},
+            {"id":"satiri",  "nome":"Satiri Adulti",        "votanti":5,  "peso":0.01}
+          ]
+        },
+        {
+          "id":"D5-B","nome":"Fonte Castalia","descrizione":"Naiadi profetiche della sorgente.",
+          "votanti":1027,"peso_politico":4000,"dei_favoriti":["apollo"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":1000,"peso":0.75},
+            {"id":"minori", "nome":"Dei Minori",   "votanti":2,   "peso":0.20},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":25,  "peso":0.05}
+          ]
+        },
+        {
+          "id":"D5-C","nome":"Pendici del Parnaso","descrizione":"Oreadi e satiri dionisiaci d'inverno.",
+          "votanti":820,"peso_politico":2560,"dei_favoriti":["dioniso"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":800,"peso":0.94},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":20, "peso":0.06}
+          ]
+        }
       ]
     },
     {
@@ -122,6 +279,33 @@
         {"id":"ninfe",  "nome":"Ninfe",        "votanti":1500, "peso":0.616},
         {"id":"minori", "nome":"Dei Minori",   "votanti":5,    "peso":0.274},
         {"id":"satiri", "nome":"Satiri Adulti","votanti":100,  "peso":0.110}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D6-A","nome":"Telesterion (Misteri)","descrizione":"Sala iniziatica dei Misteri Eleusini.",
+          "votanti":325,"peso_politico":3060,"dei_favoriti":["demetra","persefone"],
+          "categorie":[
+            {"id":"minori","nome":"Dei Minori",   "votanti":5,  "peso":0.65},
+            {"id":"ninfe", "nome":"Ninfe",        "votanti":300,"peso":0.29},
+            {"id":"satiri","nome":"Satiri Adulti","votanti":20, "peso":0.05}
+          ]
+        },
+        {
+          "id":"D6-B","nome":"Piana Rariana","descrizione":"Il primo campo di grano. Driadi del raccolto.",
+          "votanti":960,"peso_politico":3180,"dei_favoriti":["demetra"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":900,"peso":0.85},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":60, "peso":0.15}
+          ]
+        },
+        {
+          "id":"D6-C","nome":"Pozzo Calicoro","descrizione":"Naiadi del pozzo sacro, satiri delle danze.",
+          "votanti":320,"peso_politico":1060,"dei_favoriti":["demetra","dioniso"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":300,"peso":0.85},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":20, "peso":0.15}
+          ]
+        }
       ]
     },
     {
@@ -133,6 +317,44 @@
         {"id":"minori",   "nome":"Dei Minori",     "votanti":15,   "peso":0.224},
         {"id":"satiri",   "nome":"Satiri Adulti",  "votanti":300,  "peso":0.090},
         {"id":"centauri", "nome":"Centauri",       "votanti":10,   "peso":0.015}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D7-A","nome":"Cadmea (cittadella)","descrizione":"Antica rocca fondata da Cadmo.",
+          "votanti":310,"peso_politico":2226,"dei_favoriti":["ares","atena"],
+          "categorie":[
+            {"id":"minori","nome":"Dei Minori",   "votanti":3,  "peso":0.54},
+            {"id":"ninfe", "nome":"Ninfe",        "votanti":286,"peso":0.39},
+            {"id":"satiri","nome":"Satiri Adulti","votanti":21, "peso":0.07}
+          ]
+        },
+        {
+          "id":"D7-B","nome":"Monte Elicona","descrizione":"La dimora delle Muse e di Mnemosyne.",
+          "votanti":1243,"peso_politico":14917,"dei_favoriti":["apollo"],
+          "categorie":[
+            {"id":"titani","nome":"Titani Liberati","votanti":2,   "peso":0.40},
+            {"id":"minori","nome":"Dei Minori",     "votanti":12,  "peso":0.32},
+            {"id":"ninfe", "nome":"Ninfe",          "votanti":1143,"peso":0.23},
+            {"id":"satiri","nome":"Satiri Adulti",  "votanti":86,  "peso":0.05}
+          ]
+        },
+        {
+          "id":"D7-C","nome":"Fonte Dirce","descrizione":"Naiadi e centauri presso la sorgente.",
+          "votanti":1545,"peso_politico":5540,"dei_favoriti":["dioniso"],
+          "categorie":[
+            {"id":"ninfe",    "nome":"Ninfe",        "votanti":1428,"peso":0.77},
+            {"id":"satiri",   "nome":"Satiri Adulti","votanti":107, "peso":0.16},
+            {"id":"centauri", "nome":"Centauri",     "votanti":10,  "peso":0.07}
+          ]
+        },
+        {
+          "id":"D7-D","nome":"Citerone selvaggio","descrizione":"Satiri e menadi del monte dionisiaco.",
+          "votanti":1229,"peso_politico":4117,"dei_favoriti":["dioniso"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":1143,"peso":0.83},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":86,  "peso":0.17}
+          ]
+        }
       ]
     },
     {
@@ -142,6 +364,34 @@
         {"id":"ninfe",  "nome":"Ninfe",        "votanti":800, "peso":0.577},
         {"id":"minori", "nome":"Dei Minori",   "votanti":4,   "peso":0.385},
         {"id":"satiri", "nome":"Satiri Adulti","votanti":20,  "peso":0.038}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D8-A","nome":"Acrocorinto","descrizione":"Rocca con tempio di Afrodite.",
+          "votanti":106,"peso_politico":1524,"dei_favoriti":["afrodite"],
+          "categorie":[
+            {"id":"minori","nome":"Dei Minori",   "votanti":3,  "peso":0.79},
+            {"id":"ninfe", "nome":"Ninfe",        "votanti":100,"peso":0.19},
+            {"id":"satiri","nome":"Satiri Adulti","votanti":3,  "peso":0.02}
+          ]
+        },
+        {
+          "id":"D8-B","nome":"Porto di Lecheo","descrizione":"Naiadi marine e commercio.",
+          "votanti":411,"peso_politico":1680,"dei_favoriti":["hermes","poseidone"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":400,"peso":0.71},
+            {"id":"minori", "nome":"Dei Minori",   "votanti":1,  "peso":0.24},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":10, "peso":0.05}
+          ]
+        },
+        {
+          "id":"D8-C","nome":"Fonte Pirene","descrizione":"Naiadi della sorgente di Pegaso.",
+          "votanti":307,"peso_politico":956,"dei_favoriti":["poseidone"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":300,"peso":0.94},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":7,  "peso":0.06}
+          ]
+        }
       ]
     },
     {
@@ -151,6 +401,25 @@
         {"id":"ninfe",  "nome":"Ninfe",        "votanti":600, "peso":0.652},
         {"id":"minori", "nome":"Dei Minori",   "votanti":2,   "peso":0.290},
         {"id":"satiri", "nome":"Satiri Adulti","votanti":20,  "peso":0.058}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D9-A","nome":"Heraion di Argo","descrizione":"Il santuario più antico di Era.",
+          "votanti":105,"peso_politico":1124,"dei_favoriti":["era"],
+          "categorie":[
+            {"id":"minori","nome":"Dei Minori",   "votanti":2,  "peso":0.71},
+            {"id":"ninfe", "nome":"Ninfe",        "votanti":100,"peso":0.27},
+            {"id":"satiri","nome":"Satiri Adulti","votanti":3,  "peso":0.02}
+          ]
+        },
+        {
+          "id":"D9-B","nome":"Piana di Argo","descrizione":"Driadi e naiadi della pianura.",
+          "votanti":517,"peso_politico":1636,"dei_favoriti":["era","demetra"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":500,"peso":0.92},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":17, "peso":0.08}
+          ]
+        }
       ]
     },
     {
@@ -159,6 +428,24 @@
       "categorie":[
         {"id":"ninfe",  "nome":"Ninfe",        "votanti":500, "peso":0.904},
         {"id":"satiri", "nome":"Satiri Adulti","votanti":20,  "peso":0.096}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D10-A","nome":"Porta dei Leoni","descrizione":"Rovine cariche di memorie eroiche.",
+          "votanti":174,"peso_politico":557,"dei_favoriti":["ade","era"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":167,"peso":0.90},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":7,  "peso":0.10}
+          ]
+        },
+        {
+          "id":"D10-B","nome":"Colli Argolici","descrizione":"Oreadi e satiri delle alture.",
+          "votanti":346,"peso_politico":1103,"dei_favoriti":["artemide"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":333,"peso":0.91},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":13, "peso":0.09}
+          ]
+        }
       ]
     },
     {
@@ -173,6 +460,46 @@
         {"id":"centauri",  "nome":"Centauri",              "votanti":10,   "peso":0.014},
         {"id":"ciclopi",   "nome":"Ciclopi",               "votanti":30,   "peso":0.013},
         {"id":"semidei_gr","nome":"Semidei Greci",         "votanti":5,    "peso":0.007}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D11-A","nome":"Quercia Parlante","descrizione":"L'oracolo arboreo di Zeus.",
+          "votanti":795,"peso_politico":11683,"dei_favoriti":["zeus"],
+          "categorie":[
+            {"id":"olimpici","nome":"Dei Olimpici/Maggiori","votanti":1,  "peso":0.68},
+            {"id":"ninfe",   "nome":"Ninfe",                "votanti":769,"peso":0.20},
+            {"id":"minori",  "nome":"Dei Minori",            "votanti":3,  "peso":0.10},
+            {"id":"satiri",  "nome":"Satiri Adulti",        "votanti":22, "peso":0.02}
+          ]
+        },
+        {
+          "id":"D11-B","nome":"Bosco delle Colombe","descrizione":"Driadi profetiche, le sacerdotesse-ninfe.",
+          "votanti":2373,"peso_politico":7444,"dei_favoriti":["zeus","era"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":2308,"peso":0.93},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":65,  "peso":0.07}
+          ]
+        },
+        {
+          "id":"D11-C","nome":"Sorgenti di Acheronte","descrizione":"Porta ctonia: naiadi cupe e creature di confine.",
+          "votanti":1226,"peso_politico":4478,"dei_favoriti":["ade"],
+          "categorie":[
+            {"id":"ninfe",    "nome":"Ninfe",        "votanti":1154,"peso":0.77},
+            {"id":"centauri", "nome":"Centauri",     "votanti":10,  "peso":0.09},
+            {"id":"ciclopi",  "nome":"Ciclopi",      "votanti":30,  "peso":0.08},
+            {"id":"satiri",   "nome":"Satiri Adulti","votanti":32,  "peso":0.06}
+          ]
+        },
+        {
+          "id":"D11-D","nome":"Crinale Eolico","descrizione":"Venti oracolari e rari semidei pellegrini.",
+          "votanti":805,"peso_politico":4675,"dei_favoriti":["zeus"],
+          "categorie":[
+            {"id":"ninfe",     "nome":"Ninfe",            "votanti":769,"peso":0.49},
+            {"id":"vento",     "nome":"Spiriti del Vento","votanti":10, "peso":0.43},
+            {"id":"semidei_gr","nome":"Semidei Greci",    "votanti":5,  "peso":0.04},
+            {"id":"satiri",    "nome":"Satiri Adulti",    "votanti":21, "peso":0.04}
+          ]
+        }
       ]
     },
     {
@@ -181,6 +508,24 @@
       "categorie":[
         {"id":"ninfe",  "nome":"Ninfe",        "votanti":1500, "peso":0.934},
         {"id":"satiri", "nome":"Satiri Adulti","votanti":40,   "peso":0.066}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D12-A","nome":"Delo (isola natale)","descrizione":"Naiadi del luogo di nascita di Apollo e Artemide.",
+          "votanti":880,"peso_politico":2755,"dei_favoriti":["apollo","artemide"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":857,"peso":0.93},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":23, "peso":0.07}
+          ]
+        },
+        {
+          "id":"D12-B","nome":"Mykonos e isolette","descrizione":"Satiri e naiadi marine sparse.",
+          "votanti":660,"peso_politico":2065,"dei_favoriti":["dioniso"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":643,"peso":0.93},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":17, "peso":0.07}
+          ]
+        }
       ]
     },
     {
@@ -189,6 +534,32 @@
       "categorie":[
         {"id":"ninfe",  "nome":"Ninfe",        "votanti":1500, "peso":0.904},
         {"id":"satiri", "nome":"Satiri Adulti","votanti":60,   "peso":0.096}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D13-A","nome":"Cnosso","descrizione":"Labirinto e memorie minoiche.",
+          "votanti":520,"peso_politico":1660,"dei_favoriti":["zeus","ade"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":500,"peso":0.90},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":20, "peso":0.10}
+          ]
+        },
+        {
+          "id":"D13-B","nome":"Monte Ida","descrizione":"Grotta dove crebbe Zeus. Oreadi e satiri.",
+          "votanti":694,"peso_politico":2217,"dei_favoriti":["zeus"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":667,"peso":0.90},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":27, "peso":0.10}
+          ]
+        },
+        {
+          "id":"D13-C","nome":"Coste meridionali","descrizione":"Naiadi marine.",
+          "votanti":346,"peso_politico":1103,"dei_favoriti":["poseidone"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":333,"peso":0.91},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":13, "peso":0.09}
+          ]
+        }
       ]
     },
     {
@@ -199,6 +570,37 @@
         {"id":"ninfe",     "nome":"Ninfe",        "votanti":1500, "peso":0.466},
         {"id":"satiri",    "nome":"Satiri Adulti","votanti":30,   "peso":0.025},
         {"id":"semidei_gr","nome":"Semidei Greci","votanti":3,    "peso":0.012}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D14-A","nome":"Petra tou Romiou (Approdo di Afrodite)","descrizione":"Lo scoglio dove nacque Afrodite dalla spuma.",
+          "votanti":350,"peso_politico":4335,"dei_favoriti":["afrodite"],
+          "categorie":[
+            {"id":"minori",    "nome":"Dei Minori",   "votanti":8,  "peso":0.74},
+            {"id":"ninfe",     "nome":"Ninfe",        "votanti":333,"peso":0.23},
+            {"id":"semidei_gr","nome":"Semidei Greci","votanti":2,  "peso":0.02},
+            {"id":"satiri",    "nome":"Satiri Adulti","votanti":7,  "peso":0.01}
+          ]
+        },
+        {
+          "id":"D14-B","nome":"Pafo (santuario)","descrizione":"Tempio storico, sacerdozio afrodisiaco.",
+          "votanti":514,"peso_politico":2820,"dei_favoriti":["afrodite"],
+          "categorie":[
+            {"id":"ninfe",     "nome":"Ninfe",        "votanti":500,"peso":0.53},
+            {"id":"minori",    "nome":"Dei Minori",   "votanti":3,  "peso":0.43},
+            {"id":"satiri",    "nome":"Satiri Adulti","votanti":10, "peso":0.03},
+            {"id":"semidei_gr","nome":"Semidei Greci","votanti":1,  "peso":0.01}
+          ]
+        },
+        {
+          "id":"D14-C","nome":"Monti Troodos","descrizione":"Oreadi e naiadi dell'entroterra.",
+          "votanti":681,"peso_politico":2505,"dei_favoriti":["artemide","demetra"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":667,"peso":0.80},
+            {"id":"minori", "nome":"Dei Minori",   "votanti":1,  "peso":0.16},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":13, "peso":0.04}
+          ]
+        }
       ]
     },
     {
@@ -208,6 +610,34 @@
         {"id":"ninfe",  "nome":"Ninfe",        "votanti":1000, "peso":0.581},
         {"id":"minori", "nome":"Dei Minori",   "votanti":5,    "peso":0.388},
         {"id":"satiri", "nome":"Satiri Adulti","votanti":20,   "peso":0.031}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D15-A","nome":"Colosso del Porto","descrizione":"Dove sorgeva la statua solare.",
+          "votanti":230,"peso_politico":2298,"dei_favoriti":["apollo"],
+          "categorie":[
+            {"id":"minori","nome":"Dei Minori",   "votanti":4,  "peso":0.70},
+            {"id":"ninfe", "nome":"Ninfe",        "votanti":222,"peso":0.29},
+            {"id":"satiri","nome":"Satiri Adulti","votanti":4,  "peso":0.01}
+          ]
+        },
+        {
+          "id":"D15-B","nome":"Lindo (acropoli)","descrizione":"Tempio di Atena Lindia.",
+          "votanti":341,"peso_politico":1455,"dei_favoriti":["atena","apollo"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":333,"peso":0.69},
+            {"id":"minori", "nome":"Dei Minori",   "votanti":1,  "peso":0.27},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":7,  "peso":0.04}
+          ]
+        },
+        {
+          "id":"D15-C","nome":"Vallate interne","descrizione":"Naiadi e satiri.",
+          "votanti":454,"peso_politico":1407,"dei_favoriti":["dioniso"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":445,"peso":0.95},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":9,  "peso":0.05}
+          ]
+        }
       ]
     },
     {
@@ -217,6 +647,34 @@
         {"id":"ninfe",  "nome":"Ninfe",        "votanti":2000, "peso":0.630},
         {"id":"minori", "nome":"Dei Minori",   "votanti":8,    "peso":0.336},
         {"id":"satiri", "nome":"Satiri Adulti","votanti":40,   "peso":0.034}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D16-A","nome":"Mitilene (Lesbo)","descrizione":"Cuore lirico e poetico.",
+          "votanti":617,"peso_politico":3896,"dei_favoriti":["afrodite","apollo"],
+          "categorie":[
+            {"id":"minori","nome":"Dei Minori",   "votanti":5,  "peso":0.51},
+            {"id":"ninfe", "nome":"Ninfe",        "votanti":600,"peso":0.46},
+            {"id":"satiri","nome":"Satiri Adulti","votanti":12, "peso":0.03}
+          ]
+        },
+        {
+          "id":"D16-B","nome":"Coste di Chio e Samo","descrizione":"Naiadi marine, vino e poesia.",
+          "votanti":819,"peso_politico":3728,"dei_favoriti":["dioniso","era"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":800,"peso":0.64},
+            {"id":"minori", "nome":"Dei Minori",   "votanti":3,  "peso":0.32},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":16, "peso":0.04}
+          ]
+        },
+        {
+          "id":"D16-C","nome":"Entroterra anatolico","descrizione":"Oreadi di frontiera.",
+          "votanti":612,"peso_politico":1896,"dei_favoriti":["artemide"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":600,"peso":0.95},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":12, "peso":0.05}
+          ]
+        }
       ]
     },
     {
@@ -231,6 +689,49 @@
         {"id":"semidei_ro","nome":"Semidei Romani",    "votanti":10,   "peso":0.017},
         {"id":"centauri",  "nome":"Centauri",          "votanti":8,    "peso":0.014},
         {"id":"semidei_gr","nome":"Semidei Greci",     "votanti":4,    "peso":0.007}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D17-A","nome":"Etna (fucina)","descrizione":"Il cuore pulsante dei ciclopi fabbri sotto il vulcano.",
+          "votanti":892,"peso_politico":6137,"dei_favoriti":["efesto"],
+          "categorie":[
+            {"id":"ciclopi","nome":"Ciclopi",          "votanti":200,"peso":0.39},
+            {"id":"ninfe",  "nome":"Ninfe",            "votanti":667,"peso":0.33},
+            {"id":"vento",  "nome":"Spiriti del Vento","votanti":8,  "peso":0.26},
+            {"id":"satiri", "nome":"Satiri Adulti",    "votanti":17, "peso":0.02}
+          ]
+        },
+        {
+          "id":"D17-B","nome":"Enna (rapimento)","descrizione":"Il prato da cui Ade rapì Persefone.",
+          "votanti":1375,"peso_politico":6423,"dei_favoriti":["demetra","ade","persefone"],
+          "categorie":[
+            {"id":"ninfe",    "nome":"Ninfe",        "votanti":1333,"peso":0.62},
+            {"id":"minori",   "nome":"Dei Minori",   "votanti":5,   "peso":0.31},
+            {"id":"satiri",   "nome":"Satiri Adulti","votanti":33,  "peso":0.04},
+            {"id":"centauri", "nome":"Centauri",     "votanti":4,   "peso":0.03}
+          ]
+        },
+        {
+          "id":"D17-C","nome":"Isole Eolie","descrizione":"Il palazzo dei venti.",
+          "votanti":697,"peso_politico":5337,"dei_favoriti":["zeus"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",            "votanti":667,"peso":0.37},
+            {"id":"vento",  "nome":"Spiriti del Vento","votanti":10, "peso":0.37},
+            {"id":"minori", "nome":"Dei Minori",       "votanti":3,  "peso":0.22},
+            {"id":"satiri", "nome":"Satiri Adulti",    "votanti":17, "peso":0.04}
+          ]
+        },
+        {
+          "id":"D17-D","nome":"Siracusa e coste","descrizione":"Naiadi e comunità mista greco-romana.",
+          "votanti":1384,"peso_politico":4983,"dei_favoriti":["poseidone","artemide"],
+          "categorie":[
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":1333,"peso":0.80},
+            {"id":"semidei_ro","nome":"Semidei Romani", "votanti":10,  "peso":0.08},
+            {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":33,  "peso":0.05},
+            {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":4,   "peso":0.03},
+            {"id":"centauri",  "nome":"Centauri",       "votanti":4,   "peso":0.04}
+          ]
+        }
       ]
     },
     {
@@ -242,6 +743,38 @@
         {"id":"ninfe",     "nome":"Ninfe",                 "votanti":1500, "peso":0.144},
         {"id":"semidei_ro","nome":"Semidei Romani",        "votanti":15,   "peso":0.019},
         {"id":"satiri",    "nome":"Satiri Adulti",         "votanti":30,   "peso":0.008}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D18-A","nome":"Campidoglio","descrizione":"Il colle del potere: Zeus/Era nella forma romana.",
+          "votanti":323,"peso_politico":21148,"dei_favoriti":["zeus","era"],
+          "categorie":[
+            {"id":"olimpici",  "nome":"Dei Olimpici/Maggiori","votanti":2,  "peso":0.76},
+            {"id":"minori",    "nome":"Dei Minori",            "votanti":10, "peso":0.19},
+            {"id":"ninfe",     "nome":"Ninfe",                "votanti":300,"peso":0.04},
+            {"id":"semidei_ro","nome":"Semidei Romani",       "votanti":5,  "peso":0.01}
+          ]
+        },
+        {
+          "id":"D18-B","nome":"Foro Romano","descrizione":"Cuore civico, dei minori romani.",
+          "votanti":478,"peso_politico":6502,"dei_favoriti":["hermes"],
+          "categorie":[
+            {"id":"minori",    "nome":"Dei Minori",   "votanti":12, "peso":0.74},
+            {"id":"ninfe",     "nome":"Ninfe",        "votanti":450,"peso":0.21},
+            {"id":"semidei_ro","nome":"Semidei Romani","votanti":7, "peso":0.04},
+            {"id":"satiri",    "nome":"Satiri Adulti","votanti":9,  "peso":0.01}
+          ]
+        },
+        {
+          "id":"D18-C","nome":"Tevere e Trastevere","descrizione":"Naiadi del fiume, vita popolare.",
+          "votanti":771,"peso_politico":3690,"dei_favoriti":["poseidone","dioniso"],
+          "categorie":[
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":750,"peso":0.61},
+            {"id":"minori",    "nome":"Dei Minori",     "votanti":3,  "peso":0.33},
+            {"id":"semidei_ro","nome":"Semidei Romani", "votanti":3,  "peso":0.03},
+            {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":15, "peso":0.03}
+          ]
+        }
       ]
     },
     {
@@ -254,6 +787,45 @@
         {"id":"ciclopi",   "nome":"Ciclopi",          "votanti":100,  "peso":0.069},
         {"id":"semidei_ro","nome":"Semidei Romani",   "votanti":10,   "peso":0.023},
         {"id":"semidei_gr","nome":"Semidei Greci",    "votanti":10,   "peso":0.023}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D19-A","nome":"Vesuvio","descrizione":"Fucina vulcanica gemella dell'Etna.",
+          "votanti":669,"peso_politico":3062,"dei_favoriti":["efesto"],
+          "categorie":[
+            {"id":"ninfe",   "nome":"Ninfe",        "votanti":538,"peso":0.53},
+            {"id":"ciclopi", "nome":"Ciclopi",      "votanti":100,"peso":0.39},
+            {"id":"satiri",  "nome":"Satiri Adulti","votanti":31, "peso":0.08}
+          ]
+        },
+        {
+          "id":"D19-B","nome":"Campi Flegrei","descrizione":"Porta ctonia, vapori sulfurei.",
+          "votanti":858,"peso_politico":4392,"dei_favoriti":["ade","persefone"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":808,"peso":0.55},
+            {"id":"minori", "nome":"Dei Minori",   "votanti":4,  "peso":0.36},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":46, "peso":0.09}
+          ]
+        },
+        {
+          "id":"D19-C","nome":"Golfo di Napoli","descrizione":"Sirene (Partenope), naiadi marine, comunità mista.",
+          "votanti":1447,"peso_politico":7054,"dei_favoriti":["poseidone","afrodite"],
+          "categorie":[
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":1346,"peso":0.57},
+            {"id":"minori",    "nome":"Dei Minori",     "votanti":4,   "peso":0.23},
+            {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":77,  "peso":0.09},
+            {"id":"semidei_ro","nome":"Semidei Romani", "votanti":10,  "peso":0.06},
+            {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":10,  "peso":0.05}
+          ]
+        },
+        {
+          "id":"D19-D","nome":"Cuma","descrizione":"Antro della Sibilla. Satiri e ninfe profetiche.",
+          "votanti":854,"peso_politico":2792,"dei_favoriti":["apollo"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":808,"peso":0.87},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":46, "peso":0.13}
+          ]
+        }
       ]
     },
     {
@@ -266,6 +838,46 @@
         {"id":"centauri",  "nome":"Centauri",        "votanti":60,   "peso":0.032},
         {"id":"minori",    "nome":"Dei Minori",      "votanti":5,    "peso":0.027},
         {"id":"ciclopi",   "nome":"Ciclopi",         "votanti":80,   "peso":0.013}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D20-A","nome":"Capanne degli Dei (cabine)","descrizione":"Le cabine: cuore semidivino del campo.",
+          "votanti":2069,"peso_politico":41857,"dei_favoriti":["zeus","poseidone","ares","atena","apollo","artemide","afrodite","efesto","hermes","dioniso","ade","persefone","era","demetra"],
+          "categorie":[
+            {"id":"semidei_gr","nome":"Semidei Greci","votanti":900, "peso":0.86},
+            {"id":"ninfe",     "nome":"Ninfe",        "votanti":1091,"peso":0.08},
+            {"id":"minori",    "nome":"Dei Minori",   "votanti":5,   "peso":0.05},
+            {"id":"satiri",    "nome":"Satiri Adulti","votanti":73,  "peso":0.01}
+          ]
+        },
+        {
+          "id":"D20-B","nome":"Bosco del Campo","descrizione":"Driadi, satiri, centauri di Chirone, ciclopi.",
+          "votanti":3631,"peso_politico":14923,"dei_favoriti":["dioniso"],
+          "categorie":[
+            {"id":"ninfe",    "nome":"Ninfe",        "votanti":3273,"peso":0.66},
+            {"id":"centauri", "nome":"Centauri",     "votanti":60,  "peso":0.16},
+            {"id":"satiri",   "nome":"Satiri Adulti","votanti":218, "peso":0.12},
+            {"id":"ciclopi",  "nome":"Ciclopi",      "votanti":80,  "peso":0.06}
+          ]
+        },
+        {
+          "id":"D20-C","nome":"Arena & Anfiteatro","descrizione":"Addestramento e duelli; figli di Ares e Atena.",
+          "votanti":731,"peso_politico":7923,"dei_favoriti":["ares","atena"],
+          "categorie":[
+            {"id":"semidei_gr","nome":"Semidei Greci","votanti":150,"peso":0.76},
+            {"id":"ninfe",     "nome":"Ninfe",        "votanti":545,"peso":0.20},
+            {"id":"satiri",    "nome":"Satiri Adulti","votanti":36, "peso":0.04}
+          ]
+        },
+        {
+          "id":"D20-D","nome":"Spiaggia di Long Island","descrizione":"Naiadi oceanine e figli di Poseidone.",
+          "votanti":1314,"peso_politico":9857,"dei_favoriti":["poseidone"],
+          "categorie":[
+            {"id":"semidei_gr","nome":"Semidei Greci","votanti":150, "peso":0.61},
+            {"id":"ninfe",     "nome":"Ninfe",        "votanti":1091,"peso":0.33},
+            {"id":"satiri",    "nome":"Satiri Adulti","votanti":73,  "peso":0.06}
+          ]
+        }
       ]
     },
     {
@@ -279,6 +891,47 @@
         {"id":"satiri",    "nome":"Satiri Adulti",         "votanti":300,  "peso":0.029},
         {"id":"centauri",  "nome":"Centauri",              "votanti":25,   "peso":0.012},
         {"id":"ciclopi",   "nome":"Ciclopi",               "votanti":60,   "peso":0.009}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D21-A","nome":"Senato di Nuova Roma","descrizione":"Il cuore politico romano: Zeus capitolino e la classe senatoria.",
+          "votanti":794,"peso_politico":33581,"dei_favoriti":["zeus","era"],
+          "categorie":[
+            {"id":"olimpici",  "nome":"Dei Olimpici/Maggiori","votanti":2,  "peso":0.48},
+            {"id":"semidei_ro","nome":"Semidei Romani",       "votanti":300,"peso":0.36},
+            {"id":"minori",    "nome":"Dei Minori",           "votanti":10, "peso":0.12},
+            {"id":"ninfe",     "nome":"Ninfe",               "votanti":455,"peso":0.04}
+          ]
+        },
+        {
+          "id":"D21-B","nome":"Caserme delle Coorti","descrizione":"Le legioni: disciplina e voto in blocco.",
+          "votanti":1464,"peso_politico":23167,"dei_favoriti":["ares"],
+          "categorie":[
+            {"id":"semidei_ro","nome":"Semidei Romani", "votanti":500,"peso":0.86},
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":909,"peso":0.12},
+            {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":55, "peso":0.02}
+          ]
+        },
+        {
+          "id":"D21-C","nome":"Collina del Tempio","descrizione":"Templi degli dei minori romani.",
+          "votanti":689,"peso_politico":12778,"dei_favoriti":["atena","afrodite","hermes"],
+          "categorie":[
+            {"id":"semidei_ro","nome":"Semidei Romani", "votanti":200,"peso":0.63},
+            {"id":"minori",    "nome":"Dei Minori",     "votanti":8,  "peso":0.25},
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":454,"peso":0.11},
+            {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":27, "peso":0.01}
+          ]
+        },
+        {
+          "id":"D21-D","nome":"Valle di Berkeley","descrizione":"Naiadi, satiri (fauni), creature al servizio.",
+          "votanti":3458,"peso_politico":12794,"dei_favoriti":["demetra"],
+          "categorie":[
+            {"id":"ninfe",    "nome":"Ninfe",        "votanti":3182,"peso":0.75},
+            {"id":"satiri",   "nome":"Satiri Adulti","votanti":191, "peso":0.12},
+            {"id":"centauri", "nome":"Centauri",     "votanti":25,  "peso":0.08},
+            {"id":"ciclopi",  "nome":"Ciclopi",      "votanti":60,  "peso":0.05}
+          ]
+        }
       ]
     },
     {
@@ -291,6 +944,34 @@
         {"id":"ninfe",     "nome":"Ninfe",                 "votanti":500, "peso":0.008},
         {"id":"semidei_gr","nome":"Semidei Greci",         "votanti":15,  "peso":0.003},
         {"id":"semidei_ro","nome":"Semidei Romani",        "votanti":2,   "peso":0.001}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D22-A","nome":"600° Piano (Sala dei Troni)","descrizione":"La Sala del Consiglio. I 14 troni.",
+          "votanti":104,"peso_politico":114652,"dei_favoriti":["zeus","era","poseidone","demetra","ares","atena","apollo","artemide","afrodite","efesto","hermes","dioniso","ade","persefone"],
+          "categorie":[
+            {"id":"olimpici","nome":"Dei Olimpici/Maggiori","votanti":14,"peso":0.98},
+            {"id":"minori",  "nome":"Dei Minori",            "votanti":6, "peso":0.02}
+          ]
+        },
+        {
+          "id":"D22-B","nome":"Ali Residenziali Olimpie","descrizione":"Dimore degli dei maggiori, servitù divina.",
+          "votanti":123,"peso_politico":63529,"dei_favoriti":["zeus","era","poseidone","atena","apollo","artemide"],
+          "categorie":[
+            {"id":"olimpici",  "nome":"Dei Olimpici/Maggiori","votanti":6, "peso":0.76},
+            {"id":"titani",    "nome":"Titani Liberati",       "votanti":3, "peso":0.14},
+            {"id":"minori",    "nome":"Dei Minori",            "votanti":14,"peso":0.09},
+            {"id":"semidei_gr","nome":"Semidei Greci",         "votanti":15,"peso":0.01}
+          ]
+        },
+        {
+          "id":"D22-C","nome":"Giardini Pensili & Central Park","descrizione":"Naiadi urbane dei laghetti, driadi del parco.",
+          "votanti":343,"peso_politico":4999,"dei_favoriti":["demetra","persefone"],
+          "categorie":[
+            {"id":"minori","nome":"Dei Minori","votanti":10, "peso":0.80},
+            {"id":"ninfe", "nome":"Ninfe",     "votanti":333,"peso":0.20}
+          ]
+        }
       ]
     },
     {
@@ -300,6 +981,33 @@
         {"id":"ninfe",     "nome":"Ninfe",          "votanti":5000, "peso":0.852},
         {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":35,   "peso":0.080},
         {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":150,  "peso":0.068}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D23-A","nome":"Boschi del Vermont/New Hampshire","descrizione":"Foreste fittissime, driadi autunnali.",
+          "votanti":2809,"peso_politico":8837,"dei_favoriti":["demetra","artemide"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":2727,"peso":0.93},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":82,  "peso":0.07}
+          ]
+        },
+        {
+          "id":"D23-B","nome":"Distretto Universitario (Cambridge)","descrizione":"Semidei accademici, figli di Atena e Apollo.",
+          "votanti":971,"peso_politico":4343,"dei_favoriti":["atena","apollo"],
+          "categorie":[
+            {"id":"ninfe",     "nome":"Ninfe",        "votanti":909,"peso":0.63},
+            {"id":"semidei_gr","nome":"Semidei Greci","votanti":35, "peso":0.32},
+            {"id":"satiri",    "nome":"Satiri Adulti","votanti":27, "peso":0.05}
+          ]
+        },
+        {
+          "id":"D23-C","nome":"Coste del Maine","descrizione":"Naiadi marine e satiri costieri.",
+          "votanti":1405,"peso_politico":4420,"dei_favoriti":["poseidone"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":1364,"peso":0.93},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":41,  "peso":0.07}
+          ]
+        }
       ]
     },
     {
@@ -312,6 +1020,38 @@
         {"id":"semidei_ro","nome":"Semidei Romani", "votanti":20,   "peso":0.066},
         {"id":"ciclopi",   "nome":"Ciclopi",        "votanti":50,   "peso":0.050},
         {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":50,   "peso":0.033}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D24-A","nome":"Officine sotterranee","descrizione":"Workshop meccanici, figli di Efesto.",
+          "votanti":585,"peso_politico":3180,"dei_favoriti":["efesto"],
+          "categorie":[
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":500,"peso":0.47},
+            {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":15, "peso":0.19},
+            {"id":"ciclopi",   "nome":"Ciclopi",        "votanti":50, "peso":0.19},
+            {"id":"semidei_ro","nome":"Semidei Romani", "votanti":10, "peso":0.12},
+            {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":10, "peso":0.03}
+          ]
+        },
+        {
+          "id":"D24-B","nome":"Valle del Delaware","descrizione":"Naiadi fluviali, satiri.",
+          "votanti":1279,"peso_politico":5550,"dei_favoriti":["poseidone","dioniso"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":1250,"peso":0.68},
+            {"id":"minori", "nome":"Dei Minori",   "votanti":4,   "peso":0.28},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":25,  "peso":0.04}
+          ]
+        },
+        {
+          "id":"D24-C","nome":"Corridoio DC-Baltimora","descrizione":"Semidei urbani, mix dei due campi.",
+          "votanti":790,"peso_politico":3370,"dei_favoriti":["atena","hermes"],
+          "categorie":[
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":750,"peso":0.67},
+            {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":15, "peso":0.18},
+            {"id":"semidei_ro","nome":"Semidei Romani", "votanti":10, "peso":0.11},
+            {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":15, "peso":0.04}
+          ]
+        }
       ]
     },
     {
@@ -323,6 +1063,36 @@
         {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":250,  "peso":0.089},
         {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":20,   "peso":0.036},
         {"id":"semidei_ro","nome":"Semidei Romani", "votanti":15,   "peso":0.027}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D25-A","nome":"Quartiere Francese (magia)","descrizione":"Crocevia magico.",
+          "votanti":975,"peso_politico":7495,"dei_favoriti":["afrodite"],
+          "categorie":[
+            {"id":"minori",    "nome":"Dei Minori",   "votanti":10, "peso":0.53},
+            {"id":"ninfe",     "nome":"Ninfe",        "votanti":909,"peso":0.36},
+            {"id":"satiri",    "nome":"Satiri Adulti","votanti":46, "peso":0.06},
+            {"id":"semidei_gr","nome":"Semidei Greci","votanti":10, "peso":0.05}
+          ]
+        },
+        {
+          "id":"D25-B","nome":"Paludi del Bayou","descrizione":"Naiadi di palude, satiri, spiriti d'acqua.",
+          "votanti":2863,"peso_politico":9269,"dei_favoriti":["demetra"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":2727,"peso":0.88},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":136, "peso":0.12}
+          ]
+        },
+        {
+          "id":"D25-C","nome":"Foci del Mississippi","descrizione":"Naiadi del grande fiume, comunità mista.",
+          "votanti":1457,"peso_politico":5636,"dei_favoriti":["poseidone"],
+          "categorie":[
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":1364,"peso":0.73},
+            {"id":"semidei_ro","nome":"Semidei Romani", "votanti":15,  "peso":0.11},
+            {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":68,  "peso":0.09},
+            {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":10,  "peso":0.07}
+          ]
+        }
       ]
     },
     {
@@ -335,6 +1105,40 @@
         {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":30,   "peso":0.074},
         {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":100,  "peso":0.049},
         {"id":"ciclopi",   "nome":"Ciclopi",        "votanti":40,   "peso":0.030}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D26-A","nome":"Hollywood Hills","descrizione":"Bellezza e fama: cerchio di Afrodite.",
+          "votanti":908,"peso_politico":8763,"dei_favoriti":["afrodite"],
+          "categorie":[
+            {"id":"minori",    "nome":"Dei Minori",   "votanti":12, "peso":0.55},
+            {"id":"ninfe",     "nome":"Ninfe",        "votanti":833,"peso":0.29},
+            {"id":"semidei_ro","nome":"Semidei Romani","votanti":15,"peso":0.07},
+            {"id":"semidei_gr","nome":"Semidei Greci","votanti":15, "peso":0.07},
+            {"id":"satiri",    "nome":"Satiri Adulti","votanti":33, "peso":0.02}
+          ]
+        },
+        {
+          "id":"D26-B","nome":"DOA Recording Studios (Venice)","descrizione":"Ingresso agli Inferi gestito da Caronte.",
+          "votanti":638,"peso_politico":3124,"dei_favoriti":["ade"],
+          "categorie":[
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":556,"peso":0.53},
+            {"id":"ciclopi",   "nome":"Ciclopi",        "votanti":40, "peso":0.15},
+            {"id":"semidei_ro","nome":"Semidei Romani", "votanti":10, "peso":0.13},
+            {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":10, "peso":0.13},
+            {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":22, "peso":0.06}
+          ]
+        },
+        {
+          "id":"D26-C","nome":"Sierra & deserto interno","descrizione":"Oreadi rade, naiadi delle oasi.",
+          "votanti":1171,"peso_politico":4293,"dei_favoriti":["artemide"],
+          "categorie":[
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":1111,"peso":0.78},
+            {"id":"semidei_ro","nome":"Semidei Romani", "votanti":10,  "peso":0.09},
+            {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":45,  "peso":0.08},
+            {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":5,   "peso":0.05}
+          ]
+        }
       ]
     },
     {
@@ -347,6 +1151,38 @@
         {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":25,   "peso":0.033},
         {"id":"semidei_ro","nome":"Semidei Romani", "votanti":20,   "peso":0.027},
         {"id":"ciclopi",   "nome":"Ciclopi",        "votanti":30,   "peso":0.012}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D27-A","nome":"Lungolago di Chicago","descrizione":"Naiadi dei Grandi Laghi, semidei urbani.",
+          "votanti":2081,"peso_politico":9800,"dei_favoriti":["poseidone","hermes"],
+          "categorie":[
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":2000,"peso":0.61},
+            {"id":"minori",    "nome":"Dei Minori",     "votanti":6,   "peso":0.24},
+            {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":15,  "peso":0.06},
+            {"id":"semidei_ro","nome":"Semidei Romani", "votanti":10,  "peso":0.05},
+            {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":50,  "peso":0.04}
+          ]
+        },
+        {
+          "id":"D27-B","nome":"Cintura del grano (Midwest)","descrizione":"Driadi del raccolto, sterminate.",
+          "votanti":4150,"peso_politico":13960,"dei_favoriti":["demetra"],
+          "categorie":[
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":4000,"peso":0.86},
+            {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":100, "peso":0.06},
+            {"id":"semidei_ro","nome":"Semidei Romani", "votanti":10,  "peso":0.03},
+            {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":10,  "peso":0.03},
+            {"id":"ciclopi",   "nome":"Ciclopi",        "votanti":30,  "peso":0.02}
+          ]
+        },
+        {
+          "id":"D27-C","nome":"Boschi del Michigan","descrizione":"Driadi del nord, satiri.",
+          "votanti":2050,"peso_politico":6400,"dei_favoriti":["artemide"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":2000,"peso":0.94},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":50,  "peso":0.06}
+          ]
+        }
       ]
     },
     {
@@ -361,6 +1197,47 @@
         {"id":"semidei_ro","nome":"Semidei Romani", "votanti":15,   "peso":0.013},
         {"id":"ciclopi",   "nome":"Ciclopi",        "votanti":50,   "peso":0.013},
         {"id":"centauri",  "nome":"Centauri",       "votanti":10,   "peso":0.008}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D28-A","nome":"Foreste pluviali (Olympic NP)","descrizione":"Le foreste più dense del Nuovo Mondo. Driadi antichissime.",
+          "votanti":5664,"peso_politico":18707,"dei_favoriti":["artemide","demetra"],
+          "categorie":[
+            {"id":"ninfe",    "nome":"Ninfe",        "votanti":5385,"peso":0.86},
+            {"id":"satiri",   "nome":"Satiri Adulti","votanti":269, "peso":0.12},
+            {"id":"centauri", "nome":"Centauri",     "votanti":10,  "peso":0.02}
+          ]
+        },
+        {
+          "id":"D28-B","nome":"Palazzo dei Venti (Boreas)","descrizione":"La reggia del vento del nord.",
+          "votanti":847,"peso_politico":11219,"dei_favoriti":["zeus"],
+          "categorie":[
+            {"id":"vento",  "nome":"Spiriti del Vento","votanti":35, "peso":0.62},
+            {"id":"ninfe",  "nome":"Ninfe",            "votanti":769,"peso":0.21},
+            {"id":"minori", "nome":"Dei Minori",       "votanti":4,  "peso":0.14},
+            {"id":"satiri", "nome":"Satiri Adulti",    "votanti":39, "peso":0.03}
+          ]
+        },
+        {
+          "id":"D28-C","nome":"Seattle tech-corridor","descrizione":"Officine moderne, semidei e ciclopi tecnologici.",
+          "votanti":1706,"peso_politico":9630,"dei_favoriti":["efesto","atena"],
+          "categorie":[
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":1538,"peso":0.48},
+            {"id":"minori",    "nome":"Dei Minori",     "votanti":6,   "peso":0.25},
+            {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":20,  "peso":0.08},
+            {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":77,  "peso":0.06},
+            {"id":"semidei_ro","nome":"Semidei Romani", "votanti":15,  "peso":0.07},
+            {"id":"ciclopi",   "nome":"Ciclopi",        "votanti":50,  "peso":0.06}
+          ]
+        },
+        {
+          "id":"D28-D","nome":"Coste del Pacifico NW","descrizione":"Naiadi marine fredde.",
+          "votanti":2423,"peso_politico":7844,"dei_favoriti":["poseidone"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":2308,"peso":0.88},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":115, "peso":0.12}
+          ]
+        }
       ]
     },
     {
@@ -374,6 +1251,37 @@
         {"id":"centauri",  "nome":"Centauri",       "votanti":30,   "peso":0.025},
         {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":10,   "peso":0.008},
         {"id":"ciclopi",   "nome":"Ciclopi",        "votanti":30,   "peso":0.008}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D29-A","nome":"Grotta di Pan (Liceo)","descrizione":"Il santuario di Pan. Cuore spirituale dei satiri.",
+          "votanti":1709,"peso_politico":11801,"dei_favoriti":["dioniso"],
+          "categorie":[
+            {"id":"minori",    "nome":"Dei Minori",   "votanti":12,  "peso":0.41},
+            {"id":"ninfe",     "nome":"Ninfe",        "votanti":1571,"peso":0.40},
+            {"id":"centauri",  "nome":"Centauri",     "votanti":30,  "peso":0.10},
+            {"id":"satiri",    "nome":"Satiri Adulti","votanti":86,  "peso":0.06},
+            {"id":"semidei_gr","nome":"Semidei Greci","votanti":10,  "peso":0.03}
+          ]
+        },
+        {
+          "id":"D29-B","nome":"Monte Liceo","descrizione":"Vetta sacra a Zeus Liceo. Oreadi e venti.",
+          "votanti":3329,"peso_politico":13797,"dei_favoriti":["zeus"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",            "votanti":3143,"peso":0.68},
+            {"id":"vento",  "nome":"Spiriti del Vento","votanti":15,  "peso":0.22},
+            {"id":"satiri", "nome":"Satiri Adulti",    "votanti":171, "peso":0.10}
+          ]
+        },
+        {
+          "id":"D29-C","nome":"Vallate boscose","descrizione":"Sterminate driadi e naiadi. Il blocco-ninfe più grande.",
+          "votanti":6659,"peso_politico":21962,"dei_favoriti":["artemide","demetra"],
+          "categorie":[
+            {"id":"ninfe",   "nome":"Ninfe",        "votanti":6286,"peso":0.86},
+            {"id":"satiri",  "nome":"Satiri Adulti","votanti":343, "peso":0.12},
+            {"id":"ciclopi", "nome":"Ciclopi",      "votanti":30,  "peso":0.02}
+          ]
+        }
       ]
     },
     {
@@ -386,6 +1294,36 @@
         {"id":"centauri",  "nome":"Centauri",       "votanti":15,   "peso":0.046},
         {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":50,   "peso":0.030},
         {"id":"semidei_ro","nome":"Semidei Romani", "votanti":3,    "peso":0.009}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D30-A","nome":"Casa natale di Boreas","descrizione":"Terra d'origine del vento del nord. Centauri selvaggi.",
+          "votanti":450,"peso_politico":7880,"dei_favoriti":["ares","zeus"],
+          "categorie":[
+            {"id":"vento",    "nome":"Spiriti del Vento","votanti":20, "peso":0.51},
+            {"id":"minori",   "nome":"Dei Minori",       "votanti":5,  "peso":0.25},
+            {"id":"ninfe",    "nome":"Ninfe",            "votanti":400,"peso":0.15},
+            {"id":"centauri", "nome":"Centauri",         "votanti":15, "peso":0.08},
+            {"id":"satiri",   "nome":"Satiri Adulti",    "votanti":10, "peso":0.01}
+          ]
+        },
+        {
+          "id":"D30-B","nome":"Monti Rodopi","descrizione":"Oreadi, culto orfico-dionisiaco.",
+          "votanti":820,"peso_politico":2560,"dei_favoriti":["dioniso"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":800,"peso":0.94},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":20, "peso":0.06}
+          ]
+        },
+        {
+          "id":"D30-C","nome":"Pianure macedoni","descrizione":"Driadi e satiri marziali.",
+          "votanti":823,"peso_politico":2680,"dei_favoriti":["ares","era"],
+          "categorie":[
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":800,"peso":0.90},
+            {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":20, "peso":0.06},
+            {"id":"semidei_ro","nome":"Semidei Romani", "votanti":3,  "peso":0.04}
+          ]
+        }
       ]
     },
     {
@@ -399,6 +1337,36 @@
         {"id":"ciclopi",   "nome":"Ciclopi",        "votanti":30,   "peso":0.024},
         {"id":"semidei_ro","nome":"Semidei Romani", "votanti":5,    "peso":0.013},
         {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":5,    "peso":0.013}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D31-A","nome":"Biblioteca di Alessandria (rovine mistiche)","descrizione":"Sapere antico. I Titani esuli si nascondono tra gli archivi.",
+          "votanti":359,"peso_politico":10487,"dei_favoriti":["atena"],
+          "categorie":[
+            {"id":"titani",    "nome":"Titani Liberati","votanti":2,  "peso":0.57},
+            {"id":"minori",    "nome":"Dei Minori",     "votanti":8,  "peso":0.31},
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":333,"peso":0.10},
+            {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":5,  "peso":0.02}
+          ]
+        },
+        {
+          "id":"D31-B","nome":"Delta del Nilo","descrizione":"Naiadi fluviali, frontiera con gli dei egizi.",
+          "votanti":897,"peso_politico":3286,"dei_favoriti":["poseidone"],
+          "categorie":[
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":834,"peso":0.76},
+            {"id":"ciclopi",   "nome":"Ciclopi",        "votanti":30, "peso":0.11},
+            {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":28, "peso":0.07},
+            {"id":"semidei_ro","nome":"Semidei Romani", "votanti":5,  "peso":0.06}
+          ]
+        },
+        {
+          "id":"D31-C","nome":"Deserto occidentale","descrizione":"Oreadi rade, spiriti di sabbia.",
+          "votanti":344,"peso_politico":1087,"dei_favoriti":["artemide"],
+          "categorie":[
+            {"id":"ninfe",  "nome":"Ninfe",        "votanti":333,"peso":0.92},
+            {"id":"satiri", "nome":"Satiri Adulti","votanti":11, "peso":0.08}
+          ]
+        }
       ]
     },
     {
@@ -411,6 +1379,37 @@
         {"id":"ciclopi",  "nome":"Ciclopi",        "votanti":100,  "peso":0.047},
         {"id":"satiri",   "nome":"Satiri Adulti",  "votanti":100,  "peso":0.031},
         {"id":"centauri", "nome":"Centauri",       "votanti":7,    "peso":0.011}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D32-A","nome":"Giardino delle Esperidi","descrizione":"Il giardino dei pomi d'oro. Le ninfe Esperidi e Ladon.",
+          "votanti":1368,"peso_politico":10263,"dei_favoriti":["era"],
+          "categorie":[
+            {"id":"titani","nome":"Titani Liberati","votanti":2,   "peso":0.58},
+            {"id":"ninfe", "nome":"Ninfe",          "votanti":1333,"peso":0.39},
+            {"id":"satiri","nome":"Satiri Adulti",  "votanti":33,  "peso":0.03}
+          ]
+        },
+        {
+          "id":"D32-B","nome":"Monte Atlante (confine)","descrizione":"Dove Atlante regge il cielo. Venti e fabbri d'occidente.",
+          "votanti":1024,"peso_politico":9443,"dei_favoriti":["efesto"],
+          "categorie":[
+            {"id":"titani",  "nome":"Titani Liberati",  "votanti":1,  "peso":0.32},
+            {"id":"ninfe",   "nome":"Ninfe",            "votanti":889,"peso":0.28},
+            {"id":"vento",   "nome":"Spiriti del Vento","votanti":12, "peso":0.25},
+            {"id":"ciclopi", "nome":"Ciclopi",          "votanti":100,"peso":0.13},
+            {"id":"satiri",  "nome":"Satiri Adulti",    "votanti":22, "peso":0.02}
+          ]
+        },
+        {
+          "id":"D32-C","nome":"Isole atlantiche perdute","descrizione":"Naiadi oceaniche, terre semi-mitiche.",
+          "votanti":1830,"peso_politico":5974,"dei_favoriti":["poseidone"],
+          "categorie":[
+            {"id":"ninfe",    "nome":"Ninfe",        "votanti":1778,"peso":0.89},
+            {"id":"satiri",   "nome":"Satiri Adulti","votanti":45,  "peso":0.06},
+            {"id":"centauri", "nome":"Centauri",     "votanti":7,   "peso":0.05}
+          ]
+        }
       ]
     },
     {
@@ -426,6 +1425,41 @@
         {"id":"semidei_ro","nome":"Semidei Romani", "votanti":50,   "peso":0.040},
         {"id":"ciclopi",   "nome":"Ciclopi",        "votanti":150,  "peso":0.036},
         {"id":"centauri",  "nome":"Centauri",       "votanti":25,   "peso":0.020}
+      ],
+      "sub_distretti": [
+        {
+          "id":"D33-A","nome":"Carovane di Ermes","descrizione":"Mercanti, messaggeri, viaggiatori perpetui.",
+          "votanti":835,"peso_politico":17775,"dei_favoriti":["hermes"],
+          "categorie":[
+            {"id":"minori",    "nome":"Dei Minori",     "votanti":15, "peso":0.34},
+            {"id":"vento",     "nome":"Spiriti del Vento","votanti":25,"peso":0.28},
+            {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":286,"peso":0.13},
+            {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":50, "peso":0.11},
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":429,"peso":0.07},
+            {"id":"semidei_ro","nome":"Semidei Romani", "votanti":30, "peso":0.07}
+          ]
+        },
+        {
+          "id":"D33-B","nome":"Cerca di Pan (satiri erranti)","descrizione":"Migliaia di satiri alla ricerca del dio perduto.",
+          "votanti":1096,"peso_politico":6353,"dei_favoriti":["dioniso"],
+          "categorie":[
+            {"id":"satiri",   "nome":"Satiri Adulti","votanti":428,"peso":0.54},
+            {"id":"ninfe",    "nome":"Ninfe",        "votanti":643,"peso":0.30},
+            {"id":"centauri", "nome":"Centauri",     "votanti":25, "peso":0.16}
+          ]
+        },
+        {
+          "id":"D33-C","nome":"Esuli e fuggitivi","descrizione":"Titani in fuga, semidei senza campo, creature in esilio.",
+          "votanti":920,"peso_politico":25372,"dei_favoriti":[],
+          "categorie":[
+            {"id":"titani",    "nome":"Titani Liberati","votanti":6,  "peso":0.71},
+            {"id":"satiri",    "nome":"Satiri Adulti",  "votanti":286,"peso":0.09},
+            {"id":"ciclopi",   "nome":"Ciclopi",        "votanti":150,"peso":0.07},
+            {"id":"ninfe",     "nome":"Ninfe",          "votanti":428,"peso":0.05},
+            {"id":"semidei_gr","nome":"Semidei Greci",  "votanti":30, "peso":0.05},
+            {"id":"semidei_ro","nome":"Semidei Romani", "votanti":20, "peso":0.03}
+          ]
+        }
       ]
     }
   ],
