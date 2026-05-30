@@ -659,7 +659,6 @@ const NE = (() => {
     $('btn-start').addEventListener('click', startScrutiny);
     $('btn-survey').addEventListener('click', startSurvey);
     $('btn-reset').addEventListener('click', resetScrutiny);
-    $('btn-copy').addEventListener('click', copyRP);
     $('btn-sel-all').addEventListener('click', () => selectAllDistricts(true));
     $('btn-sel-none').addEventListener('click', () => selectAllDistricts(false));
     document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
