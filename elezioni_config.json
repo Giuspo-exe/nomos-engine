@@ -8,34 +8,62 @@
     "soglia_suprema": 66
   },
   "candidati": [
-    { "id": "zeus",      "nome": "Zeus",      "titolo": "Signore dei Fulmini",    "genere": "M",
-      "affinita": { "ninfe":0.60,"titani":0.55,"olimpici":0.90,"minori":0.65,"vento":0.75,"ciclopi":0.85,"satiri":0.40,"centauri":0.50,"semidei_gr":0.70,"semidei_ro":0.75 } },
-    { "id": "era",       "nome": "Era",       "titolo": "Regina degli Dei",       "genere": "F",
-      "affinita": { "ninfe":0.50,"titani":0.30,"olimpici":0.85,"minori":0.60,"vento":0.40,"ciclopi":0.25,"satiri":0.30,"centauri":0.35,"semidei_gr":0.25,"semidei_ro":0.70 } },
-    { "id": "poseidone", "nome": "Poseidone", "titolo": "Signore dei Mari",       "genere": "M",
-      "affinita": { "ninfe":0.80,"titani":0.45,"olimpici":0.70,"minori":0.60,"vento":0.65,"ciclopi":0.55,"satiri":0.40,"centauri":0.65,"semidei_gr":0.75,"semidei_ro":0.70 } },
-    { "id": "demetra",   "nome": "Demetra",   "titolo": "Signora del Raccolto",   "genere": "F",
-      "affinita": { "ninfe":0.85,"titani":0.50,"olimpici":0.60,"minori":0.65,"vento":0.55,"ciclopi":0.20,"satiri":0.70,"centauri":0.60,"semidei_gr":0.55,"semidei_ro":0.60 } },
-    { "id": "ares",      "nome": "Ares",      "titolo": "Dio della Guerra",       "genere": "M",
-      "affinita": { "ninfe":0.25,"titani":0.50,"olimpici":0.60,"minori":0.40,"vento":0.55,"ciclopi":0.45,"satiri":0.35,"centauri":0.70,"semidei_gr":0.75,"semidei_ro":0.90 } },
-    { "id": "atena",     "nome": "Atena",     "titolo": "Dea della Saggezza",     "genere": "F",
-      "affinita": { "ninfe":0.55,"titani":0.40,"olimpici":0.75,"minori":0.70,"vento":0.45,"ciclopi":0.35,"satiri":0.40,"centauri":0.65,"semidei_gr":0.80,"semidei_ro":0.70 } },
-    { "id": "apollo",    "nome": "Apollo",    "titolo": "Dio del Sole",           "genere": "M",
-      "affinita": { "ninfe":0.80,"titani":0.50,"olimpici":0.70,"minori":0.75,"vento":0.60,"ciclopi":0.40,"satiri":0.65,"centauri":0.55,"semidei_gr":0.75,"semidei_ro":0.85 } },
-    { "id": "artemide",  "nome": "Artemide",  "titolo": "Signora della Caccia",   "genere": "F",
-      "affinita": { "ninfe":0.90,"titani":0.40,"olimpici":0.60,"minori":0.65,"vento":0.70,"ciclopi":0.30,"satiri":0.55,"centauri":0.60,"semidei_gr":0.65,"semidei_ro":0.70 } },
-    { "id": "afrodite",  "nome": "Afrodite",  "titolo": "Dea dell'Amore",         "genere": "F",
-      "affinita": { "ninfe":0.75,"titani":0.40,"olimpici":0.65,"minori":0.70,"vento":0.50,"ciclopi":0.20,"satiri":0.60,"centauri":0.45,"semidei_gr":0.70,"semidei_ro":0.85 } },
-    { "id": "efesto",    "nome": "Efesto",    "titolo": "Dio della Forgia",       "genere": "M",
-      "affinita": { "ninfe":0.35,"titani":0.60,"olimpici":0.55,"minori":0.60,"vento":0.30,"ciclopi":0.95,"satiri":0.45,"centauri":0.50,"semidei_gr":0.60,"semidei_ro":0.65 } },
-    { "id": "hermes",    "nome": "Hermes",    "titolo": "Messaggero degli Dei",   "genere": "M",
-      "affinita": { "ninfe":0.65,"titani":0.55,"olimpici":0.70,"minori":0.75,"vento":0.80,"ciclopi":0.45,"satiri":0.70,"centauri":0.65,"semidei_gr":0.80,"semidei_ro":0.75 } },
-    { "id": "dioniso",   "nome": "Dioniso",   "titolo": "Dio del Vino",           "genere": "M",
-      "affinita": { "ninfe":0.80,"titani":0.50,"olimpici":0.55,"minori":0.65,"vento":0.45,"ciclopi":0.50,"satiri":0.95,"centauri":0.60,"semidei_gr":0.65,"semidei_ro":0.60 } },
-    { "id": "estia",     "nome": "Estia",     "titolo": "Custode del Focolare",   "genere": "F",
-      "affinita": { "ninfe":0.75,"titani":0.55,"olimpici":0.70,"minori":0.70,"vento":0.40,"ciclopi":0.45,"satiri":0.50,"centauri":0.45,"semidei_gr":0.65,"semidei_ro":0.70 } },
-    { "id": "persefone", "nome": "Persefone", "titolo": "Regina degli Inferi",    "genere": "F",
-      "affinita": { "ninfe":0.65,"titani":0.75,"olimpici":0.55,"minori":0.70,"vento":0.60,"ciclopi":0.45,"satiri":0.55,"centauri":0.50,"semidei_gr":0.60,"semidei_ro":0.65 } }
+    {
+      "id": "zeus", "nome": "Zeus", "titolo": "Signore dei Fulmini", "genere": "M",
+      "params": { "establishment": 1.90, "populism_rural": 0.60, "militarism": 0.80, "intellect_grec": 1.00, "underworld_outcast": 0.30 }
+    },
+    {
+      "id": "era", "nome": "Era", "titolo": "Regina degli Dei", "genere": "F",
+      "params": { "establishment": 1.70, "populism_rural": 0.40, "militarism": 0.30, "intellect_grec": 0.60, "underworld_outcast": 0.20 }
+    },
+    {
+      "id": "poseidone", "nome": "Poseidone", "titolo": "Signore dei Mari", "genere": "M",
+      "params": { "establishment": 1.20, "populism_rural": 1.10, "militarism": 0.80, "intellect_grec": 0.90, "underworld_outcast": 0.50 }
+    },
+    {
+      "id": "demetra", "nome": "Demetra", "titolo": "Signora del Raccolto", "genere": "F",
+      "params": { "establishment": 1.00, "populism_rural": 1.80, "militarism": 0.20, "intellect_grec": 0.70, "underworld_outcast": 0.40 }
+    },
+    {
+      "id": "ares", "nome": "Ares", "titolo": "Dio della Guerra", "genere": "M",
+      "params": { "establishment": 0.80, "populism_rural": 0.50, "militarism": 1.90, "intellect_grec": 0.50, "underworld_outcast": 0.50 }
+    },
+    {
+      "id": "atena", "nome": "Atena", "titolo": "Dea della Saggezza", "genere": "F",
+      "params": { "establishment": 1.30, "populism_rural": 0.60, "militarism": 0.90, "intellect_grec": 1.90, "underworld_outcast": 0.30 }
+    },
+    {
+      "id": "apollo", "nome": "Apollo", "titolo": "Dio del Sole", "genere": "M",
+      "params": { "establishment": 1.20, "populism_rural": 1.10, "militarism": 0.60, "intellect_grec": 1.60, "underworld_outcast": 0.30 }
+    },
+    {
+      "id": "artemide", "nome": "Artemide", "titolo": "Signora della Caccia", "genere": "F",
+      "params": { "establishment": 0.90, "populism_rural": 1.50, "militarism": 0.60, "intellect_grec": 1.00, "underworld_outcast": 0.40 }
+    },
+    {
+      "id": "afrodite", "nome": "Afrodite", "titolo": "Dea dell'Amore", "genere": "F",
+      "params": { "establishment": 1.10, "populism_rural": 1.00, "militarism": 0.30, "intellect_grec": 0.90, "underworld_outcast": 0.30 }
+    },
+    {
+      "id": "efesto", "nome": "Efesto", "titolo": "Dio della Forgia", "genere": "M",
+      "params": { "establishment": 0.70, "populism_rural": 0.70, "militarism": 1.30, "intellect_grec": 1.10, "underworld_outcast": 0.50 }
+    },
+    {
+      "id": "hermes", "nome": "Hermes", "titolo": "Messaggero degli Dei", "genere": "M",
+      "params": { "establishment": 1.00, "populism_rural": 1.20, "militarism": 0.60, "intellect_grec": 1.30, "underworld_outcast": 0.80 }
+    },
+    {
+      "id": "dioniso", "nome": "Dioniso", "titolo": "Dio del Vino", "genere": "M",
+      "params": { "establishment": 0.70, "populism_rural": 1.70, "militarism": 0.50, "intellect_grec": 0.70, "underworld_outcast": 0.60 }
+    },
+    {
+      "id": "ade", "nome": "Ade", "titolo": "Signore degli Inferi", "genere": "M", "colore": "#2a2a2a",
+      "params": { "establishment": 0.30, "populism_rural": 0.50, "militarism": 0.80, "intellect_grec": 0.70, "underworld_outcast": 1.90 }
+    },
+    {
+      "id": "persefone", "nome": "Persefone", "titolo": "Regina degli Inferi", "genere": "F",
+      "params": { "establishment": 0.80, "populism_rural": 1.00, "militarism": 0.40, "intellect_grec": 0.90, "underworld_outcast": 1.50 }
+    }
   ],
   "distretti": [
     {

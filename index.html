@@ -49,10 +49,14 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
 
 /* ── LEFT: DISTRICT MAP ── */
 #district-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:6px;background:var(--bg0);flex-shrink:0;max-height:190px;overflow-y:auto}
-.d-btn{aspect-ratio:1;background:var(--bg1);border:1px solid var(--br);color:var(--tx2);font-family:var(--mono);font-size:8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:background .1s,border-color .1s,color .1s;text-transform:uppercase;letter-spacing:.03em;line-height:1.2;padding:2px}
+.d-btn{position:relative;aspect-ratio:1;background:var(--bg1);border:1px solid var(--br);color:var(--tx2);font-family:var(--mono);font-size:8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:background .1s,border-color .1s,color .1s;text-transform:uppercase;letter-spacing:.03em;line-height:1.2;padding:2px}
 .d-btn:hover{background:var(--bg3);border-color:var(--blue2);color:var(--blue2)}
 .d-btn.active{background:rgba(74,127,165,.15);border-color:var(--blue2);color:var(--blue2)}
 .d-btn.has-hitori{border-color:var(--gold)!important;background:rgba(201,168,76,.06)!important}
+.d-btn.scrutiny-sel{border-color:var(--gold)!important;background:rgba(201,168,76,.06)!important}
+.d-btn.scrutinized{border-color:var(--green)!important;background:rgba(39,174,96,.06)!important;color:var(--green)}
+.d-scrutiny-chk{position:absolute;bottom:2px;right:2px;width:10px;height:10px;accent-color:var(--green);cursor:pointer;z-index:2}
+.d-scrutiny-chk:disabled{opacity:.4;cursor:default}
 .d-id{font-size:11px;font-weight:700}
 .d-nm{font-size:7px;text-align:center;line-height:1.1}
 
@@ -84,10 +88,13 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
 .hitori-badge{font-family:var(--mono);font-size:9px;color:var(--gold);width:14px}
 
 /* ── CENTER: SCRUTINY ── */
-#scrutiny-ctrl{display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--bg1);border-bottom:1px solid var(--br);flex-shrink:0}
+#scrutiny-ctrl{display:flex;align-items:center;gap:6px;padding:7px 12px;background:var(--bg1);border-bottom:1px solid var(--br);flex-shrink:0;flex-wrap:wrap}
 .btn-prim{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 13px;background:rgba(201,168,76,.08);border:1px solid var(--gold);color:var(--gold);cursor:pointer;transition:background .1s,color .1s}
 .btn-prim:hover:not(:disabled){background:rgba(201,168,76,.18);color:var(--gold2)}
 .btn-prim:disabled{opacity:.35;cursor:not-allowed}
+.btn-survey{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 13px;background:rgba(142,68,173,.08);border:1px solid var(--purple);color:var(--purple);cursor:pointer;transition:background .1s,color .1s}
+.btn-survey:hover:not(:disabled){background:rgba(142,68,173,.2)}
+.btn-survey:disabled{opacity:.35;cursor:not-allowed}
 .btn-sec{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:5px 9px;background:transparent;border:1px solid var(--br2);color:var(--tx1);cursor:pointer;transition:background .1s,color .1s}
 .btn-sec:hover{background:var(--bg3);color:var(--tx0)}
 .btn-sm{font-family:var(--mono);font-size:10px;padding:3px 8px;background:transparent;border:1px solid var(--br);color:var(--tx2);cursor:pointer;text-transform:uppercase;letter-spacing:.06em;transition:all .1s}
@@ -99,6 +106,9 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
 .prog-fill{height:100%;background:var(--gold);transition:width .3s}
 .prog-label{font-family:var(--mono);font-size:10px;color:var(--tx2)}
 
+/* Projection indicator */
+#proj-indicator{display:none;text-align:center;font-size:9px;color:var(--purple);padding:3px 12px;background:rgba(142,68,173,.05);border-bottom:1px solid rgba(142,68,173,.2);letter-spacing:.1em;text-transform:uppercase;flex-shrink:0}
+
 /* Results */
 #results-box{flex:1;overflow-y:auto;padding:7px 12px;min-height:0}
 .res-row{display:flex;align-items:center;padding:3px 0;border-bottom:1px solid rgba(51,51,51,.35);gap:6px}
@@ -109,6 +119,8 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
 .res-bar-wrap{flex:1;height:15px;background:var(--bg1);border:1px solid var(--br);position:relative;overflow:hidden}
 .res-bar-fill{height:100%;background:var(--blue);transition:width .35s ease-out}
 .res-bar-fill.leader{background:var(--gold)}
+.res-bar-fill.proj{background:var(--purple);opacity:.65}
+.res-bar-fill.proj.leader{background:rgba(201,168,76,.55)}
 .thr-line{position:absolute;top:0;bottom:0;width:1px;background:var(--red);z-index:2}
 .res-pct{font-family:var(--mono);font-size:11px;font-weight:500;width:50px;text-align:right;flex-shrink:0}
 .res-delta{font-family:var(--mono);font-size:10px;width:36px;text-align:right;flex-shrink:0;color:var(--tx2)}
@@ -217,9 +229,11 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
 .lb-name{flex:1;font-size:11px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lb-bar-w{width:50px;height:4px;background:var(--bg2);flex-shrink:0}
 .lb-bar-f{height:100%;background:var(--blue);transition:width .5s}.lb-bar-f.l{background:var(--gold)}
+.lb-bar-f.proj{background:var(--purple);opacity:.7}.lb-bar-f.proj.l{background:rgba(201,168,76,.55)}
 .lb-pct{font-family:var(--mono);font-size:12px;font-weight:700;width:52px;text-align:right;flex-shrink:0}
 .lb-delta{font-family:var(--mono);font-size:10px;width:36px;text-align:right;flex-shrink:0;color:var(--tx2)}
 .lb-bonus{font-family:var(--mono);font-size:9px;width:28px;text-align:right;flex-shrink:0;color:var(--green)}
+.lb-proj-banner{text-align:center;font-size:9px;color:var(--purple);padding:3px 0;background:rgba(142,68,173,.05);border-bottom:1px solid rgba(142,68,173,.2);letter-spacing:.1em;text-transform:uppercase}
 
 /* Notif bar */
 #notif{position:fixed;bottom:0;left:0;right:0;height:22px;background:var(--bg1);border-top:1px solid var(--br);display:flex;align-items:center;padding:0 12px;font-family:var(--mono);font-size:10px;color:var(--tx2);z-index:999;overflow:hidden}
@@ -237,7 +251,7 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
     <div class="tb-right">
       <span class="tb-stat">FASE <span class="tb-val c-gold" id="t-phase">—</span></span>
       <span class="tb-stat">STATO <span class="tb-val c-blue" id="t-stato">IN ATTESA</span></span>
-      <span class="tb-stat">DISTRETTI <span class="tb-val mono" id="t-dist">0/0</span></span>
+      <span class="tb-stat">SCRUTINATI <span class="tb-val mono" id="t-dist">0/0</span></span>
       <span class="tb-stat">PESO TOT. <span class="tb-val mono c-dim" id="t-pesoTot">—</span></span>
     </div>
   </header>
@@ -246,7 +260,13 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
 
     <!-- ══ LEFT: MAP ══ -->
     <section class="col">
-      <div class="col-hdr">MAPPA DISTRETTI <span class="hdr-badge" id="d-badge">0</span></div>
+      <div class="col-hdr">
+        MAPPA DISTRETTI <span class="hdr-badge" id="d-badge">0</span>
+        <div style="display:flex;gap:3px;margin-left:auto">
+          <button class="btn-sm" id="btn-sel-all" style="font-size:9px;padding:2px 5px">TUTTI</button>
+          <button class="btn-sm" id="btn-sel-none" style="font-size:9px;padding:2px 5px">NESSUNO</button>
+        </div>
+      </div>
       <div id="district-grid"></div>
       <div id="inspector">
         <div class="insp-hdr">// DISTRICT INSPECTOR</div>
@@ -264,11 +284,13 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
         </div>
       </div>
       <div id="scrutiny-ctrl">
-        <button class="btn-prim" id="btn-start" disabled>▶ INIZIA SCRUTINIO</button>
+        <button class="btn-survey" id="btn-survey">⊙ SONDAGGIO</button>
+        <button class="btn-prim" id="btn-start" disabled>▶ SCRUTINIO</button>
         <button class="btn-sec"  id="btn-reset">RESET</button>
         <span class="mono c-dim" id="step-lbl" style="font-size:10px;margin-left:auto"></span>
       </div>
-      <div id="results-box"><div class="empty-msg" style="margin-top:16px">Vai al tab <strong>GENERALI</strong> e premi <strong>INIZIA SCRUTINIO</strong> per avviare lo spoglio.</div></div>
+      <div id="proj-indicator">⊙ MODALITÀ PROIEZIONE — DATI NON DEFINITIVI</div>
+      <div id="results-box"><div class="empty-msg" style="margin-top:16px">Lancia un <strong>SONDAGGIO</strong> per una proiezione, oppure seleziona i distretti (☑) e premi <strong>SCRUTINIO</strong> per i risultati ufficiali.</div></div>
       <div id="ticker-sect">
         <div id="ticker-hdr"><span class="t-dot"></span>LIVE FEED</div>
         <div id="ticker-log"></div>
@@ -304,13 +326,13 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
 
         <!-- GENERALI -->
         <div class="tab-pane" id="pane-generali">
-          <div class="tab-info">Fase elettorale principale su tutti i <span class="mono c-gold" id="gen-dist-count">33</span> distretti. Lo scrutinio integra i modificatori di Hitori e i bonus dai duelli primari. Premi <strong>INIZIA SCRUTINIO</strong> nella colonna centrale.</div>
+          <div class="tab-info">Fase elettorale principale su <span class="mono c-gold" id="gen-dist-count">33</span> distretti. Seleziona i distretti (☑) nella mappa e premi <strong>SCRUTINIO</strong>. Puoi aggiungere distretti in più round successivi. <strong>SONDAGGIO</strong> genera una proiezione non definitiva su tutti i distretti.</div>
           <div id="gen-rows"></div>
         </div>
 
         <!-- BALLOTTAGGIO -->
         <div class="tab-pane" id="pane-ballottaggio">
-          <div class="tab-info">Se nessun candidato supera il <span class="mono c-red" id="ball-thr-txt">30%</span>, vengono selezionati i 2 Dei e le 2 Dee in testa. Il ballottaggio ri-esegue uno spoglio rapido solo tra i 4 qualificati per decretare Re e Regina dell'Olimpo.</div>
+          <div class="tab-info">Se nessun candidato supera il <span class="mono c-red" id="ball-thr-txt">30%</span>, vengono selezionati i 2 Dei e le 2 Dee in testa. Il ballottaggio ri-esegue uno spoglio rapido solo tra i 4 qualificati.</div>
           <div id="ballot-content"><div class="empty-msg">Esegui lo scrutinio Generali per sbloccare il Ballottaggio.</div></div>
         </div>
 
@@ -345,45 +367,64 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
   </div>
 </div>
 
-<div id="notif"><span id="notif-inner">NOMOS ENGINE v2.0 // Sistema Psefologico Olimpico — 33 Distretti Attivi // OLYMPUS ELECTORAL COMMISSION // Ogni voto è una preghiera, ogni preghiera è un voto // Modificatori di Hitori attivi — intervieni con saggezza // Sistema riservato alla Commissione Elettorale</span></div>
+<div id="notif"><span id="notif-inner">NOMOS ENGINE v2.0 // Sistema Psefologico Olimpico — 33 Distretti Attivi // OLYMPUS ELECTORAL COMMISSION // Ogni voto è una preghiera, ogni preghiera è un voto // Parametri: Establishment · Populismo Rurale · Militarismo · Intelletto Greco · Outcast degli Inferi // Sistema riservato alla Commissione Elettorale</span></div>
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   NOMOS ENGINE v2.0 — Full Logic
+   NOMOS ENGINE v2.0 — Full Logic (Upgrade: 5-param + Survey/Selective Scrutiny)
 ═══════════════════════════════════════════════════════════════ */
 const NE = (() => {
 
   /* ── Challengers per duelli primari ── */
   const CHALLENGERS = {
-    zeus:      {nome:'Crono',     titolo:'Signore del Tempo',     forza:0.82},
-    era:       {nome:'Nemesi',    titolo:'Dea della Retribuzione',forza:0.68},
-    poseidone: {nome:'Tritone',   titolo:'Araldo dei Mari',       forza:0.71},
-    demetra:   {nome:'Gaia',      titolo:'Madre Terra',           forza:0.78},
-    ares:      {nome:'Enyo',      titolo:'Dea del Furore',        forza:0.73},
-    atena:     {nome:'Medusa',    titolo:'Gorgone Primordiale',   forza:0.65},
-    apollo:    {nome:'Helios',    titolo:'Dio del Sole Antico',   forza:0.73},
-    artemide:  {nome:'Selene',    titolo:'Dea della Luna',        forza:0.70},
-    afrodite:  {nome:'Psiche',    titolo:'Anima Immortalata',     forza:0.66},
-    efesto:    {nome:'Dedalo',    titolo:'Artefice Mortale',      forza:0.70},
-    hermes:    {nome:'Pan',       titolo:'Dio dei Boschi',        forza:0.67},
-    dioniso:   {nome:'Sileno',    titolo:'Vecchio Satiro Saggio', forza:0.72},
-    estia:     {nome:'Vesta',     titolo:'Fiamma di Roma',        forza:0.68},
-    persefone: {nome:'Ecate',     titolo:'Dea della Magia Oscura',forza:0.76}
+    zeus:      {nome:'Crono',     titolo:'Signore del Tempo',          forza:0.82},
+    era:       {nome:'Nemesi',    titolo:'Dea della Retribuzione',     forza:0.68},
+    poseidone: {nome:'Tritone',   titolo:'Araldo dei Mari',            forza:0.71},
+    demetra:   {nome:'Gaia',      titolo:'Madre Terra',                forza:0.78},
+    ares:      {nome:'Enyo',      titolo:'Dea del Furore',             forza:0.73},
+    atena:     {nome:'Medusa',    titolo:'Gorgone Primordiale',        forza:0.65},
+    apollo:    {nome:'Helios',    titolo:'Dio del Sole Antico',        forza:0.73},
+    artemide:  {nome:'Selene',    titolo:'Dea della Luna',             forza:0.70},
+    afrodite:  {nome:'Psiche',    titolo:'Anima Immortalata',          forza:0.66},
+    efesto:    {nome:'Dedalo',    titolo:'Artefice Mortale',           forza:0.70},
+    hermes:    {nome:'Pan',       titolo:'Dio dei Boschi',             forza:0.67},
+    dioniso:   {nome:'Sileno',    titolo:'Vecchio Satiro Saggio',      forza:0.72},
+    ade:       {nome:'Caronte',   titolo:'Traghettatore delle Anime',  forza:0.75},
+    persefone: {nome:'Ecate',     titolo:'Dea della Magia Oscura',     forza:0.76}
   };
 
+  /* ── Mapping categoria demografica → parametro politico ── */
+  const PARAM_MAP = {
+    olimpici:   'establishment',
+    minori:     'establishment',
+    ninfe:      'populism_rural',
+    satiri:     'populism_rural',
+    ciclopi:    'militarism',
+    centauri:   'militarism',
+    semidei_ro: 'militarism',
+    semidei_gr: 'intellect_grec',
+    vento:      'intellect_grec',
+    titani:     'underworld_outcast'
+  };
+
+  /* Distretti speciali dove underworld_outcast riceve un bonus innato */
+  const UNDERWORLD_BONUS_DIST = new Set(['D31', 'D32', 'D33']);
+
   /* ── State ── */
-  let cfg         = null;
-  let distRes     = {};   // {distId: {catId_godId: pct, godId: pct}}
-  let finalScores = {};   // {godId: pct}
-  let ballotFinal = {};   // {godId: pct} — ballottaggio
-  let hitori      = {};   // {distId: {godId: modifier_as_%}}
-  let affinBonus  = {};   // {godId: 0.08 or 0}
-  let duels       = {};   // {godId: {rival,won,done}}
-  let ballotRes   = null; // {re:{...}, regina:{...}}
-  let running     = false;
-  let done        = false;
-  let phase       = 'primarie';
-  let selDist     = null;
+  let cfg            = null;
+  let distRes        = {};   // {distId: {catId_godId: pct, godId: pct}} — ufficiali
+  let finalScores    = {};   // aggregate dagli scrutinizedSet
+  let ballotFinal    = {};
+  let hitori         = {};   // {distId: {godId: modifier%}}
+  let affinBonus     = {};   // {godId: 0.08 or 0}
+  let duels          = {};
+  let ballotRes      = null;
+  let running        = false;
+  let done           = false;
+  let projMode       = false;  // true = mostrando proiezione sondaggio
+  let scrutinizedSet = new Set(); // distID ufficialmente scrutinati
+  let phase          = 'primarie';
+  let selDist        = null;
   const PHASES = {primarie:'PRIMARIE',generali:'GENERALI',ballottaggio:'BALLOTTAGGIO RE/REGINA',coalizioni:'COALIZIONI'};
 
   /* ── Boot ── */
@@ -419,12 +460,28 @@ const NE = (() => {
     buildDuelGrid();
 
     $('btn-start').addEventListener('click', startScrutiny);
+    $('btn-survey').addEventListener('click', startSurvey);
     $('btn-reset').addEventListener('click', resetScrutiny);
     $('btn-copy').addEventListener('click', copyRP);
+    $('btn-sel-all').addEventListener('click', () => selectAllDistricts(true));
+    $('btn-sel-none').addEventListener('click', () => selectAllDistricts(false));
     document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
 
     switchTab('primarie');
-    tick(`Pronti: ${cfg.candidati.length} candidati, ${cfg.distretti.length} distretti.`, 'ok');
+    tick(`Pronti: ${cfg.candidati.length} candidati (params 5D), ${cfg.distretti.length} distretti.`, 'ok');
+  }
+
+  /* ══════════════════════════════════════
+     PARAM-BASED AFFINITY ENGINE
+  ══════════════════════════════════════ */
+  function getAffinity(god, catId, distId) {
+    const paramName = PARAM_MAP[catId] || 'establishment';
+    let val = (god.params && god.params[paramName] != null) ? god.params[paramName] : 1.0;
+    /* Bonus infernale nei distretti speciali */
+    if (paramName === 'underworld_outcast' && UNDERWORLD_BONUS_DIST.has(distId)) {
+      val = Math.min(2.0, val * 1.45);
+    }
+    return val;
   }
 
   /* ══════════════════════════════════════
@@ -435,7 +492,22 @@ const NE = (() => {
     cfg.distretti.forEach(d => {
       const btn = document.createElement('button');
       btn.className = 'd-btn'; btn.dataset.id = d.id;
-      btn.innerHTML = `<span class="d-id">${d.id}</span><span class="d-nm">${d.nome.split(' ')[0]}</span>`;
+
+      const chk = document.createElement('input');
+      chk.type = 'checkbox'; chk.className = 'd-scrutiny-chk'; chk.dataset.id = d.id;
+      chk.addEventListener('click', e => {
+        e.stopPropagation();
+        if (!scrutinizedSet.has(d.id)) {
+          btn.classList.toggle('scrutiny-sel', chk.checked);
+        }
+      });
+
+      const idSpan = document.createElement('span'); idSpan.className = 'd-id'; idSpan.textContent = d.id;
+      const nmSpan = document.createElement('span'); nmSpan.className = 'd-nm'; nmSpan.textContent = d.nome.split(' ')[0];
+
+      btn.appendChild(chk);
+      btn.appendChild(idSpan);
+      btn.appendChild(nmSpan);
       btn.addEventListener('click', () => selectDistrict(d.id));
       g.appendChild(btn);
     });
@@ -447,6 +519,30 @@ const NE = (() => {
     renderInspector(id);
   }
 
+  function selectAllDistricts(selectAll) {
+    document.querySelectorAll('.d-scrutiny-chk').forEach(chk => {
+      if (!scrutinizedSet.has(chk.dataset.id)) {
+        chk.checked = selectAll;
+        const btn = document.querySelector(`.d-btn[data-id="${chk.dataset.id}"]`);
+        if (btn) btn.classList.toggle('scrutiny-sel', selectAll);
+      }
+    });
+  }
+
+  function getCheckedDistrictIds() {
+    return [...document.querySelectorAll('.d-scrutiny-chk:checked')].map(c => c.dataset.id);
+  }
+
+  function updateDistrictButtonColors() {
+    document.querySelectorAll('.d-btn').forEach(btn => {
+      const id = btn.dataset.id;
+      const isScrutinized = scrutinizedSet.has(id);
+      btn.classList.toggle('scrutinized', isScrutinized);
+      const chk = btn.querySelector('.d-scrutiny-chk');
+      if (chk && isScrutinized) { chk.checked = true; chk.disabled = true; }
+    });
+  }
+
   /* ══════════════════════════════════════
      INSPECTOR
   ══════════════════════════════════════ */
@@ -454,7 +550,7 @@ const NE = (() => {
     const d   = cfg.distretti.find(x => x.id === id);
     const res = distRes[id] || null;
     let h = `<div class="insp-name">${d.id} — ${d.nome}</div>
-             <div class="insp-sub">${d.regione} · Votanti: ${d.votanti.toLocaleString('it')} · Peso: ${d.peso_politico.toLocaleString('it')}</div>
+             <div class="insp-sub">${d.regione} · Votanti: ${d.votanti.toLocaleString('it')} · Peso: ${d.peso_politico.toLocaleString('it')}${scrutinizedSet.has(id) ? ' · <span style="color:var(--green)">SCRUTINATO</span>' : ' · <span style="color:var(--tx2)">In attesa</span>'}</div>
              <div class="insp-desc">${d.descrizione}</div>
              <div class="insp-st">COMPOSIZIONE DEMOGRAFICA</div>`;
 
@@ -511,10 +607,9 @@ const NE = (() => {
     } else {
       hitori[distId][godId] = num;
     }
-    /* Mark district button if has modifiers */
     const hasAny = Object.keys(hitori[distId]||{}).length > 0;
     const btn = document.querySelector(`.d-btn[data-id="${distId}"]`);
-    if (btn) btn.classList.toggle('has-hitori', hasAny);
+    if (btn && !scrutinizedSet.has(distId)) btn.classList.toggle('has-hitori', hasAny);
     tick(`[Hitori] ${cfg.distretti.find(d=>d.id===distId)?.nome} · ${cfg.candidati.find(g=>g.id===godId)?.nome}: ${val||'rimosso'}`, '');
   }
 
@@ -553,7 +648,6 @@ const NE = (() => {
     cfg.candidati.forEach(g => {
       const ch   = CHALLENGERS[g.id];
       const d    = duels[g.id];
-      const res  = d ? (d.won ? `<span class="c-green">VINCE +8%</span>` : `<span class="c-red">PERDE</span>`) : '';
       const row  = document.createElement('div');
       row.className = 'duel-row'; row.id = `duel-${g.id}`;
       row.innerHTML = `
@@ -569,109 +663,175 @@ const NE = (() => {
     const god = cfg.candidati.find(g => g.id === godId);
     const ch  = CHALLENGERS[godId];
     if (!god || !ch) return;
-    const godStr  = Object.values(god.affinita).reduce((s,v)=>s+v,0) / Object.keys(god.affinita).length;
+    /* godStr = media dei 5 parametri (range 0-2); winProb = godStr / (godStr + challenger.forza) */
+    const vals   = Object.values(god.params || {});
+    const godStr = vals.length ? vals.reduce((s,v)=>s+v,0)/vals.length : 1.0;
     const winProb = godStr / (godStr + ch.forza);
     const won     = Math.random() < winProb;
     duels[godId]  = { rival: ch.nome, won };
     affinBonus[godId] = won ? 0.08 : 0;
 
-    /* Update row */
     const row = $(`duel-${godId}`);
     if (row) {
       row.querySelector('.duel-result').className = `duel-result ${won?'win':'lose'}`;
       row.querySelector('.duel-result').innerHTML = won ? `<span class="c-green">+8% aff.</span>` : `<span class="c-red">—</span>`;
       row.querySelector('.duel-btn').disabled = true;
     }
-    buildLeaderboard(done ? finalScores : null);
+    const displayScores = scrutinizedSet.size > 0 ? finalScores : null;
+    buildLeaderboard(displayScores, projMode && !displayScores);
     tick(`DUELLO: ${god.nome} vs ${ch.nome} — ${won ? god.nome.toUpperCase()+' VINCE! (+8% affinità globale)' : ch.nome.toUpperCase()+' VINCE. (nessun bonus)'}`, won ? 'ok' : '');
   }
 
   /* ══════════════════════════════════════
-     CALCULATION ENGINE
+     CORE COMPUTATION — per singolo distretto
   ══════════════════════════════════════ */
-  function computeScores(candidateSubset) {
-    const cands = candidateSubset || cfg.candidati;
-    const distS = {};
-    distRes = {};
+  function computeDistrictScores(dist, cands, target) {
+    /* target: oggetto su cui scrivere i risultati (distRes o temp) */
+    target[dist.id] = {};
+    const wSum = {};
+    cands.forEach(g => { wSum[g.id] = 0; });
 
-    cfg.distretti.forEach(dist => {
-      distRes[dist.id] = {};
-      const wSum = {};
-      cands.forEach(g => { wSum[g.id] = 0; });
-
-      dist.categorie.forEach(cat => {
-        const raw = {};
-        cands.forEach(g => {
-          const aff      = Math.min(1, (g.affinita[cat.id] ?? 0.3) + (affinBonus[g.id] ?? 0));
-          const rng      = (Math.random() * 0.06) - 0.03;
-          const hitoriV  = ((hitori[dist.id]?.[g.id] ?? 0)) / 100;
-          raw[g.id]      = Math.max(0.001, aff + rng + hitoriV);
-        });
-        const catTot = cands.reduce((s,g)=>s+raw[g.id],0);
-        cands.forEach(g => {
-          const pct = catTot > 0 ? (raw[g.id]/catTot)*100 : 0;
-          distRes[dist.id][`${cat.id}_${g.id}`] = pct;
-          wSum[g.id] += pct * cat.peso;
-        });
+    dist.categorie.forEach(cat => {
+      const raw = {};
+      cands.forEach(g => {
+        const aff     = getAffinity(g, cat.id, dist.id);
+        const bonus   = affinBonus[g.id] ?? 0;
+        const rng     = (Math.random() * 0.06) - 0.03;
+        const hitoriV = ((hitori[dist.id]?.[g.id] ?? 0)) / 100;
+        raw[g.id]     = Math.max(0.01, (aff + bonus) * (1 + rng) + hitoriV);
       });
-
-      const distTot = cands.reduce((s,g)=>s+wSum[g.id],0);
-      cands.forEach(g => { distRes[dist.id][g.id] = distTot > 0 ? (wSum[g.id]/distTot)*100 : 0; });
-      distS[dist.id] = {};
-      cands.forEach(g => { distS[dist.id][g.id] = distRes[dist.id][g.id]; });
+      const catTot = cands.reduce((s,g)=>s+raw[g.id],0);
+      cands.forEach(g => {
+        const pct = catTot > 0 ? (raw[g.id]/catTot)*100 : 0;
+        target[dist.id][`${cat.id}_${g.id}`] = pct;
+        wSum[g.id] += pct * cat.peso;
+      });
     });
 
-    const agg = {};
+    const distTot = cands.reduce((s,g)=>s+wSum[g.id],0);
+    cands.forEach(g => { target[dist.id][g.id] = distTot > 0 ? (wSum[g.id]/distTot)*100 : 0; });
+  }
+
+  /* Calcola e salva in distRes ufficiale per i distretti forniti */
+  function computeNewDistrictScores(newDists) {
+    const cands = cfg.candidati;
+    newDists.forEach(dist => computeDistrictScores(dist, cands, distRes));
+  }
+
+  /* Aggrega i risultati da un oggetto resMap per i distretti indicati */
+  function aggregateDistResults(resMap, dists) {
+    if (!dists || !dists.length) return {};
+    const cands = cfg.candidati;
+    const agg   = {};
     cands.forEach(g => {
-      const s = cfg.distretti.reduce((acc,d)=>acc+(distS[d.id][g.id]||0),0);
-      agg[g.id] = s / cfg.distretti.length;
+      const s = dists.reduce((acc,d) => acc + (resMap[d.id]?.[g.id] || 0), 0);
+      agg[g.id] = s / dists.length;
     });
-    const ft = cands.reduce((s,g)=>s+agg[g.id],0);
+    const ft = cands.reduce((s,g) => s + agg[g.id], 0);
     cands.forEach(g => { agg[g.id] = ft > 0 ? (agg[g.id]/ft)*100 : 0; });
     return agg;
   }
 
-  function computePartial(numDist, cands) {
-    const p = {};
-    (cands||cfg.candidati).forEach(g => { p[g.id] = 0; });
-    for (let i = 0; i < numDist && i < cfg.distretti.length; i++) {
-      const d = cfg.distretti[i];
-      (cands||cfg.candidati).forEach(g => { p[g.id] += (distRes[d.id]?.[g.id]||0); });
-    }
-    (cands||cfg.candidati).forEach(g => { p[g.id] /= numDist; });
-    const pt = (cands||cfg.candidati).reduce((s,g)=>s+p[g.id],0);
-    (cands||cfg.candidati).forEach(g => { p[g.id] = pt>0?(p[g.id]/pt)*100:0; });
-    return p;
+  /* Proiezione su TUTTI i distretti senza toccare distRes (per survey) */
+  function computeSurveyScores() {
+    const cands = cfg.candidati;
+    const tempRes = {};
+    cfg.distretti.forEach(dist => {
+      if (scrutinizedSet.has(dist.id)) {
+        /* Usa i risultati ufficiali già scrutinati */
+        tempRes[dist.id] = distRes[dist.id];
+      } else {
+        computeDistrictScores(dist, cands, tempRes);
+      }
+    });
+    return { tempRes, agg: aggregateDistResults(tempRes, cfg.distretti) };
+  }
+
+  /* Calcolo temporaneo per ballottaggio (non tocca distRes) */
+  function computeScoresTemp(candidateSubset) {
+    const cands = candidateSubset || cfg.candidati;
+    const tempRes = {};
+    cfg.distretti.forEach(dist => computeDistrictScores(dist, cands, tempRes));
+    return aggregateDistResults(tempRes, cfg.distretti);
+  }
+
+  /* Parziale durante animazione scrutinio */
+  function computePartialAnim(di, newDists, prevDists) {
+    const partialNewDists = newDists.slice(0, di);
+    const allPartial = [...prevDists, ...partialNewDists];
+    if (!allPartial.length) return {};
+    return aggregateDistResults(distRes, allPartial);
   }
 
   /* ══════════════════════════════════════
-     SCRUTINY ANIMATION
+     SONDAGGIO NAZIONALE (PROIEZIONE)
+  ══════════════════════════════════════ */
+  function startSurvey() {
+    if (running) return;
+    projMode = true;
+    $('btn-survey').disabled = true;
+    $('proj-indicator').style.display = 'block';
+    tick('═══ SONDAGGIO NAZIONALE AVVIATO ═══', 'hl');
+
+    const { tempRes, agg } = computeSurveyScores();
+
+    renderResultBars(agg, false, true);
+    buildLeaderboard(agg, true);
+    updateGeneraliTab(agg, true);
+
+    tick(`Sondaggio completato — ${cfg.distretti.length} distretti analizzati (${scrutinizedSet.size} ufficiali + ${cfg.distretti.length - scrutinizedSet.size} proiettati).`, 'ok');
+    $('btn-survey').disabled = false;
+    generateRP(true, agg);
+  }
+
+  /* ══════════════════════════════════════
+     SCRUTINIO SELETTIVO
   ══════════════════════════════════════ */
   function startScrutiny() {
-    if (running || done || phase !== 'generali') return;
-    running = true;
-    $('btn-start').disabled = true;
+    if (running || phase !== 'generali') return;
+
+    const selectedIds = getCheckedDistrictIds();
+    if (!selectedIds.length) {
+      tick('❌ Seleziona almeno un distretto (☑) per avviare lo scrutinio ufficiale.', 'err');
+      return;
+    }
+    const newIds   = selectedIds.filter(id => !scrutinizedSet.has(id));
+    if (!newIds.length) {
+      tick('⚠ Tutti i distretti selezionati sono già stati scrutinati ufficialmente.', 'err');
+      return;
+    }
+
+    const newDists  = cfg.distretti.filter(d => newIds.includes(d.id));
+    const prevDists = cfg.distretti.filter(d => scrutinizedSet.has(d.id));
+
+    running  = true;
+    projMode = false;
+    $('btn-start').disabled  = true;
+    $('btn-survey').disabled = true;
+    $('proj-indicator').style.display = 'none';
     setText('t-stato', 'SCRUTINIO');
     document.getElementById('t-stato').className = 'tb-val c-red';
-    tick('═══ SCRUTINIO GENERALI AVVIATO ═══','hl');
+    tick(`═══ SCRUTINIO UFFICIALE AVVIATO — ${newIds.length} distretti selezionati ═══`, 'hl');
 
-    /* pre-compute all scores */
-    finalScores = computeScores();
+    /* Pre-compute */
+    computeNewDistrictScores(newDists);
+    newIds.forEach(id => scrutinizedSet.add(id));
 
     let di = 0;
     function step() {
       if (!running) return;
-      if (di < cfg.distretti.length) {
-        const d = cfg.distretti[di];
+      if (di < newDists.length) {
+        const d      = newDists[di];
         const winner = cfg.candidati.map(g=>({nome:g.nome,v:distRes[d.id][g.id]||0})).sort((a,b)=>b.v-a.v)[0];
-        tick(`${d.id} ${d.nome} → ${winner.nome} (${winner.v.toFixed(1)}%)`, '');
-        renderResultBars(computePartial(di+1), false);
-        const pct = Math.round((di+1)/cfg.distretti.length*100);
-        $('prog-bar').style.width = pct+'%'; setText('prog-lbl', pct+'%');
-        setText('t-dist', `${di+1}/${cfg.distretti.length}`);
-        setText('step-lbl', `D${di+1}/${cfg.distretti.length}`);
+        tick(`✓ ${d.id} ${d.nome} → ${winner.nome} (${winner.v.toFixed(1)}%)`, '');
+        renderResultBars(computePartialAnim(di+1, newDists, prevDists), false, false);
+        const totalDone = prevDists.length + di + 1;
+        const pct = Math.round(totalDone / cfg.distretti.length * 100);
+        $('prog-bar').style.width = pct + '%'; setText('prog-lbl', pct + '%');
+        setText('t-dist', `${totalDone}/${cfg.distretti.length}`);
+        setText('step-lbl', `+${di+1}/${newDists.length}`);
         di++;
-        setTimeout(step, cfg.distretti.length > 10 ? 250 : 600);
+        setTimeout(step, newDists.length > 10 ? 250 : 600);
       } else {
         finishScrutiny();
       }
@@ -680,31 +840,52 @@ const NE = (() => {
   }
 
   function finishScrutiny() {
-    running = false; done = true;
-    renderResultBars(finalScores, true);
-    $('prog-bar').style.width = '100%'; setText('prog-lbl', '100%');
-    setText('t-stato','COMPLETATO'); document.getElementById('t-stato').className = 'tb-val c-green';
-    setText('step-lbl','');
-    tick('═══ SCRUTINIO COMPLETATO ═══','ok');
-    const s = sortedCands();
+    running = false;
+    done    = scrutinizedSet.size === cfg.distretti.length;
+
+    const scrutDists = cfg.distretti.filter(d => scrutinizedSet.has(d.id));
+    finalScores = aggregateDistResults(distRes, scrutDists);
+
+    renderResultBars(finalScores, true, false);
+    const pct = Math.round(scrutinizedSet.size / cfg.distretti.length * 100);
+    $('prog-bar').style.width = pct + '%'; setText('prog-lbl', pct + '%');
+    setText('t-dist', `${scrutinizedSet.size}/${cfg.distretti.length}`);
+    setText('t-stato', done ? 'COMPLETATO' : 'PARZIALE');
+    document.getElementById('t-stato').className = done ? 'tb-val c-green' : 'tb-val c-gold';
+    setText('step-lbl', '');
+
+    const label = done ? '═══ SCRUTINIO COMPLETATO ═══' : `═══ SCRUTINIO PARZIALE — ${scrutinizedSet.size}/${cfg.distretti.length} distretti scrutinati ═══`;
+    tick(label, 'ok');
+    const s = sortedCands(finalScores);
     s.slice(0,3).forEach((c,i) => tick(`#${i+1} ${c.nome}: ${c.pct.toFixed(2)}%`, i===0?'hl':''));
-    buildLeaderboard(finalScores);
-    updateGeneraliTab();
+
+    buildLeaderboard(finalScores, false);
+    updateGeneraliTab(finalScores, false);
     updateBallottaggio();
     updateCoalizioniTab();
+    updateDistrictButtonColors();
     if (selDist) renderInspector(selDist);
-    generateRP();
+    generateRP(false, finalScores);
+
+    $('btn-start').disabled  = done;
+    $('btn-survey').disabled = false;
   }
 
-  function renderResultBars(scores, isFinal) {
+  /* ══════════════════════════════════════
+     RENDER RESULT BARS
+  ══════════════════════════════════════ */
+  function renderResultBars(scores, isFinal, isProjection) {
+    if (!scores || !Object.keys(scores).length) return;
     const sorted = Object.entries(scores).sort(([,a],[,b])=>b-a);
     const leader = sorted[0];
     sorted.forEach(([gid, pct], rank) => {
       const rk = $(`rrk-${gid}`), bar = $(`rbar-${gid}`), pc = $(`rpct-${gid}`), dl = $(`rdel-${gid}`);
       if (!rk) return;
       rk.textContent = rank+1; rk.className = `res-rank${rank<3?` r${rank+1}`:''}`;
-      bar.style.width = pct.toFixed(2)+'%'; bar.className = `res-bar-fill${rank===0?' leader':''}`;
-      pc.textContent = pct.toFixed(2)+'%'; pc.style.color = rank===0?'var(--gold)':'';
+      bar.style.width = pct.toFixed(2)+'%';
+      bar.className = `res-bar-fill${rank===0?' leader':''}${isProjection?' proj':''}`;
+      pc.textContent = pct.toFixed(2)+'%';
+      pc.style.color = rank===0 ? (isProjection ? 'var(--purple)' : 'var(--gold)') : '';
       if (isFinal && rank>0 && leader) { dl.textContent=(pct-leader[1]).toFixed(1)+'%'; }
     });
     const box = $('results-box');
@@ -714,19 +895,24 @@ const NE = (() => {
   /* ══════════════════════════════════════
      LEADERBOARD
   ══════════════════════════════════════ */
-  function buildLeaderboard(scores) {
+  function buildLeaderboard(scores, isProjection) {
     const list = $('lb-list');
-    if (!scores) { list.innerHTML='<div class="empty-msg" style="padding:18px">In attesa dei dati…</div>'; return; }
+    if (!scores || !Object.keys(scores).length) {
+      list.innerHTML='<div class="empty-msg" style="padding:18px">In attesa dei dati…</div>';
+      return;
+    }
     const sorted = sortedCands(scores);
     const top    = sorted[0]?.pct||1;
-    list.innerHTML = sorted.map((c,i) => {
+    const banner = isProjection ? '<div class="lb-proj-banner">⊙ PROIEZIONE SONDAGGIO</div>' : '';
+    list.innerHTML = banner + sorted.map((c,i) => {
       const bonus = affinBonus[c.id] ? `+8%` : '';
+      const isProj = isProjection;
       return `<div class="lb-row">
         <span class="lb-rank${i<3?` r${i+1}`:''}">${i+1}</span>
         <span class="lb-g ${c.genere}">${c.genere}</span>
         <span class="lb-name">${c.nome}</span>
-        <div class="lb-bar-w"><div class="lb-bar-f${i===0?' l':''}" style="width:${(c.pct/top*100).toFixed(1)}%"></div></div>
-        <span class="lb-pct${i===0?' c-gold':''}">${c.pct.toFixed(2)}%</span>
+        <div class="lb-bar-w"><div class="lb-bar-f${i===0?' l':''}${isProj?' proj':''}" style="width:${(c.pct/top*100).toFixed(1)}%"></div></div>
+        <span class="lb-pct${i===0?(isProj?' c-purple':' c-gold'):''}">${c.pct.toFixed(2)}%</span>
         <span class="lb-delta">${i>0?(c.pct-sorted[0].pct).toFixed(1)+'%':''}</span>
         <span class="lb-bonus">${bonus}</span>
       </div>`;
@@ -736,15 +922,17 @@ const NE = (() => {
   /* ══════════════════════════════════════
      TAB: GENERALI
   ══════════════════════════════════════ */
-  function updateGeneraliTab() {
-    const sorted = sortedCands();
+  function updateGeneraliTab(scores, isProjection) {
+    const useScores = scores || finalScores;
+    if (!useScores || !Object.keys(useScores).length) return;
+    const sorted = sortedCands(useScores);
     const top    = sorted[0]?.pct||1;
     $('gen-rows').innerHTML = sorted.map((c,i) => `
       <div class="gen-row">
         <span class="gen-rank${i<3?` r${i+1}`:''}">${i+1}</span>
         <span class="gen-name">${c.nome}</span>
         <div class="gen-bar-w"><div class="gen-bar-f${i===0?' l':''}" style="width:${(c.pct/top*100).toFixed(1)}%"></div></div>
-        <span class="gen-pct ${i===0?'c-gold':'c-blue'}">${c.pct.toFixed(2)}%</span>
+        <span class="gen-pct ${i===0?(isProjection?'c-purple':'c-gold'):'c-blue'}">${c.pct.toFixed(2)}%${isProjection?' ⊙':''}</span>
         <span class="gen-delta">${i>0?(c.pct-sorted[0].pct).toFixed(1)+'%':''}</span>
       </div>`).join('');
   }
@@ -753,13 +941,16 @@ const NE = (() => {
      TAB: BALLOTTAGGIO
   ══════════════════════════════════════ */
   function updateBallottaggio() {
+    if (!finalScores || !Object.keys(finalScores).length) return;
     const soglia = cfg.elezione.soglia_ballottaggio;
-    const sorted = sortedCands();
+    const sorted = sortedCands(finalScores);
     const leader = sorted[0];
     const bc     = $('ballot-content');
+    const partial = scrutinizedSet.size < cfg.distretti.length;
+    const partialNote = partial ? `<div style="font-size:9px;color:var(--gold);border:1px solid rgba(201,168,76,.3);padding:3px 6px;margin-bottom:6px">⚠ Dati parziali — ${scrutinizedSet.size}/${cfg.distretti.length} distretti scrutinati.</div>` : '';
 
     if (leader.pct >= soglia) {
-      bc.innerHTML = `
+      bc.innerHTML = partialNote + `
         <div class="ballot-alert win">✓ VINCITORE DIRETTO — ${leader.nome.toUpperCase()} con ${leader.pct.toFixed(2)}%<br>Supera la soglia del ${soglia}%. Nessun ballottaggio.</div>
         <div class="ballot-winner re">
           <span class="ballot-winner-title">RE DELL'OLIMPO</span>
@@ -770,7 +961,7 @@ const NE = (() => {
     } else {
       const top2M = sorted.filter(c=>c.genere==='M').slice(0,2);
       const top2F = sorted.filter(c=>c.genere==='F').slice(0,2);
-      bc.innerHTML = `
+      bc.innerHTML = partialNote + `
         <div class="ballot-alert run">✗ Nessun candidato supera il ${soglia}% — Ballottaggio attivato.</div>
         <div class="ballot-sect">
           <div class="ballot-sect-title">♂ REI — TOP 2 DEI</div>
@@ -786,19 +977,19 @@ const NE = (() => {
   }
 
   function runBallotScrutiny() {
-    if (!done) return;
-    const sorted = sortedCands();
+    if (!finalScores || !Object.keys(finalScores).length) return;
+    const sorted = sortedCands(finalScores);
     const top2M  = sorted.filter(c=>c.genere==='M').slice(0,2);
     const top2F  = sorted.filter(c=>c.genere==='F').slice(0,2);
     const bcands = [...top2M,...top2F].map(c=>cfg.candidati.find(g=>g.id===c.id));
 
     tick('═══ BALLOTTAGGIO AVVIATO ═══','hl');
-    const bScores = computeScores(bcands);
+    const bScores = computeScoresTemp(bcands);
+    ballotFinal   = bScores;
 
     const mSorted = top2M.map(c=>({...c,pct:bScores[c.id]||0})).sort((a,b)=>b.pct-a.pct);
     const fSorted = top2F.map(c=>({...c,pct:bScores[c.id]||0})).sort((a,b)=>b.pct-a.pct);
-    ballotFinal  = bScores;
-    ballotRes    = { re: mSorted[0], regina: fSorted[0] };
+    ballotRes     = { re: mSorted[0], regina: fSorted[0] };
 
     const br = $('ballot-result');
     if (br) {
@@ -817,14 +1008,15 @@ const NE = (() => {
     }
     tick(`PROCLAMATO RE: ${mSorted[0].nome} (${(bScores[mSorted[0].id]||0).toFixed(2)}%)`, 'ok');
     tick(`PROCLAMATA REGINA: ${fSorted[0].nome} (${(bScores[fSorted[0].id]||0).toFixed(2)}%)`, 'ok');
-    generateRP();
+    generateRP(false, finalScores);
   }
 
   /* ══════════════════════════════════════
      TAB: COALIZIONI
   ══════════════════════════════════════ */
   function updateCoalizioniTab() {
-    const sorted = sortedCands();
+    if (!finalScores || !Object.keys(finalScores).length) return;
+    const sorted = sortedCands(finalScores);
     const list   = $('coal-list');
     list.innerHTML = '';
     const wrapper = document.createElement('div');
@@ -860,13 +1052,14 @@ const NE = (() => {
     setText('coal-lbl-51', `${total.toFixed(1)}% / ${s51}%`);
     setText('coal-lbl-66', `${total.toFixed(1)}% / ${s66}%`);
 
-    if (phase === 'coalizioni') generateRP();
+    if (phase === 'coalizioni') generateRP(false, finalScores);
   }
 
   /* ══════════════════════════════════════
      CONTEXT-AWARE RP EXPORT
   ══════════════════════════════════════ */
-  function generateRP() {
+  function generateRP(isSurvey, scores) {
+    const useScores = scores || finalScores;
     const now = new Date();
     const ts  = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()} — ${pad(now.getHours())}:${pad(now.getMinutes())}`;
     let t = '';
@@ -875,40 +1068,45 @@ const NE = (() => {
       t  = `[COMMISSIONE OLIMPICA — ESITO DUELLI PRIMARI]\n[${ts}]\n${'═'.repeat(52)}\n\n`;
       const duelDone = cfg.candidati.filter(g=>duels[g.id]);
       if (!duelDone.length) {
-        t += `Nessun duello primario ancora disputato.\nPremi "DUELLA" accanto a ciascun Dio per avviare il confronto.\n`;
+        t += `Nessun duello primario ancora disputato.\n`;
       } else {
         duelDone.forEach(g => {
           const d  = duels[g.id];
           const ch = CHALLENGERS[g.id];
-          t += `${d.won?'✓':'✗'} ${g.nome.padEnd(12)} vs ${ch.nome.padEnd(14)} → ${d.won?'VINCE (+8% affinità)':'PERDE (nessun bonus)'}\n`;
+          t += `${d.won?'✓':'✗'} ${g.nome.padEnd(12)} vs ${ch.nome.padEnd(16)} → ${d.won?'VINCE (+8% affinità)':'PERDE (nessun bonus)'}\n`;
         });
         const vince = cfg.candidati.filter(g=>duels[g.id]?.won).length;
-        t += `\nDuelli completati: ${duelDone.length}/${cfg.candidati.length} — Vittorie: ${vince}\n`;
+        t += `\nDuelli: ${duelDone.length}/${cfg.candidati.length} — Vittorie: ${vince}\n`;
       }
       t += `\n${'─'.repeat(52)}\nFonte: NOMOS ENGINE v2.0 // Commissione Olimpica\n`;
 
-    } else if (phase === 'generali' || phase === 'ballottaggio' && !ballotRes) {
-      if (!done) { $('rp-ta').value = 'Esegui lo scrutinio Generali per generare il bollettino.'; return; }
-      const sorted = sortedCands();
-      const leader = sorted[0];
-      const soglia = cfg.elezione.soglia_ballottaggio;
-      t  = `[AGENZIA OLIMPICA STAMPA — ${ts}]\n[${cfg.elezione.nome.toUpperCase()} — BOLLETTINO GENERALI]\n${'═'.repeat(52)}\n\n`;
-      if (leader.pct >= soglia) {
-        t += `VINCITORE AL PRIMO TURNO: ${leader.nome.toUpperCase()} — ${leader.pct.toFixed(2)}%\nSupera la soglia del ${soglia}%.\n\n`;
-      } else {
-        t += `NESSUN CANDIDATO SUPERA IL ${soglia}% — BALLOTTAGGIO ATTIVATO.\nIn testa: ${leader.nome} (${leader.pct.toFixed(2)}%)\n\n`;
+    } else if (phase === 'generali' || (phase === 'ballottaggio' && !ballotRes)) {
+      if (!useScores || !Object.keys(useScores).length) {
+        $('rp-ta').value = 'Lancia Sondaggio o Scrutinio per generare il bollettino.'; return;
       }
-      t += `CLASSIFICA — 33 DISTRETTI:\n`;
+      const sorted  = sortedCands(useScores);
+      const leader  = sorted[0];
+      const soglia  = cfg.elezione.soglia_ballottaggio;
+      const modeTag = isSurvey ? 'PROIEZIONE SONDAGGIO' : `SCRUTINIO ${scrutinizedSet.size}/${cfg.distretti.length} DISTRETTI`;
+      t  = `[AGENZIA OLIMPICA STAMPA — ${ts}]\n[${cfg.elezione.nome.toUpperCase()} — ${modeTag}]\n${'═'.repeat(52)}\n\n`;
+      if (leader.pct >= soglia) {
+        t += `VINCITORE${isSurvey?' PROIETTATO':' AL PRIMO TURNO'}: ${leader.nome.toUpperCase()} — ${leader.pct.toFixed(2)}%\n\n`;
+      } else {
+        t += `NESSUN CANDIDATO SUPERA IL ${soglia}% — ${isSurvey?'BALLOTTAGGIO PROBABILE':'BALLOTTAGGIO ATTIVATO'}.\nIn testa: ${leader.nome} (${leader.pct.toFixed(2)}%)\n\n`;
+      }
+      t += `CLASSIFICA:\n`;
       sorted.forEach((c,i)=>{
         const del = i>0 ? ` [${(c.pct-leader.pct).toFixed(2)}pp]` : ' [TESTA]';
         t += `${pad2(i+1)}. ${c.nome.padEnd(12)} ${c.pct.toFixed(2).padStart(6)}%${del}\n`;
       });
-      t += `\nDETTAGLIO DISTRETTI (top in ciascuno):\n`;
-      cfg.distretti.forEach(d => {
-        const dr = distRes[d.id]; if(!dr) return;
-        const ds = cfg.candidati.map(g=>({nome:g.nome,v:dr[g.id]||0})).sort((a,b)=>b.v-a.v);
-        t += `  [${d.id}] ${d.nome.slice(0,22).padEnd(22)}: ${ds[0].nome} (${ds[0].v.toFixed(1)}%)\n`;
-      });
+      if (!isSurvey && scrutinizedSet.size > 0) {
+        t += `\nDETTAGLIO DISTRETTI SCRUTINATI:\n`;
+        cfg.distretti.filter(d=>scrutinizedSet.has(d.id)).forEach(d => {
+          const dr = distRes[d.id]; if(!dr) return;
+          const ds = cfg.candidati.map(g=>({nome:g.nome,v:dr[g.id]||0})).sort((a,b)=>b.v-a.v);
+          t += `  [${d.id}] ${d.nome.slice(0,22).padEnd(22)}: ${ds[0].nome} (${ds[0].v.toFixed(1)}%)\n`;
+        });
+      }
       t += `\n${'─'.repeat(52)}\nFonte: NOMOS ENGINE v2.0 // ${cfg.elezione.anno}\n[Uso narrativo/GDR]\n`;
 
     } else if (phase === 'ballottaggio' && ballotRes) {
@@ -925,7 +1123,6 @@ const NE = (() => {
         t += `║  Peso Politico:      ${((ballotFinal[ballotRes.regina.id]||0).toFixed(2)+'%').padEnd(15)} ║\n`;
         t += `╚══════════════════════════════════════╝\n\n`;
       }
-      const sorted = sortedCands();
       t += `CLASSIFICA BALLOTTAGGIO:\n`;
       Object.entries(ballotFinal).sort(([,a],[,b])=>b-a).forEach(([gid,pct],i)=>{
         const g = cfg.candidati.find(c=>c.id===gid);
@@ -948,8 +1145,7 @@ const NE = (() => {
       } else {
         t += `FIRMATARI DEL PATTO (${checked.length}):\n`;
         checked.forEach(c => { t += `  · ${c.nome.padEnd(12)} ${c.pct.toFixed(2)}%\n`; });
-        t += `\nPESO COALIZIONE: ${total.toFixed(2)}%\n`;
-        t += `\nVERIFICA SOGLIE:\n`;
+        t += `\nPESO COALIZIONE: ${total.toFixed(2)}%\n\nVERIFICA SOGLIE:\n`;
         t += `  Maggioranza Assoluta (${s51}%): ${total>=s51?'✓ RAGGIUNTA':'✗ INSUFFICIENTE (mancano '+(s51-total).toFixed(2)+'pp)'}\n`;
         t += `  Maggioranza Suprema  (${s66}%): ${total>=s66?'✓ RAGGIUNTA':'✗ INSUFFICIENTE (mancano '+(s66-total).toFixed(2)+'pp)'}\n`;
         if (total>=s66) t += `\n► La coalizione detiene il POTERE DI VETO ASSOLUTO sull'Olimpo.\n`;
@@ -967,9 +1163,14 @@ const NE = (() => {
      RESET
   ══════════════════════════════════════ */
   function resetScrutiny() {
-    running=false; done=false; distRes={}; finalScores={}; ballotFinal={}; ballotRes=null;
-    selDist=null;
-    $('btn-start').disabled = (phase !== 'generali');
+    running = false; done = false; projMode = false;
+    distRes = {}; finalScores = {}; ballotFinal = {}; ballotRes = null;
+    scrutinizedSet = new Set();
+    selDist = null;
+
+    $('btn-start').disabled  = (phase !== 'generali');
+    $('btn-survey').disabled = false;
+    $('proj-indicator').style.display = 'none';
     setText('t-stato','IN ATTESA'); document.getElementById('t-stato').className='tb-val c-blue';
     $('prog-bar').style.width='0%'; setText('prog-lbl','0%'); setText('step-lbl','');
     setText('t-dist',`0/${cfg.distretti.length}`);
@@ -980,7 +1181,11 @@ const NE = (() => {
     $('coal-list').innerHTML='<div class="empty-msg">Esegui lo scrutinio Generali per abilitare le coalizioni.</div>';
     $('coal-bars').style.display='none';
     $('insp-body').innerHTML='<div class="empty-msg">Seleziona un distretto per visualizzare i dati demografici e impostare i modificatori di Hitori.</div>';
-    document.querySelectorAll('.d-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.d-btn').forEach(btn => {
+      btn.classList.remove('active','scrutinized','scrutiny-sel','has-hitori');
+      const chk = btn.querySelector('.d-scrutiny-chk');
+      if (chk) { chk.checked = false; chk.disabled = false; }
+    });
     $('ticker-log').innerHTML='';
     tick('Sistema resettato. Pronto per un nuovo scrutinio.','');
   }
@@ -993,10 +1198,11 @@ const NE = (() => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab===id));
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.id===`pane-${id}`));
     setText('t-phase', PHASES[id]||id.toUpperCase());
-    /* Scrutiny btn only active in Generali (and not already done/running) */
     $('btn-start').disabled = (id !== 'generali' || done || running);
-    /* Sync RP text */
-    if (done || id==='primarie' || id==='coalizioni') generateRP();
+    if (done || id==='primarie' || id==='coalizioni') {
+      const isSurv = projMode && !Object.keys(finalScores).length;
+      generateRP(isSurv, isSurv ? null : finalScores);
+    }
   }
 
   /* ══════════════════════════════════════
