@@ -1134,6 +1134,13 @@ function buildGlobalPanel() {
     rankEl.appendChild(row);
   });
 
+  // Mostra il pannello PRIMA di creare il chart (Chart.js richiede canvas visibile)
+  if (!selectedDistrict) {
+    document.getElementById('global-panel').style.display = '';
+    document.getElementById('detail-panel').style.display = 'none';
+    document.getElementById('btn-back-global').style.display = 'none';
+  }
+
   // Global bar chart
   if (chartGlobal) { chartGlobal.destroy(); chartGlobal = null; }
   const canvas = document.getElementById('chart-global');
@@ -1170,12 +1177,6 @@ function buildGlobalPanel() {
     winsEl.appendChild(badge);
   });
 
-  // Show global panel if no district is selected
-  if (!selectedDistrict) {
-    document.getElementById('global-panel').style.display = '';
-    document.getElementById('detail-panel').style.display = 'none';
-    document.getElementById('btn-back-global').style.display = 'none';
-  }
 }
 
 // ============================================================
