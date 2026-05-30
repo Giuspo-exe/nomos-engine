@@ -730,6 +730,21 @@ const NE = (() => {
     } catch(e) { return false; }
   }
 
+  function saveSimForMappa(resMap, cands) {
+    try {
+      const out = {};
+      cfg.distretti.forEach(d => {
+        if (!resMap[d.id]) return;
+        const scores = {};
+        cands.forEach(g => { scores[g.id] = resMap[d.id][g.id] || 0; });
+        let winner = null, winPct = 0;
+        cands.forEach(g => { if (scores[g.id] > winPct) { winPct = scores[g.id]; winner = g.id; } });
+        out[d.id] = { winner, pct: winPct, scores };
+      });
+      localStorage.setItem('nomos_sim_v2', JSON.stringify(out));
+    } catch(e) {}
+  }
+
   function clearStorage() {
     localStorage.removeItem(STORAGE_KEY);
     tick('Salvataggio locale rimosso. Ricarica la pagina per tornare ai dati di fabbrica.', 'ok');
@@ -1155,6 +1170,7 @@ const NE = (() => {
 
     const { tempRes, agg } = computeSurveyScores();
     lastResMap = tempRes;
+    saveSimForMappa(tempRes, getActiveCandidates());
 
     renderResultBars(agg, false, true);
     buildLeaderboard(agg, true);
@@ -1229,6 +1245,7 @@ const NE = (() => {
 
     const scrutDists = cfg.distretti.filter(d => scrutinizedSet.has(d.id));
     finalScores = aggregateDistResults(distRes, scrutDists);
+    saveSimForMappa(distRes, getActiveCandidates());
 
     renderResultBars(finalScores, true, false);
     chartUpdate(finalScores);

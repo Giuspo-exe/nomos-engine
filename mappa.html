@@ -738,8 +738,23 @@ function runFullSimulation(noise = 0.08) {
   cfg.distretti.forEach(d => {
     simResults[d.id] = computeDistrictScores(d, noise);
   });
+  try { localStorage.setItem('nomos_sim_v2', JSON.stringify(simResults)); } catch(e) {}
   updateGridColors();
   if (selectedDistrict) showDetail(selectedDistrict, false);
+}
+
+function loadSimFromStorage() {
+  try {
+    const raw = localStorage.getItem('nomos_sim_v2');
+    if (!raw) return false;
+    const saved = JSON.parse(raw);
+    // Verifica che i distretti corrispondano
+    if (cfg.distretti.every(d => saved[d.id])) {
+      simResults = saved;
+      return true;
+    }
+  } catch(e) {}
+  return false;
 }
 
 // ============================================================
@@ -841,6 +856,8 @@ function initMap() {
     if (!shape) return;
 
     const g = document.createElementNS(SVG_NS, 'g');
+    g.setAttribute('data-id', d.id);  // per delegated click
+    g.style.cursor = 'pointer';
 
     // Shadow polygon (slightly offset)
     const shadow = document.createElementNS(SVG_NS, 'polygon');
@@ -1463,8 +1480,12 @@ document.querySelectorAll('.region-btn').forEach(btn => {
 //  INIT
 // ============================================================
 loadData().then(() => {
-  // Auto-run simulation on load
-  runFullSimulation(0.08);
+  // Carica risultati salvati dal simulatore principale, altrimenti riesegue
+  if (loadSimFromStorage()) {
+    updateGridColors();
+  } else {
+    runFullSimulation(0.08);
+  }
 });
 </script>
 </body>
