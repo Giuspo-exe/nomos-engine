@@ -1,0 +1,90 @@
+{
+  "elezione": {
+    "nome": "Gran Concilio dell'Olimpo",
+    "anno": "3 Era Post-Titanica",
+    "descrizione": "Elezioni per la carica suprema di Archon dell'Olimpo, massima autorità sul Pantheon.",
+    "soglia_ballottaggio": 30,
+    "soglia_coalizione": 51
+  },
+  "candidati": [
+    {
+      "id": "zeus", "nome": "Zeus", "titolo": "Signore dei Fulmini", "genere": "M",
+      "affinita": { "guerrieri": 0.85, "filosofi": 0.65, "nobili": 0.80, "mercanti": 0.55, "marinai": 0.50, "contadini": 0.30 }
+    },
+    {
+      "id": "era", "nome": "Era", "titolo": "Regina degli Dei", "genere": "F",
+      "affinita": { "guerrieri": 0.40, "filosofi": 0.50, "nobili": 0.85, "mercanti": 0.45, "marinai": 0.30, "contadini": 0.65 }
+    },
+    {
+      "id": "poseidone", "nome": "Poseidone", "titolo": "Signore dei Mari", "genere": "M",
+      "affinita": { "guerrieri": 0.70, "filosofi": 0.40, "nobili": 0.55, "mercanti": 0.65, "marinai": 0.95, "contadini": 0.40 }
+    },
+    {
+      "id": "demetra", "nome": "Demetra", "titolo": "Signora del Raccolto", "genere": "F",
+      "affinita": { "guerrieri": 0.25, "filosofi": 0.55, "nobili": 0.45, "mercanti": 0.60, "marinai": 0.20, "contadini": 0.95 }
+    },
+    {
+      "id": "ares", "nome": "Ares", "titolo": "Dio della Guerra", "genere": "M",
+      "affinita": { "guerrieri": 0.95, "filosofi": 0.15, "nobili": 0.50, "mercanti": 0.30, "marinai": 0.45, "contadini": 0.20 }
+    },
+    {
+      "id": "atena", "nome": "Atena", "titolo": "Dea della Saggezza", "genere": "F",
+      "affinita": { "guerrieri": 0.75, "filosofi": 0.90, "nobili": 0.70, "mercanti": 0.55, "marinai": 0.45, "contadini": 0.40 }
+    },
+    {
+      "id": "apollo", "nome": "Apollo", "titolo": "Dio del Sole", "genere": "M",
+      "affinita": { "guerrieri": 0.55, "filosofi": 0.85, "nobili": 0.75, "mercanti": 0.50, "marinai": 0.40, "contadini": 0.45 }
+    },
+    {
+      "id": "artemide", "nome": "Artemide", "titolo": "Signora della Caccia", "genere": "F",
+      "affinita": { "guerrieri": 0.75, "filosofi": 0.55, "nobili": 0.50, "mercanti": 0.25, "marinai": 0.40, "contadini": 0.55 }
+    },
+    {
+      "id": "afrodite", "nome": "Afrodite", "titolo": "Dea dell'Amore", "genere": "F",
+      "affinita": { "guerrieri": 0.30, "filosofi": 0.50, "nobili": 0.80, "mercanti": 0.75, "marinai": 0.50, "contadini": 0.40 }
+    },
+    {
+      "id": "efesto", "nome": "Efesto", "titolo": "Dio della Forgia", "genere": "M",
+      "affinita": { "guerrieri": 0.45, "filosofi": 0.60, "nobili": 0.35, "mercanti": 0.70, "marinai": 0.50, "contadini": 0.55 }
+    },
+    {
+      "id": "hermes", "nome": "Hermes", "titolo": "Messaggero degli Dei", "genere": "M",
+      "affinita": { "guerrieri": 0.50, "filosofi": 0.65, "nobili": 0.60, "mercanti": 0.90, "marinai": 0.70, "contadini": 0.45 }
+    },
+    {
+      "id": "dioniso", "nome": "Dioniso", "titolo": "Dio del Vino", "genere": "M",
+      "affinita": { "guerrieri": 0.40, "filosofi": 0.60, "nobili": 0.55, "mercanti": 0.65, "marinai": 0.55, "contadini": 0.70 }
+    },
+    {
+      "id": "estia", "nome": "Estia", "titolo": "Custode del Focolare", "genere": "F",
+      "affinita": { "guerrieri": 0.20, "filosofi": 0.60, "nobili": 0.60, "mercanti": 0.40, "marinai": 0.25, "contadini": 0.85 }
+    },
+    {
+      "id": "persefone", "nome": "Persefone", "titolo": "Regina degli Inferi", "genere": "F",
+      "affinita": { "guerrieri": 0.45, "filosofi": 0.70, "nobili": 0.55, "mercanti": 0.40, "marinai": 0.35, "contadini": 0.65 }
+    }
+  ],
+  "distretti": [
+    {
+      "id": "D1",
+      "nome": "Olimpo",
+      "descrizione": "La vetta sacra, sede del Pantheon. Dominio della politica divina e della nobiltà celeste.",
+      "categorie": [
+        { "id": "guerrieri", "nome": "Guerrieri Celesti", "peso": 0.35 },
+        { "id": "filosofi", "nome": "Filosofi & Oracoli", "peso": 0.40 },
+        { "id": "nobili",   "nome": "Nobiltà Olimpica",   "peso": 0.25 }
+      ]
+    },
+    {
+      "id": "D2",
+      "nome": "Manhattan",
+      "descrizione": "La metropoli moderna, crocevia di culture e commerci. Riflette le dinamiche del mondo mortale.",
+      "categorie": [
+        { "id": "mercanti",  "nome": "Mercanti & Banchieri",   "peso": 0.45 },
+        { "id": "marinai",   "nome": "Marinai & Navigatori",   "peso": 0.25 },
+        { "id": "contadini", "nome": "Lavoratori & Artigiani", "peso": 0.30 }
+      ]
+    }
+  ],
+  "eventi": []
+}
