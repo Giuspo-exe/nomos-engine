@@ -260,18 +260,64 @@
   .legend-dot { width: 8px; height: 8px; flex-shrink: 0; }
 
   /* RIGHT PANEL */
-  #detail-placeholder {
+  #global-panel { display: none; }
+  #detail-panel { display: none; }
+
+  /* Global ranking */
+  .rank-row {
     display: flex;
     align-items: center;
-    justify-content: center;
-    height: 100%;
-    color: var(--text-muted);
-    font-family: 'Roboto Mono', monospace;
-    font-size: 12px;
-    text-align: center;
-    line-height: 2;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
   }
-  #detail-panel { display: none; }
+  .rank-pos {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    width: 18px;
+    flex-shrink: 0;
+  }
+  .rank-dot { width: 10px; height: 10px; flex-shrink: 0; }
+  .rank-name { flex: 1; font-weight: 600; }
+  .rank-wins {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+  .rank-pct {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    width: 42px;
+    text-align: right;
+  }
+  .rank-bar-wrap {
+    width: 70px;
+    height: 4px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+  .rank-bar { height: 4px; }
+
+  /* wins badges */
+  #global-wins { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .wins-badge {
+    display: flex; align-items: center; gap: 5px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px; padding: 4px 8px;
+    border: 1px solid var(--border2);
+    color: var(--text-dim);
+  }
+  .wins-badge .wb-dot { width: 8px; height: 8px; flex-shrink: 0; }
+  .wins-badge .wb-count { color: var(--gold); font-weight: 700; }
+
+  /* back button */
+  #btn-back-global {
+    display: none;
+    margin-bottom: 12px;
+  }
 
   .detail-header {
     margin-bottom: 16px;
@@ -423,9 +469,22 @@
 
   <!-- RIGHT COLUMN -->
   <div id="right-col">
-    <div id="detail-placeholder">
-      ← Clicca un distretto<br>per vedere i dettagli
+    <!-- GLOBAL OVERVIEW (default, nascosto dopo click distretto) -->
+    <div id="global-panel">
+      <div class="section-title">◈ CLASSIFICA GLOBALE</div>
+      <div id="global-ranking"></div>
+      <div class="section-title" style="margin-top:14px">▬ VOTI TOTALI SIMULATI</div>
+      <div class="chart-container" style="margin-bottom:14px">
+        <canvas id="chart-global"></canvas>
+      </div>
+      <div class="section-title">◉ DISTRETTI PER CANDIDATO</div>
+      <div id="global-wins"></div>
+      <div style="margin-top:20px;font-family:'Roboto Mono',monospace;font-size:10px;color:var(--text-muted);text-align:center;line-height:2">
+        ← Clicca un territorio sulla mappa<br>per i dettagli del distretto
+      </div>
     </div>
+
+    <button class="btn" id="btn-back-global">← TORNA ALLA CLASSIFICA</button>
     <div id="detail-panel">
       <div class="detail-header">
         <div class="d-title" id="det-id-name"></div>
@@ -548,6 +607,7 @@ let sondaggioTimer = null;
 let chartBar = null;
 let chartDemo = null;
 let mapPolys = {};       // districtId -> SVG polygon element
+let chartGlobal = null;
 
 // ============================================================
 //  LOAD DATA
@@ -1022,6 +1082,100 @@ function updateGridColors() {
   updateMapMarkers();
   applyCandFilter();
   applyRegionFilter();
+  buildGlobalPanel();
+}
+
+// ============================================================
+//  GLOBAL OVERVIEW PANEL
+// ============================================================
+function buildGlobalPanel() {
+  if (Object.keys(simResults).length === 0) return;
+
+  // Aggregate: wins and total weighted score per candidate
+  const wins = {}, totalPeso = {}, totalVoti = {};
+  candidati.forEach(c => { wins[c.id] = 0; totalPeso[c.id] = 0; totalVoti[c.id] = 0; });
+
+  cfg.distretti.forEach(d => {
+    const r = simResults[d.id];
+    if (!r) return;
+    candidati.forEach(c => {
+      totalVoti[c.id] += (r.scores[c.id] || 0) * d.votanti / 100;
+    });
+    if (r.winner) {
+      wins[r.winner] = (wins[r.winner] || 0) + 1;
+      totalPeso[r.winner] = (totalPeso[r.winner] || 0) + d.peso_politico;
+    }
+  });
+
+  const grandTotal = Object.values(totalVoti).reduce((a, b) => a + b, 0);
+  const sorted = candidati
+    .map(c => ({
+      ...c,
+      pct: grandTotal > 0 ? (totalVoti[c.id] / grandTotal * 100) : 0,
+      wins: wins[c.id] || 0,
+      peso: totalPeso[c.id] || 0
+    }))
+    .sort((a, b) => b.pct - a.pct);
+
+  // Ranking list
+  const rankEl = document.getElementById('global-ranking');
+  rankEl.innerHTML = '';
+  sorted.forEach((c, i) => {
+    const color = candColorMap[c.id] || '#555';
+    const row = document.createElement('div');
+    row.className = 'rank-row';
+    row.innerHTML = `
+      <div class="rank-pos">${i + 1}°</div>
+      <div class="rank-dot" style="background:${color}"></div>
+      <div class="rank-name">${c.nome}</div>
+      <div class="rank-wins">${c.wins}D</div>
+      <div class="rank-bar-wrap"><div class="rank-bar" style="width:${c.pct}%;background:${color}"></div></div>
+      <div class="rank-pct">${c.pct.toFixed(1)}%</div>`;
+    rankEl.appendChild(row);
+  });
+
+  // Global bar chart
+  if (chartGlobal) { chartGlobal.destroy(); chartGlobal = null; }
+  const canvas = document.getElementById('chart-global');
+  const top8 = sorted.slice(0, 8);
+  chartGlobal = new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: top8.map(c => c.nome),
+      datasets: [{
+        data: top8.map(c => parseFloat(c.pct.toFixed(1))),
+        backgroundColor: top8.map(c => candColorMap[c.id] || '#555'),
+        borderWidth: 0
+      }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: '#333' }, ticks: { color: '#888', font: { family: 'Roboto Mono', size: 10 } }, border: { color: '#333' } },
+        y: { grid: { color: '#1e1e1e' }, ticks: { color: '#ccc', font: { family: 'Roboto Mono', size: 10 } }, border: { color: '#333' } }
+      }
+    }
+  });
+
+  // Wins badges
+  const winsEl = document.getElementById('global-wins');
+  winsEl.innerHTML = '';
+  sorted.filter(c => c.wins > 0).forEach(c => {
+    const color = candColorMap[c.id] || '#555';
+    const badge = document.createElement('div');
+    badge.className = 'wins-badge';
+    badge.style.borderColor = color + '55';
+    badge.innerHTML = `<span class="wb-dot" style="background:${color}"></span>${c.nome} <span class="wb-count">${c.wins}</span>`;
+    winsEl.appendChild(badge);
+  });
+
+  // Show global panel if no district is selected
+  if (!selectedDistrict) {
+    document.getElementById('global-panel').style.display = '';
+    document.getElementById('detail-panel').style.display = 'none';
+    document.getElementById('btn-back-global').style.display = 'none';
+  }
 }
 
 // ============================================================
@@ -1116,7 +1270,8 @@ function showDetail(districtId, scroll) {
   buildFavList(d);
 
   // Show panel
-  document.getElementById('detail-placeholder').style.display = 'none';
+  document.getElementById('global-panel').style.display = 'none';
+  document.getElementById('btn-back-global').style.display = '';
   document.getElementById('detail-panel').style.display = '';
 
   if (scroll) {
@@ -1277,6 +1432,14 @@ document.getElementById('btn-sondaggio').addEventListener('click', function() {
     this.classList.add('active');
     this.textContent = '⬛ STOP SONDAGGIO';
   }
+});
+
+document.getElementById('btn-back-global').addEventListener('click', () => {
+  selectedDistrict = null;
+  highlightDistrict(null);
+  document.getElementById('detail-panel').style.display = 'none';
+  document.getElementById('btn-back-global').style.display = 'none';
+  document.getElementById('global-panel').style.display = '';
 });
 
 document.getElementById('btn-reset-filter').addEventListener('click', () => {
