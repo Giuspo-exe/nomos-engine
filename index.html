@@ -239,6 +239,39 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
 #notif{position:fixed;bottom:0;left:0;right:0;height:22px;background:var(--bg1);border-top:1px solid var(--br);display:flex;align-items:center;padding:0 12px;font-family:var(--mono);font-size:10px;color:var(--tx2);z-index:999;overflow:hidden}
 #notif-inner{white-space:nowrap;animation:nticker 45s linear infinite}
 @keyframes nticker{0%{transform:translateX(120vw)}100%{transform:translateX(-120%)}}
+
+/* ── LAB DEMAGOGHI ── */
+#lab-sect{flex-shrink:0;border-bottom:1px solid var(--br)}
+#lab-hdr{display:flex;align-items:center;justify-content:space-between;padding:0 12px;height:28px;background:var(--bg1);border-bottom:1px solid var(--br);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--red2);flex-shrink:0;cursor:pointer;user-select:none}
+#lab-body{padding:8px 12px;background:var(--bg0)}
+.lab-field{margin-bottom:6px}
+.lab-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--tx2);margin-bottom:2px}
+.lab-input{font-family:var(--mono);font-size:11px;width:100%;background:var(--bg2);border:1px solid var(--br2);color:var(--tx0);padding:3px 7px;outline:none}
+.lab-input:focus{border-color:var(--red2)}
+.lab-slider-row{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.lab-slider-lbl{font-size:9px;color:var(--tx2);width:112px;text-transform:uppercase;letter-spacing:.04em;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lab-slider{flex:1;accent-color:var(--red2);cursor:pointer}
+.lab-slider-val{font-family:var(--mono);font-size:10px;color:var(--red2);width:28px;text-align:right;flex-shrink:0}
+.btn-reg{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 13px;background:rgba(192,57,43,.08);border:1px solid var(--red2);color:var(--red2);cursor:pointer;width:100%;margin-top:6px;transition:background .1s}
+.btn-reg:hover{background:rgba(192,57,43,.18)}
+/* Eliminated candidates */
+.lb-row.elim{opacity:.3;text-decoration:line-through}
+.res-row.elim{opacity:.3}
+.gen-row.elim{opacity:.3;text-decoration:line-through}
+/* Inspector action buttons */
+.insp-btns{display:flex;gap:5px;margin-bottom:8px}
+.btn-insp{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:4px 8px;cursor:pointer;border:1px solid;flex:1;text-align:center;transition:background .1s}
+.btn-insp.svy{background:rgba(142,68,173,.06);border-color:var(--purple);color:var(--purple)}
+.btn-insp.svy:hover{background:rgba(142,68,173,.18)}
+.btn-insp.cpy{background:rgba(39,174,96,.04);border-color:var(--green);color:var(--green)}
+.btn-insp.cpy:hover{background:rgba(39,174,96,.14)}
+.ls-box{border:1px solid rgba(142,68,173,.3);background:rgba(142,68,173,.04);padding:7px;margin-top:8px}
+.ls-title{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:4px;border-bottom:1px solid rgba(142,68,173,.2);padding-bottom:2px}
+.ls-row{display:flex;align-items:center;gap:4px;padding:2px 0;border-bottom:1px solid rgba(51,51,51,.25);font-size:10px}
+.ls-row:last-child{border-bottom:none}
+.ls-rk{font-family:var(--mono);color:var(--tx2);width:14px;flex-shrink:0}
+.ls-nm{flex:1;color:var(--tx1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ls-pt{font-family:var(--mono);color:var(--purple);width:46px;text-align:right;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -357,6 +390,34 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
 
       </div>
 
+      <!-- LAB DEMAGOGHI -->
+      <div id="lab-sect">
+        <div id="lab-hdr" onclick="NE.toggleLab()">
+          ⚗ LABORATORIO DEMAGOGHI // CREA SFIDANTE <span id="lab-arrow">▶</span>
+        </div>
+        <div id="lab-body" style="display:none">
+          <div class="lab-field">
+            <div class="lab-lbl">Nome Sfidante</div>
+            <input class="lab-input" id="lab-name" type="text" placeholder="Es. Prometeo Liberato…">
+          </div>
+          <div class="lab-field" style="margin-bottom:3px">
+            <div class="lab-lbl">Genere</div>
+            <label style="font-size:10px;color:var(--tx1);margin-right:12px;cursor:pointer"><input type="radio" name="lab-gen" value="M" checked style="accent-color:var(--blue2)"> ♂ Dio</label>
+            <label style="font-size:10px;color:var(--tx1);cursor:pointer"><input type="radio" name="lab-gen" value="F" style="accent-color:var(--pink)"> ♀ Dea</label>
+          </div>
+          <div class="lab-field">
+            <div class="lab-lbl">Parametri Politici (0.0 — 2.0)</div>
+            <div class="lab-slider-row"><span class="lab-slider-lbl">Establishment</span><input class="lab-slider" id="ls-estab" type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-estab',this.value)"><span class="lab-slider-val" id="lv-estab">1.00</span></div>
+            <div class="lab-slider-row"><span class="lab-slider-lbl">Populism Rural</span><input class="lab-slider" id="ls-popu"  type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-popu',this.value)"><span class="lab-slider-val" id="lv-popu">1.00</span></div>
+            <div class="lab-slider-row"><span class="lab-slider-lbl">Militarism</span><input class="lab-slider" id="ls-mili"  type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-mili',this.value)"><span class="lab-slider-val" id="lv-mili">1.00</span></div>
+            <div class="lab-slider-row"><span class="lab-slider-lbl">Intellect Grec</span><input class="lab-slider" id="ls-intel" type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-intel',this.value)"><span class="lab-slider-val" id="lv-intel">1.00</span></div>
+            <div class="lab-slider-row"><span class="lab-slider-lbl">Underworld Outcast</span><input class="lab-slider" id="ls-under" type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-under',this.value)"><span class="lab-slider-val" id="lv-under">1.00</span></div>
+          </div>
+          <button class="btn-reg" onclick="NE.registerChallenger()">⚡ REGISTRA CANDIDATO</button>
+          <div id="lab-status" style="font-family:var(--mono);font-size:9px;color:var(--tx2);margin-top:4px;text-align:center;min-height:14px"></div>
+        </div>
+      </div>
+
       <!-- Leaderboard -->
       <div id="lb-sect">
         <div id="lb-hdr">LEADERBOARD // PESO POLITICO <span class="mono c-dim" style="font-size:10px">ord. decr.</span></div>
@@ -425,6 +486,10 @@ const NE = (() => {
   let scrutinizedSet = new Set(); // distID ufficialmente scrutinati
   let phase          = 'primarie';
   let selDist        = null;
+  let eliminatiSet   = new Set();   // IDs candidati eliminati alle primarie
+  let outsiderIds    = new Set();   // IDs candidati registrati dal Lab
+  let labOpen        = false;
+  let outsiderCount  = 0;
   const PHASES = {primarie:'PRIMARIE',generali:'GENERALI',ballottaggio:'BALLOTTAGGIO RE/REGINA',coalizioni:'COALIZIONI'};
 
   /* ── Boot ── */
@@ -482,6 +547,30 @@ const NE = (() => {
       val = Math.min(2.0, val * 1.45);
     }
     return val;
+  }
+
+  /* ══════════════════════════════════════
+     CANDIDATI ATTIVI (filtro primarie)
+  ══════════════════════════════════════ */
+  function getActiveCandidates() {
+    if (eliminatiSet.size === 0) return cfg.candidati;
+    return cfg.candidati.filter(g => !eliminatiSet.has(g.id));
+  }
+
+  function applyEliminati() {
+    eliminatiSet = new Set();
+    cfg.candidati.forEach(g => {
+      if (!outsiderIds.has(g.id) && duels[g.id] && !duels[g.id].won) {
+        eliminatiSet.add(g.id);
+      }
+    });
+    const n = eliminatiSet.size;
+    if (n > 0) {
+      const names = cfg.candidati.filter(g => eliminatiSet.has(g.id)).map(g => g.nome).join(', ');
+      tick(`[Primarie] ${n} candidat${n>1?'i':'o'} elimin${n>1?'ati':'ato'}: ${names}`, 'err');
+    }
+    /* Ricostruisce i placeholder evidenziando eliminati */
+    buildResultPlaceholders();
   }
 
   /* ══════════════════════════════════════
@@ -552,6 +641,11 @@ const NE = (() => {
     let h = `<div class="insp-name">${d.id} — ${d.nome}</div>
              <div class="insp-sub">${d.regione} · Votanti: ${d.votanti.toLocaleString('it')} · Peso: ${d.peso_politico.toLocaleString('it')}${scrutinizedSet.has(id) ? ' · <span style="color:var(--green)">SCRUTINATO</span>' : ' · <span style="color:var(--tx2)">In attesa</span>'}</div>
              <div class="insp-desc">${d.descrizione}</div>
+             <div class="insp-btns">
+               <button class="btn-insp svy" onclick="NE.localSurvey('${id}')">⊙ SONDAGGIO LOCALE</button>
+               <button class="btn-insp cpy" onclick="NE.copyDistrictReport('${id}')">◎ COPIA REPORT</button>
+             </div>
+             <div id="local-survey-box"></div>
              <div class="insp-st">COMPOSIZIONE DEMOGRAFICA</div>`;
 
     d.categorie.forEach(c => {
@@ -626,7 +720,8 @@ const NE = (() => {
     const thr = cfg?.elezione.soglia_ballottaggio ?? 30;
     cfg.candidati.forEach((g,i) => {
       const row = document.createElement('div');
-      row.className = 'res-row'; row.id = `rrow-${g.id}`;
+      row.className = 'res-row' + (eliminatiSet.has(g.id) ? ' elim' : '');
+      row.id = `rrow-${g.id}`;
       row.innerHTML = `
         <span class="res-rank" id="rrk-${g.id}">${i+1}</span>
         <span class="res-name">${g.nome}</span>
@@ -645,7 +740,7 @@ const NE = (() => {
   ══════════════════════════════════════ */
   function buildDuelGrid() {
     const grid = $('duel-grid'); grid.innerHTML = '';
-    cfg.candidati.forEach(g => {
+    cfg.candidati.filter(g => !outsiderIds.has(g.id)).forEach(g => {
       const ch   = CHALLENGERS[g.id];
       const d    = duels[g.id];
       const row  = document.createElement('div');
@@ -714,45 +809,44 @@ const NE = (() => {
 
   /* Calcola e salva in distRes ufficiale per i distretti forniti */
   function computeNewDistrictScores(newDists) {
-    const cands = cfg.candidati;
+    const cands = getActiveCandidates();
     newDists.forEach(dist => computeDistrictScores(dist, cands, distRes));
   }
 
   /* Aggrega i risultati da un oggetto resMap per i distretti indicati */
-  function aggregateDistResults(resMap, dists) {
+  function aggregateDistResults(resMap, dists, cands) {
     if (!dists || !dists.length) return {};
-    const cands = cfg.candidati;
-    const agg   = {};
-    cands.forEach(g => {
+    const activeCands = cands || getActiveCandidates();
+    const agg = {};
+    activeCands.forEach(g => {
       const s = dists.reduce((acc,d) => acc + (resMap[d.id]?.[g.id] || 0), 0);
       agg[g.id] = s / dists.length;
     });
-    const ft = cands.reduce((s,g) => s + agg[g.id], 0);
-    cands.forEach(g => { agg[g.id] = ft > 0 ? (agg[g.id]/ft)*100 : 0; });
+    const ft = activeCands.reduce((s,g) => s + agg[g.id], 0);
+    activeCands.forEach(g => { agg[g.id] = ft > 0 ? (agg[g.id]/ft)*100 : 0; });
     return agg;
   }
 
   /* Proiezione su TUTTI i distretti senza toccare distRes (per survey) */
   function computeSurveyScores() {
-    const cands = cfg.candidati;
+    const cands = getActiveCandidates();
     const tempRes = {};
     cfg.distretti.forEach(dist => {
       if (scrutinizedSet.has(dist.id)) {
-        /* Usa i risultati ufficiali già scrutinati */
         tempRes[dist.id] = distRes[dist.id];
       } else {
         computeDistrictScores(dist, cands, tempRes);
       }
     });
-    return { tempRes, agg: aggregateDistResults(tempRes, cfg.distretti) };
+    return { tempRes, agg: aggregateDistResults(tempRes, cfg.distretti, cands) };
   }
 
   /* Calcolo temporaneo per ballottaggio (non tocca distRes) */
   function computeScoresTemp(candidateSubset) {
-    const cands = candidateSubset || cfg.candidati;
+    const cands = candidateSubset || getActiveCandidates();
     const tempRes = {};
     cfg.distretti.forEach(dist => computeDistrictScores(dist, cands, tempRes));
-    return aggregateDistResults(tempRes, cfg.distretti);
+    return aggregateDistResults(tempRes, cfg.distretti, cands);
   }
 
   /* Parziale durante animazione scrutinio */
@@ -1166,6 +1260,7 @@ const NE = (() => {
     running = false; done = false; projMode = false;
     distRes = {}; finalScores = {}; ballotFinal = {}; ballotRes = null;
     scrutinizedSet = new Set();
+    eliminatiSet = new Set();
     selDist = null;
 
     $('btn-start').disabled  = (phase !== 'generali');
@@ -1195,6 +1290,7 @@ const NE = (() => {
   ══════════════════════════════════════ */
   function switchTab(id) {
     phase = id;
+    if (id === 'generali') applyEliminati();
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab===id));
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.id===`pane-${id}`));
     setText('t-phase', PHASES[id]||id.toUpperCase());
@@ -1221,7 +1317,7 @@ const NE = (() => {
   ══════════════════════════════════════ */
   function sortedCands(scores) {
     const s = scores || finalScores;
-    return cfg.candidati.map(g=>({...g,pct:s[g.id]||0})).sort((a,b)=>b.pct-a.pct);
+    return getActiveCandidates().map(g=>({...g,pct:s[g.id]||0})).sort((a,b)=>b.pct-a.pct);
   }
   function tick(msg, cls) {
     const log=$('ticker-log'), ln=document.createElement('div');
@@ -1234,8 +1330,112 @@ const NE = (() => {
   function pad(n){return String(n).padStart(2,'0')}
   function pad2(n){return String(n).padStart(2,' ')}
 
+  /* ══════════════════════════════════════
+     LAB DEMAGOGHI
+  ══════════════════════════════════════ */
+  function toggleLab() {
+    labOpen = !labOpen;
+    $('lab-body').style.display = labOpen ? 'block' : 'none';
+    $('lab-arrow').textContent = labOpen ? '▼' : '▶';
+  }
+
+  function labSlider(valId, value) {
+    const el = $(valId);
+    if (el) el.textContent = parseFloat(value).toFixed(2);
+  }
+
+  function registerChallenger() {
+    const nome = $('lab-name')?.value.trim();
+    const statusEl = $('lab-status');
+    if (!nome) {
+      statusEl.textContent = '⚠ Inserisci un nome per il candidato.';
+      statusEl.style.color = 'var(--red2)';
+      return;
+    }
+    outsiderCount++;
+    const id = `outsider_${outsiderCount}`;
+    const genereEl = document.querySelector('input[name="lab-gen"]:checked');
+    const genere   = genereEl ? genereEl.value : 'M';
+    const newCand  = {
+      id, nome, genere,
+      params: {
+        establishment:      parseFloat($('ls-estab').value),
+        populism_rural:     parseFloat($('ls-popu').value),
+        militarism:         parseFloat($('ls-mili').value),
+        intellect_grec:     parseFloat($('ls-intel').value),
+        underworld_outcast: parseFloat($('ls-under').value)
+      }
+    };
+    cfg.candidati.push(newCand);
+    outsiderIds.add(id);
+    buildResultPlaceholders();
+    buildDuelGrid();
+    setText('s-cand', cfg.candidati.length);
+    $('lab-name').value = '';
+    statusEl.textContent = `✓ ${nome} registrato come Outsider Indipendente (${genere === 'M' ? '♂' : '♀'})`;
+    statusEl.style.color = 'var(--green2)';
+    tick(`[Lab] Sfidante registrato: ${nome} — ${genere==='M'?'Dio':'Dea'} Outsider`, 'ok');
+  }
+
+  /* ══════════════════════════════════════
+     SONDAGGIO LOCALE + COPIA REPORT
+  ══════════════════════════════════════ */
+  function localSurvey(distId) {
+    const dist = cfg.distretti.find(d => d.id === distId);
+    if (!dist) return;
+    const cands = getActiveCandidates();
+    const tempRes = {};
+    computeDistrictScores(dist, cands, tempRes);
+    const dr     = tempRes[distId];
+    const sorted = cands.map(g => ({nome:g.nome, id:g.id, v:dr[g.id]||0})).sort((a,b)=>b.v-a.v);
+
+    let h = `<div class="ls-box"><div class="ls-title">⊙ PROIEZIONE LOCALE — ${distId}</div>`;
+    sorted.forEach((c,i) => {
+      h += `<div class="ls-row">
+              <span class="ls-rk">${i+1}</span>
+              <span class="ls-nm">${c.nome}</span>
+              <span class="ls-pt">${c.v.toFixed(2)}%</span>
+            </div>`;
+    });
+    h += `</div>`;
+
+    const box = $('local-survey-box');
+    if (box) box.innerHTML = h;
+    tick(`[Sondaggio locale] ${distId} ${dist.nome} — Leader: ${sorted[0].nome} (${sorted[0].v.toFixed(1)}%)`, '');
+  }
+
+  function copyDistrictReport(distId) {
+    const dist = cfg.distretti.find(d => d.id === distId);
+    if (!dist) return;
+    const domCat  = dist.categorie.reduce((a,b) => b.votanti > a.votanti ? b : a);
+    const cands   = getActiveCandidates();
+    const source  = distRes[distId] ? distRes[distId] : (() => { const t={}; computeDistrictScores(dist,cands,t); return t[distId]; })();
+    const sorted  = cands.map(g=>({nome:g.nome,id:g.id,v:source[g.id]||0})).sort((a,b)=>b.v-a.v);
+    const top3    = sorted.slice(0,3);
+    const now     = new Date();
+    const ts      = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    let t  = `[REPORT DISTRETTO — ${dist.id}]\n`;
+    t     += `[${ts}]\n`;
+    t     += `${'─'.repeat(42)}\n`;
+    t     += `NOME:      ${dist.nome}\n`;
+    t     += `REGIONE:   ${dist.regione}\n`;
+    t     += `VOTANTI:   ${dist.votanti.toLocaleString('it')}\n`;
+    t     += `PESO POL.: ${dist.peso_politico}\n`;
+    t     += `CAT. DOM.: ${domCat.nome} (${domCat.votanti.toLocaleString('it')} vot.)\n`;
+    t     += `${'─'.repeat(42)}\n`;
+    t     += `TOP 3 CANDIDATI:\n`;
+    top3.forEach((c,i) => { t += `  ${i+1}. ${c.nome.padEnd(14)} ${c.v.toFixed(2)}%\n`; });
+    t     += `${'─'.repeat(42)}\n`;
+    t     += `${distRes[distId] ? '★ DATO UFFICIALE' : '⊙ PROIEZIONE SONDAGGIO'}\n`;
+    t     += `Fonte: NOMOS ENGINE v2.0 // GDR\n`;
+    navigator.clipboard.writeText(t)
+      .then(() => tick(`[Report] ${distId} ${dist.nome} copiato negli appunti.`, 'ok'))
+      .catch(() => tick(`[Report] Errore copia — verifica permessi browser.`, 'err'));
+  }
+
   /* ── Expose per inline event handlers ── */
-  return { init, runDuel, setHitori, liveHitoriStyle, runBallotScrutiny };
+  return { init, runDuel, setHitori, liveHitoriStyle, runBallotScrutiny,
+           toggleLab, labSlider, registerChallenger, localSurvey, copyDistrictReport };
 })();
 
 document.addEventListener('DOMContentLoaded', NE.init);
