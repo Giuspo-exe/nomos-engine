@@ -439,6 +439,7 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
       <div id="lab-sect">
         <div id="lab-hdr" onclick="NE.toggleLab()">
           ⚗ LABORATORIO DEMAGOGHI // CREA SFIDANTE <span id="lab-arrow">▶</span>
+          <button class="btn-sm" style="font-size:8px;padding:1px 5px;margin-left:auto;color:var(--red2);border-color:var(--red2)" onclick="event.stopPropagation();if(confirm('Cancellare tutti i dati salvati e tornare ai candidati di fabbrica?')){NE.clearStorage();location.reload()}">RESET DATI</button>
         </div>
         <div id="lab-body" style="display:none">
           <div class="lab-field">
@@ -622,6 +623,39 @@ const NE = (() => {
   let outsiderCount  = 0;
   const PHASES = {primarie:'PRIMARIE',generali:'GENERALI',ballottaggio:'BALLOTTAGGIO RE/REGINA',coalizioni:'COALIZIONI'};
 
+  /* ── Storage ── */
+  const STORAGE_KEY = 'nomos_state_v2';
+  let origCandIds = new Set();
+
+  function saveToStorage() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        candidati: cfg.candidati,
+        elezione:  cfg.elezione,
+        ts: Date.now()
+      }));
+    } catch(e) {}
+  }
+
+  function loadFromStorage() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return false;
+      const saved = JSON.parse(raw);
+      if (saved.candidati && Array.isArray(saved.candidati)) {
+        cfg.candidati = saved.candidati;
+        cfg.candidati.forEach(g => { if (!origCandIds.has(g.id)) outsiderIds.add(g.id); });
+      }
+      if (saved.elezione) cfg.elezione = { ...cfg.elezione, ...saved.elezione };
+      return true;
+    } catch(e) { return false; }
+  }
+
+  function clearStorage() {
+    localStorage.removeItem(STORAGE_KEY);
+    tick('Salvataggio locale rimosso. Ricarica la pagina per tornare ai dati di fabbrica.', 'ok');
+  }
+
   /* ── Boot ── */
   async function init() {
     tick('Sistema avviato — caricamento configurazione…','');
@@ -629,8 +663,11 @@ const NE = (() => {
       const r = await fetch('elezioni_config.json');
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       cfg = await r.json();
+      origCandIds = new Set(cfg.candidati.map(g => g.id));
+      const hadSaved = loadFromStorage();
       const pesoTot = cfg.distretti.reduce((s,d)=>s+d.peso_politico,0);
       tick(`Database caricato: "${cfg.elezione.nome}" — ${cfg.distretti.length} distretti — Peso totale: ${pesoTot.toLocaleString('it')}`, 'ok');
+      if (hadSaved) tick(`↑ Stato ripristinato da localStorage (${cfg.candidati.length} candidati).`, 'ok');
       setupUI(pesoTot);
     } catch(e) {
       tick(`ERRORE: ${e.message}`, 'err');
@@ -1165,12 +1202,9 @@ const NE = (() => {
   ══════════════════════════════════════ */
   function buildLeaderboard(scores, isProjection) {
     const list = $('lb-list');
-    if (!scores || !Object.keys(scores).length) {
-      list.innerHTML='<div class="empty-msg" style="padding:18px">In attesa dei dati…</div>';
-      return;
-    }
-    const sorted = sortedCands(scores);
-    const top    = sorted[0]?.pct||1;
+    const hasScores = scores && Object.keys(scores).length;
+    const sorted = hasScores ? sortedCands(scores) : cfg.candidati.map(g => ({...g, pct: 0}));
+    const top    = sorted[0]?.pct || 1;
     const banner = isProjection ? '<div class="lb-proj-banner">⊙ PROIEZIONE SONDAGGIO</div>' : '';
     list.innerHTML = banner + sorted.map((c,i) => {
       const bonus  = affinBonus[c.id] ? `+8%` : '';
@@ -1193,14 +1227,22 @@ const NE = (() => {
   function eliminateCandidate(id) {
     const g = cfg.candidati.find(c => c.id === id);
     if (!g) return;
-    if (!confirm(`Eliminare ${g.nome} dal simulatore? L'azione è irreversibile fino al reset.`)) return;
-    eliminatiSet.add(id);
+    if (!confirm(`Eliminare ${g.nome} definitivamente? (Puoi annullare solo con RESET o cancellando il salvataggio locale.)`)) return;
+    cfg.candidati = cfg.candidati.filter(c => c.id !== id);
+    eliminatiSet.delete(id);
+    outsiderIds.delete(id);
+    delete candidateColors[id];
+    delete affinBonus[id];
+    if (finalScores[id]) delete finalScores[id];
+    saveToStorage();
+    assignColors();
     buildResultPlaceholders();
     const sc = Object.keys(finalScores).length ? finalScores : null;
     buildLeaderboard(sc, projMode && !sc);
     updateDistrictMapColors();
-    tick(`[Eliminato] ${g.nome} rimosso dal simulatore.`, 'err');
     populateDuelSelects();
+    setText('s-cand', cfg.candidati.length);
+    tick(`[Rimosso] ${g.nome} eliminato permanentemente e salvataggio aggiornato.`, 'err');
   }
 
   function openEditModal(id) {
@@ -1237,10 +1279,11 @@ const NE = (() => {
       underworld_outcast: parseFloat(document.getElementById('em-under').value)
     };
     closeEditModal();
+    saveToStorage();
     const sc = Object.keys(finalScores).length ? finalScores : null;
     buildLeaderboard(sc, projMode && !sc);
     populateDuelSelects();
-    tick(`[Modifica] ${g.nome} aggiornato.`, 'ok');
+    tick(`[Modifica] ${g.nome} aggiornato e salvato.`, 'ok');
   }
 
   function closeEditModal() {
@@ -1624,7 +1667,8 @@ const NE = (() => {
     populateDuelSelects();
     setText('s-cand', cfg.candidati.length);
     $('lab-name').value = '';
-    statusEl.textContent = `✓ ${nome} registrato come Outsider Indipendente (${genere === 'M' ? '♂' : '♀'})`;
+    saveToStorage();
+    statusEl.textContent = `✓ ${nome} registrato come Outsider Indipendente (${genere === 'M' ? '♂' : '♀'}) — salvato.`;
     statusEl.style.color = 'var(--green2)';
     tick(`[Lab] Sfidante registrato: ${nome} — ${genere==='M'?'Dio':'Dea'} Outsider`, 'ok');
   }
@@ -1689,7 +1733,7 @@ const NE = (() => {
   return { init, setHitori, liveHitoriStyle, runBallotScrutiny,
            toggleLab, labSlider, registerChallenger, localSurvey, copyDistrictReport,
            runSandboxDuel, eliminateCandidate, openEditModal, saveEditModal, closeEditModal,
-           copyNationalReport, copySelectedDistrictReport, populateDuelSelects };
+           copyNationalReport, copySelectedDistrictReport, populateDuelSelects, clearStorage };
 })();
 
 document.addEventListener('DOMContentLoaded', NE.init);
