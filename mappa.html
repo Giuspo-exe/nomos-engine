@@ -856,8 +856,9 @@ function initMap() {
     if (!shape) return;
 
     const g = document.createElementNS(SVG_NS, 'g');
-    g.setAttribute('data-id', d.id);  // per delegated click
+    g.setAttribute('data-id', d.id);
     g.style.cursor = 'pointer';
+    g.onclick = () => { showDetail(d.id, true); highlightDistrict(d.id); };
 
     // Shadow polygon (slightly offset)
     const shadow = document.createElementNS(SVG_NS, 'polygon');
@@ -877,12 +878,8 @@ function initMap() {
     poly.setAttribute('stroke-width', '1.5');
     poly.setAttribute('stroke-linejoin', 'round');
     poly.setAttribute('class', 'district-poly');
-    poly.setAttribute('data-id', d.id);
+    poly.setAttribute('pointer-events', 'all');
 
-    poly.addEventListener('click', () => {
-      showDetail(d.id, true);
-      highlightDistrict(d.id);
-    });
     poly.addEventListener('mouseenter', () => showMapTooltip(d, poly));
     poly.addEventListener('mouseleave', hideMapTooltip);
 
@@ -930,11 +927,16 @@ function initMap() {
 
   // ── Delegated click on entire SVG ────────────────────────
   svg.addEventListener('click', e => {
-    const target = e.target.closest('[data-id]');
-    if (target) {
-      const id = target.getAttribute('data-id');
-      showDetail(id, true);
-      highlightDistrict(id);
+    // Walk up DOM manually (closest() può non funzionare su SVG in alcuni browser)
+    let el = e.target;
+    while (el && el !== svg) {
+      const id = el.getAttribute && el.getAttribute('data-id');
+      if (id) {
+        showDetail(id, true);
+        highlightDistrict(id);
+        return;
+      }
+      el = el.parentNode;
     }
   });
 
