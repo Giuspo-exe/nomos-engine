@@ -6,6 +6,7 @@
 <title>NOMOS ENGINE v2.0 — Psephology Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;border-radius:0!important}
 :root{
@@ -254,10 +255,31 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
 .lab-slider-val{font-family:var(--mono);font-size:10px;color:var(--red2);width:28px;text-align:right;flex-shrink:0}
 .btn-reg{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 13px;background:rgba(192,57,43,.08);border:1px solid var(--red2);color:var(--red2);cursor:pointer;width:100%;margin-top:6px;transition:background .1s}
 .btn-reg:hover{background:rgba(192,57,43,.18)}
+/* ── CHART BOX ── */
+#chart-box{flex-shrink:0;height:155px;border-top:1px solid var(--br);background:var(--bg0);display:flex;align-items:center;justify-content:center;padding:6px 8px;gap:8px}
+#chart-box canvas{max-height:143px;max-width:143px}
+#chart-legend{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px;max-height:143px}
+.chart-leg-row{display:flex;align-items:center;gap:5px;font-size:9px;color:var(--tx1);line-height:1.2}
+.chart-leg-dot{width:7px;height:7px;flex-shrink:0}
+.chart-leg-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chart-leg-pct{font-family:var(--mono);color:var(--tx0);width:36px;text-align:right;flex-shrink:0}
+
 /* Eliminated candidates */
 .lb-row.elim{opacity:.3;text-decoration:line-through}
 .res-row.elim{opacity:.3}
 .gen-row.elim{opacity:.3;text-decoration:line-through}
+
+/* Leaderboard action buttons */
+.lb-action{font-family:var(--mono);font-size:10px;padding:1px 4px;background:transparent;border:1px solid var(--br2);color:var(--tx2);cursor:pointer;line-height:1;flex-shrink:0;transition:all .1s}
+.lb-action.del:hover{border-color:var(--red2);color:var(--red2)}
+.lb-action.edit:hover{border-color:var(--gold);color:var(--gold)}
+
+/* Edit modal */
+#edit-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:2000;align-items:center;justify-content:center}
+#edit-modal.open{display:flex}
+#edit-modal-box{background:var(--bg1);border:1px solid var(--gold);padding:16px;width:320px;max-width:90vw}
+.modal-title{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--gold);margin-bottom:12px;letter-spacing:.08em}
+.modal-btns{display:flex;gap:6px;margin-top:12px}
 /* Inspector action buttons */
 .insp-btns{display:flex;gap:5px;margin-bottom:8px}
 .btn-insp{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:4px 8px;cursor:pointer;border:1px solid;flex:1;text-align:center;transition:background .1s}
@@ -324,12 +346,20 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
       </div>
       <div id="proj-indicator">⊙ MODALITÀ PROIEZIONE — DATI NON DEFINITIVI</div>
       <div id="results-box"><div class="empty-msg" style="margin-top:16px">Lancia un <strong>SONDAGGIO</strong> per una proiezione, oppure seleziona i distretti (☑) e premi <strong>SCRUTINIO</strong> per i risultati ufficiali.</div></div>
+      <div id="chart-box">
+        <canvas id="political-chart"></canvas>
+        <div id="chart-legend"><div class="empty-msg" style="font-size:9px">Lancia sondaggio o scrutinio per visualizzare il grafico.</div></div>
+      </div>
       <div id="ticker-sect">
         <div id="ticker-hdr"><span class="t-dot"></span>LIVE FEED</div>
         <div id="ticker-log"></div>
       </div>
       <div id="rp-sect">
-        <div id="rp-hdr">TEXT EXPORT // <span id="rp-phase-label">ROLEPLAY</span> <button class="btn-copy" id="btn-copy">COPIA</button></div>
+        <div id="rp-hdr" style="flex-wrap:wrap;gap:4px">
+          TEXT EXPORT // <span id="rp-phase-label">ROLEPLAY</span>
+          <button class="btn-copy" id="btn-copy-national" onclick="NE.copyNationalReport()">NAZIONE</button>
+          <button class="btn-copy" id="btn-copy-district" onclick="NE.copySelectedDistrictReport()">DISTRETTO</button>
+        </div>
         <textarea id="rp-ta" readonly placeholder="Il comunicato sarà generato contestualmente alla fase attiva."></textarea>
       </div>
     </section>
@@ -354,7 +384,22 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
             <div class="stat-box"><div class="stat-lbl">Soglia Ballottaggio</div><div class="stat-val c-red"  id="s-ball">—</div></div>
             <div class="stat-box"><div class="stat-lbl">Soglia Coalizione</div><div class="stat-val c-green" id="s-coal">—</div></div>
           </div>
-          <div class="duel-grid" id="duel-grid"></div>
+          <!-- Sandbox Duelli -->
+          <div style="margin-top:8px;padding:8px;background:var(--bg0);border:1px solid var(--br)">
+            <div class="lab-lbl" style="margin-bottom:6px;color:var(--gold)">⚔ CONFIGURATORE DUELLO REGIONALE</div>
+            <div style="display:flex;gap:6px;margin-bottom:6px">
+              <div style="flex:1">
+                <div class="lab-lbl">Candidato A</div>
+                <select id="duel-sel-a" class="lab-input" style="padding:3px 5px"></select>
+              </div>
+              <div style="flex:1">
+                <div class="lab-lbl">Candidato B</div>
+                <select id="duel-sel-b" class="lab-input" style="padding:3px 5px"></select>
+              </div>
+            </div>
+            <button class="btn-prim" style="width:100%;font-size:10px;padding:4px" onclick="NE.runSandboxDuel()">⚡ AVVIA DUELLO REGIONALE</button>
+          </div>
+          <div id="duel-history" style="margin-top:6px;display:flex;flex-direction:column;gap:2px"></div>
         </div>
 
         <!-- GENERALI -->
@@ -428,6 +473,28 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
   </div>
 </div>
 
+<!-- Edit candidate modal -->
+<div id="edit-modal">
+  <div id="edit-modal-box">
+    <div class="modal-title" id="edit-modal-title">MODIFICA CANDIDATO</div>
+    <input type="hidden" id="edit-modal-id">
+    <div class="lab-field">
+      <div class="lab-lbl">Nome</div>
+      <input class="lab-input" id="edit-modal-name" type="text">
+    </div>
+    <div class="lab-lbl" style="margin-bottom:4px">Parametri Politici (0.0 — 2.0)</div>
+    <div class="lab-slider-row"><span class="lab-slider-lbl">Establishment</span><input class="lab-slider" id="em-estab" type="range" min="0" max="2" step="0.05" oninput="document.getElementById('emv-estab').textContent=parseFloat(this.value).toFixed(2)"><span class="lab-slider-val" id="emv-estab">1.00</span></div>
+    <div class="lab-slider-row"><span class="lab-slider-lbl">Populism Rural</span><input class="lab-slider" id="em-popu"  type="range" min="0" max="2" step="0.05" oninput="document.getElementById('emv-popu').textContent=parseFloat(this.value).toFixed(2)"><span class="lab-slider-val" id="emv-popu">1.00</span></div>
+    <div class="lab-slider-row"><span class="lab-slider-lbl">Militarism</span><input class="lab-slider" id="em-mili"  type="range" min="0" max="2" step="0.05" oninput="document.getElementById('emv-mili').textContent=parseFloat(this.value).toFixed(2)"><span class="lab-slider-val" id="emv-mili">1.00</span></div>
+    <div class="lab-slider-row"><span class="lab-slider-lbl">Intellect Grec</span><input class="lab-slider" id="em-intel" type="range" min="0" max="2" step="0.05" oninput="document.getElementById('emv-intel').textContent=parseFloat(this.value).toFixed(2)"><span class="lab-slider-val" id="emv-intel">1.00</span></div>
+    <div class="lab-slider-row"><span class="lab-slider-lbl">Underworld Outcast</span><input class="lab-slider" id="em-under" type="range" min="0" max="2" step="0.05" oninput="document.getElementById('emv-under').textContent=parseFloat(this.value).toFixed(2)"><span class="lab-slider-val" id="emv-under">1.00</span></div>
+    <div class="modal-btns">
+      <button class="btn-prim" style="flex:1" onclick="NE.saveEditModal()">✓ SALVA</button>
+      <button class="btn-sec" style="flex:1" onclick="NE.closeEditModal()">ANNULLA</button>
+    </div>
+  </div>
+</div>
+
 <div id="notif"><span id="notif-inner">NOMOS ENGINE v2.0 // Sistema Psefologico Olimpico — 33 Distretti Attivi // OLYMPUS ELECTORAL COMMISSION // Ogni voto è una preghiera, ogni preghiera è un voto // Parametri: Establishment · Populismo Rurale · Militarismo · Intelletto Greco · Outcast degli Inferi // Sistema riservato alla Commissione Elettorale</span></div>
 
 <script>
@@ -435,6 +502,68 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
    NOMOS ENGINE v2.0 — Full Logic (Upgrade: 5-param + Survey/Selective Scrutiny)
 ═══════════════════════════════════════════════════════════════ */
 const NE = (() => {
+
+  /* ── Palette colori candidati ── */
+  const COLOR_PALETTE = [
+    '#c9a84c','#4a7fa5','#27ae60','#8e44ad','#c0392b',
+    '#e67e22','#1abc9c','#3498db','#e91e63','#795548',
+    '#00bcd4','#ff5722','#9c27b0','#607d8b','#f1c40f',
+    '#2ecc71','#e74c3c','#16a085','#d35400','#2980b9'
+  ];
+  const candidateColors = {}; // id → hex color
+  let politicalChart = null;
+
+  function assignColors() {
+    let i = 0;
+    cfg.candidati.forEach(g => {
+      if (!candidateColors[g.id]) {
+        candidateColors[g.id] = g.colore || COLOR_PALETTE[i % COLOR_PALETTE.length];
+        i++;
+      }
+    });
+  }
+
+  function initChart() {
+    const ctx = document.getElementById('political-chart');
+    if (!ctx) return;
+    politicalChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: { labels: [], datasets: [{ data: [], backgroundColor: [], borderWidth: 1, borderColor: '#1a1a1a' }] },
+      options: {
+        responsive: true, maintainAspectRatio: true,
+        plugins: { legend: { display: false }, tooltip: {
+          callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed.toFixed(2)}%` }
+        }},
+        animation: { duration: 400 }
+      }
+    });
+  }
+
+  function chartUpdate(scores) {
+    if (!politicalChart || !scores) return;
+    const cands = getActiveCandidates();
+    const labels = [], data = [], colors = [];
+    cands.forEach(g => {
+      labels.push(g.nome);
+      data.push(parseFloat((scores[g.id] || 0).toFixed(2)));
+      colors.push(candidateColors[g.id] || '#555');
+    });
+    politicalChart.data.labels = labels;
+    politicalChart.data.datasets[0].data = data;
+    politicalChart.data.datasets[0].backgroundColor = colors;
+    politicalChart.update();
+
+    const leg = document.getElementById('chart-legend');
+    if (!leg) return;
+    const sorted = cands.map(g => ({ nome:g.nome, id:g.id, pct:scores[g.id]||0 })).sort((a,b)=>b.pct-a.pct);
+    leg.innerHTML = sorted.map(c =>
+      `<div class="chart-leg-row">
+        <div class="chart-leg-dot" style="background:${candidateColors[c.id]||'#555'}"></div>
+        <span class="chart-leg-name">${c.nome}</span>
+        <span class="chart-leg-pct">${c.pct.toFixed(1)}%</span>
+      </div>`
+    ).join('');
+  }
 
   /* ── Challengers per duelli primari ── */
   const CHALLENGERS = {
@@ -473,6 +602,7 @@ const NE = (() => {
 
   /* ── State ── */
   let cfg            = null;
+  let lastResMap     = {};   // per colorazione mappa (distRes o tempRes sondaggio)
   let distRes        = {};   // {distId: {catId_godId: pct, godId: pct}} — ufficiali
   let finalScores    = {};   // aggregate dagli scrutinizedSet
   let ballotFinal    = {};
@@ -519,6 +649,8 @@ const NE = (() => {
     setText('ball-thr-txt', cfg.elezione.soglia_ballottaggio + '%');
     setText('gen-dist-count', cfg.distretti.length);
 
+    assignColors();
+    initChart();
     buildDistrictGrid();
     buildResultPlaceholders();
     buildLeaderboard(null);
@@ -630,6 +762,22 @@ const NE = (() => {
       const chk = btn.querySelector('.d-scrutiny-chk');
       if (chk && isScrutinized) { chk.checked = true; chk.disabled = true; }
     });
+    updateDistrictMapColors();
+  }
+
+  function updateDistrictMapColors() {
+    const cands = getActiveCandidates();
+    document.querySelectorAll('.d-btn').forEach(btn => {
+      const id = btn.dataset.id;
+      const dr = lastResMap[id];
+      if (!dr) { btn.style.setProperty('--d-color', 'transparent'); btn.style.boxShadow = ''; return; }
+      const leader = cands.map(g => ({ id: g.id, v: dr[g.id] || 0 })).sort((a,b) => b.v - a.v)[0];
+      if (!leader || leader.v === 0) return;
+      const col = candidateColors[leader.id] || '#555';
+      btn.style.background = col + '22';
+      btn.style.borderColor = col + '88';
+      btn.querySelector('.d-id').style.color = col;
+    });
   }
 
   /* ══════════════════════════════════════
@@ -736,45 +884,60 @@ const NE = (() => {
   }
 
   /* ══════════════════════════════════════
-     DUEL GRID (Primarie)
+     SANDBOX DUELLI (Primarie)
   ══════════════════════════════════════ */
-  function buildDuelGrid() {
-    const grid = $('duel-grid'); grid.innerHTML = '';
-    cfg.candidati.filter(g => !outsiderIds.has(g.id)).forEach(g => {
-      const ch   = CHALLENGERS[g.id];
-      const d    = duels[g.id];
-      const row  = document.createElement('div');
-      row.className = 'duel-row'; row.id = `duel-${g.id}`;
-      row.innerHTML = `
-        <span class="duel-god">${g.nome}</span>
-        <span class="duel-sfidante">vs <em>${ch?.nome??'?'}</em></span>
-        <span class="duel-result ${d?d.won?'win':'lose':'pending'}">${d ? (d.won ? '+8% aff.':'—') : 'non giocato'}</span>
-        <button class="duel-btn" onclick="NE.runDuel('${g.id}')" ${d?'disabled':''}>DUELLA</button>`;
-      grid.appendChild(row);
-    });
+  function buildDuelGrid() { populateDuelSelects(); }
+
+  function populateDuelSelects() {
+    const selA = $('duel-sel-a'), selB = $('duel-sel-b');
+    if (!selA || !selB) return;
+    const cands = cfg.candidati.filter(g => !eliminatiSet.has(g.id));
+    const makeOpts = (sel, skipId) => {
+      const prev = sel.value;
+      sel.innerHTML = cands.filter(g => g.id !== skipId)
+        .map(g => `<option value="${g.id}">${g.nome}</option>`).join('');
+      if (cands.find(g => g.id === prev && g.id !== skipId)) sel.value = prev;
+    };
+    makeOpts(selA, selB.value);
+    makeOpts(selB, selA.value);
+    selA.onchange = () => makeOpts(selB, selA.value);
+    selB.onchange = () => makeOpts(selA, selB.value);
   }
 
-  function runDuel(godId) {
-    const god = cfg.candidati.find(g => g.id === godId);
-    const ch  = CHALLENGERS[godId];
-    if (!god || !ch) return;
-    /* godStr = media dei 5 parametri (range 0-2); winProb = godStr / (godStr + challenger.forza) */
-    const vals   = Object.values(god.params || {});
-    const godStr = vals.length ? vals.reduce((s,v)=>s+v,0)/vals.length : 1.0;
-    const winProb = godStr / (godStr + ch.forza);
-    const won     = Math.random() < winProb;
-    duels[godId]  = { rival: ch.nome, won };
-    affinBonus[godId] = won ? 0.08 : 0;
+  function runSandboxDuel() {
+    const idA = $('duel-sel-a')?.value;
+    const idB = $('duel-sel-b')?.value;
+    if (!idA || !idB || idA === idB) { tick('⚠ Seleziona due candidati diversi.', 'err'); return; }
+    const godA = cfg.candidati.find(g => g.id === idA);
+    const godB = cfg.candidati.find(g => g.id === idB);
+    if (!godA || !godB) return;
 
-    const row = $(`duel-${godId}`);
-    if (row) {
-      row.querySelector('.duel-result').className = `duel-result ${won?'win':'lose'}`;
-      row.querySelector('.duel-result').innerHTML = won ? `<span class="c-green">+8% aff.</span>` : `<span class="c-red">—</span>`;
-      row.querySelector('.duel-btn').disabled = true;
+    const str = g => { const v = Object.values(g.params||{}); return v.length ? v.reduce((s,x)=>s+x,0)/v.length : 1.0; };
+    const sA = str(godA), sB = str(godB);
+    const probA = sA / (sA + sB);
+    const wonA  = Math.random() < probA;
+    const winner = wonA ? godA : godB;
+    const loser  = wonA ? godB : godA;
+
+    affinBonus[winner.id] = 0.08;
+    eliminatiSet.add(loser.id);
+
+    const hist = $('duel-history');
+    if (hist) {
+      const row = document.createElement('div');
+      row.className = 'duel-row';
+      row.innerHTML = `<span class="duel-god c-green">✓ ${winner.nome}</span>
+        <span class="duel-sfidante">vs</span>
+        <span class="duel-god c-red" style="text-decoration:line-through">${loser.nome}</span>
+        <span class="duel-result win">+8% aff.</span>`;
+      hist.prepend(row);
     }
-    const displayScores = scrutinizedSet.size > 0 ? finalScores : null;
-    buildLeaderboard(displayScores, projMode && !displayScores);
-    tick(`DUELLO: ${god.nome} vs ${ch.nome} — ${won ? god.nome.toUpperCase()+' VINCE! (+8% affinità globale)' : ch.nome.toUpperCase()+' VINCE. (nessun bonus)'}`, won ? 'ok' : '');
+
+    buildResultPlaceholders();
+    populateDuelSelects();
+    const sc = Object.keys(finalScores).length ? finalScores : null;
+    buildLeaderboard(sc, projMode && !sc);
+    tick(`DUELLO: ${godA.nome} vs ${godB.nome} — ${winner.nome.toUpperCase()} VINCE! ${loser.nome} eliminato.`, 'ok');
   }
 
   /* ══════════════════════════════════════
@@ -868,10 +1031,13 @@ const NE = (() => {
     tick('═══ SONDAGGIO NAZIONALE AVVIATO ═══', 'hl');
 
     const { tempRes, agg } = computeSurveyScores();
+    lastResMap = tempRes;
 
     renderResultBars(agg, false, true);
     buildLeaderboard(agg, true);
     updateGeneraliTab(agg, true);
+    chartUpdate(agg);
+    updateDistrictMapColors();
 
     tick(`Sondaggio completato — ${cfg.distretti.length} distretti analizzati (${scrutinizedSet.size} ufficiali + ${cfg.distretti.length - scrutinizedSet.size} proiettati).`, 'ok');
     $('btn-survey').disabled = false;
@@ -910,6 +1076,7 @@ const NE = (() => {
     /* Pre-compute */
     computeNewDistrictScores(newDists);
     newIds.forEach(id => scrutinizedSet.add(id));
+    newIds.forEach(id => { lastResMap[id] = distRes[id]; });
 
     let di = 0;
     function step() {
@@ -941,6 +1108,7 @@ const NE = (() => {
     finalScores = aggregateDistResults(distRes, scrutDists);
 
     renderResultBars(finalScores, true, false);
+    chartUpdate(finalScores);
     const pct = Math.round(scrutinizedSet.size / cfg.distretti.length * 100);
     $('prog-bar').style.width = pct + '%'; setText('prog-lbl', pct + '%');
     setText('t-dist', `${scrutinizedSet.size}/${cfg.distretti.length}`);
@@ -999,18 +1167,78 @@ const NE = (() => {
     const top    = sorted[0]?.pct||1;
     const banner = isProjection ? '<div class="lb-proj-banner">⊙ PROIEZIONE SONDAGGIO</div>' : '';
     list.innerHTML = banner + sorted.map((c,i) => {
-      const bonus = affinBonus[c.id] ? `+8%` : '';
+      const bonus  = affinBonus[c.id] ? `+8%` : '';
       const isProj = isProjection;
-      return `<div class="lb-row">
+      const dot    = `<span style="display:inline-block;width:7px;height:7px;background:${candidateColors[c.id]||'#555'};margin-right:4px;flex-shrink:0"></span>`;
+      return `<div class="lb-row${eliminatiSet.has(c.id)?' elim':''}">
         <span class="lb-rank${i<3?` r${i+1}`:''}">${i+1}</span>
         <span class="lb-g ${c.genere}">${c.genere}</span>
-        <span class="lb-name">${c.nome}</span>
+        ${dot}<span class="lb-name">${c.nome}</span>
         <div class="lb-bar-w"><div class="lb-bar-f${i===0?' l':''}${isProj?' proj':''}" style="width:${(c.pct/top*100).toFixed(1)}%"></div></div>
         <span class="lb-pct${i===0?(isProj?' c-purple':' c-gold'):''}">${c.pct.toFixed(2)}%</span>
         <span class="lb-delta">${i>0?(c.pct-sorted[0].pct).toFixed(1)+'%':''}</span>
         <span class="lb-bonus">${bonus}</span>
+        <button class="lb-action edit" title="Modifica parametri" onclick="NE.openEditModal('${c.id}')">📝</button>
+        <button class="lb-action del"  title="Elimina candidato"  onclick="NE.eliminateCandidate('${c.id}')">❌</button>
       </div>`;
     }).join('');
+  }
+
+  function eliminateCandidate(id) {
+    const g = cfg.candidati.find(c => c.id === id);
+    if (!g) return;
+    if (!confirm(`Eliminare ${g.nome} dal simulatore? L'azione è irreversibile fino al reset.`)) return;
+    eliminatiSet.add(id);
+    buildResultPlaceholders();
+    const sc = Object.keys(finalScores).length ? finalScores : null;
+    buildLeaderboard(sc, projMode && !sc);
+    updateDistrictMapColors();
+    tick(`[Eliminato] ${g.nome} rimosso dal simulatore.`, 'err');
+    populateDuelSelects();
+  }
+
+  function openEditModal(id) {
+    const g = cfg.candidati.find(c => c.id === id);
+    if (!g) return;
+    document.getElementById('edit-modal-id').value = id;
+    document.getElementById('edit-modal-title').textContent = `MODIFICA — ${g.nome.toUpperCase()}`;
+    document.getElementById('edit-modal-name').value = g.nome;
+    const p = g.params || {};
+    const set = (slid, val) => {
+      const s = document.getElementById(slid);
+      const v = document.getElementById(slid.replace('em-','emv-'));
+      if (s) { s.value = val; if (v) v.textContent = parseFloat(val).toFixed(2); }
+    };
+    set('em-estab', p.establishment ?? 1);
+    set('em-popu',  p.populism_rural ?? 1);
+    set('em-mili',  p.militarism ?? 1);
+    set('em-intel', p.intellect_grec ?? 1);
+    set('em-under', p.underworld_outcast ?? 1);
+    document.getElementById('edit-modal').classList.add('open');
+  }
+
+  function saveEditModal() {
+    const id = document.getElementById('edit-modal-id').value;
+    const g  = cfg.candidati.find(c => c.id === id);
+    if (!g) return;
+    const newNome = document.getElementById('edit-modal-name').value.trim();
+    if (newNome) g.nome = newNome;
+    g.params = {
+      establishment:      parseFloat(document.getElementById('em-estab').value),
+      populism_rural:     parseFloat(document.getElementById('em-popu').value),
+      militarism:         parseFloat(document.getElementById('em-mili').value),
+      intellect_grec:     parseFloat(document.getElementById('em-intel').value),
+      underworld_outcast: parseFloat(document.getElementById('em-under').value)
+    };
+    closeEditModal();
+    const sc = Object.keys(finalScores).length ? finalScores : null;
+    buildLeaderboard(sc, projMode && !sc);
+    populateDuelSelects();
+    tick(`[Modifica] ${g.nome} aggiornato.`, 'ok');
+  }
+
+  function closeEditModal() {
+    document.getElementById('edit-modal').classList.remove('open');
   }
 
   /* ══════════════════════════════════════
@@ -1261,6 +1489,7 @@ const NE = (() => {
     distRes = {}; finalScores = {}; ballotFinal = {}; ballotRes = null;
     scrutinizedSet = new Set();
     eliminatiSet = new Set();
+    lastResMap = {};
     selDist = null;
 
     $('btn-start').disabled  = (phase !== 'generali');
@@ -1278,9 +1507,15 @@ const NE = (() => {
     $('insp-body').innerHTML='<div class="empty-msg">Seleziona un distretto per visualizzare i dati demografici e impostare i modificatori di Hitori.</div>';
     document.querySelectorAll('.d-btn').forEach(btn => {
       btn.classList.remove('active','scrutinized','scrutiny-sel','has-hitori');
+      btn.style.background = ''; btn.style.borderColor = '';
+      const idSpan = btn.querySelector('.d-id'); if (idSpan) idSpan.style.color = '';
       const chk = btn.querySelector('.d-scrutiny-chk');
       if (chk) { chk.checked = false; chk.disabled = false; }
     });
+    populateDuelSelects();
+    $('duel-history').innerHTML = '';
+    if (politicalChart) { politicalChart.data.labels=[]; politicalChart.data.datasets[0].data=[]; politicalChart.update(); }
+    $('chart-legend').innerHTML = '<div class="empty-msg" style="font-size:9px">Lancia sondaggio o scrutinio per visualizzare il grafico.</div>';
     $('ticker-log').innerHTML='';
     tick('Sistema resettato. Pronto per un nuovo scrutinio.','');
   }
@@ -1304,12 +1539,22 @@ const NE = (() => {
   /* ══════════════════════════════════════
      COPY RP
   ══════════════════════════════════════ */
-  function copyRP() {
-    const ta = $('rp-ta'); if(!ta.value) return;
+  function copyRP() { copyNationalReport(); }
+
+  function copyNationalReport() {
+    generateRP(projMode && !Object.keys(finalScores).length, Object.keys(finalScores).length ? finalScores : null);
+    const ta = $('rp-ta'); if (!ta.value) return;
+    const btn = $('btn-copy-national');
     navigator.clipboard.writeText(ta.value).then(() => {
-      const btn=$('btn-copy'); btn.textContent='COPIATO!'; btn.classList.add('copied');
-      setTimeout(()=>{btn.textContent='COPIA';btn.classList.remove('copied');},2200);
-    }).catch(()=>{ ta.select(); document.execCommand('copy'); });
+      if (btn) { btn.textContent = 'COPIATO!'; btn.classList.add('copied'); setTimeout(() => { btn.textContent = 'NAZIONE'; btn.classList.remove('copied'); }, 2200); }
+    }).catch(() => { ta.select(); document.execCommand('copy'); });
+  }
+
+  function copySelectedDistrictReport() {
+    if (!selDist) { tick('⚠ Seleziona prima un distretto dalla mappa.', 'err'); return; }
+    const btn = $('btn-copy-district');
+    copyDistrictReport(selDist);
+    if (btn) { btn.textContent = 'COPIATO!'; btn.classList.add('copied'); setTimeout(() => { btn.textContent = 'DISTRETTO'; btn.classList.remove('copied'); }, 2200); }
   }
 
   /* ══════════════════════════════════════
@@ -1368,8 +1613,9 @@ const NE = (() => {
     };
     cfg.candidati.push(newCand);
     outsiderIds.add(id);
+    candidateColors[id] = COLOR_PALETTE[Object.keys(candidateColors).length % COLOR_PALETTE.length];
     buildResultPlaceholders();
-    buildDuelGrid();
+    populateDuelSelects();
     setText('s-cand', cfg.candidati.length);
     $('lab-name').value = '';
     statusEl.textContent = `✓ ${nome} registrato come Outsider Indipendente (${genere === 'M' ? '♂' : '♀'})`;
@@ -1434,8 +1680,10 @@ const NE = (() => {
   }
 
   /* ── Expose per inline event handlers ── */
-  return { init, runDuel, setHitori, liveHitoriStyle, runBallotScrutiny,
-           toggleLab, labSlider, registerChallenger, localSurvey, copyDistrictReport };
+  return { init, setHitori, liveHitoriStyle, runBallotScrutiny,
+           toggleLab, labSlider, registerChallenger, localSurvey, copyDistrictReport,
+           runSandboxDuel, eliminateCandidate, openEditModal, saveEditModal, closeEditModal,
+           copyNationalReport, copySelectedDistrictReport, populateDuelSelects };
 })();
 
 document.addEventListener('DOMContentLoaded', NE.init);
