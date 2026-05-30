@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOMOS ENGINE v2.0 — Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;border-radius:0!important}
+:root{
+  --bg0:#0a0a0a;--bg1:#111111;--bg2:#1a1a1a;--bg3:#222222;
+  --br:#333333;--br2:#444444;
+  --tx0:#cccccc;--tx1:#888888;--tx2:#555555;
+  --gold:#c9a84c;--gold2:#e8c56a;
+  --blue:#4a7fa5;--blue2:#5b99c7;
+  --red:#c0392b;--red2:#e74c3c;
+  --green:#27ae60;--green2:#2ecc71;
+  --pink:#c2527a;--purple:#8e44ad;
+  --ui:'Inter',sans-serif;--mono:'Roboto Mono','Consolas',monospace;
+}
+html,body{min-height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--ui);font-size:13px;line-height:1.4;overflow-x:hidden}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg0)}
+::-webkit-scrollbar-thumb{background:var(--br2)}
+
+/* ── TOPBAR ── */
+#topbar{display:flex;align-items:center;justify-content:space-between;height:44px;padding:0 20px;background:var(--bg1);border-bottom:2px solid var(--gold);position:sticky;top:0;z-index:100}
+.tb-logo{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--gold);letter-spacing:.08em}
+.tb-logo span{color:var(--tx1);font-weight:400}
+.btn-back{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 13px;background:rgba(201,168,76,.08);border:1px solid var(--gold);color:var(--gold);cursor:pointer;transition:background .1s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-back:hover{background:rgba(201,168,76,.18);color:var(--gold2)}
+
+/* ── LOADING ── */
+#loading-overlay{position:fixed;inset:0;background:var(--bg0);display:flex;align-items:center;justify-content:center;z-index:200;flex-direction:column;gap:12px}
+#loading-overlay.hidden{display:none}
+.loading-txt{font-family:var(--mono);font-size:13px;color:var(--gold);letter-spacing:.1em}
+.loading-bar{width:200px;height:2px;background:var(--bg2);border:1px solid var(--br)}
+.loading-fill{height:100%;background:var(--gold);animation:loadanim 1.2s ease-in-out infinite alternate}
+@keyframes loadanim{0%{width:0}100%{width:100%}}
+
+/* ── MAIN CONTENT ── */
+#content{max-width:1100px;margin:0 auto;padding:24px 20px;display:flex;flex-direction:column;gap:0}
+
+/* ── SECTIONS ── */
+.section{border:1px solid var(--br);margin-bottom:16px;background:var(--bg1)}
+.section-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--br);cursor:pointer;user-select:none}
+.section-hdr:hover{background:var(--bg3)}
+.section-title{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.section-toggle{font-family:var(--mono);font-size:11px;color:var(--tx2);transition:transform .2s}
+.section-toggle.open{transform:rotate(180deg)}
+.section-body{padding:18px 16px}
+.section-body.collapsed{display:none}
+
+/* ── CONTROLS ── */
+.ctrl-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+select.ctrl-select{font-family:var(--mono);font-size:11px;background:var(--bg2);border:1px solid var(--br2);color:var(--tx0);padding:5px 10px;outline:none;cursor:pointer;min-width:200px}
+select.ctrl-select:focus{border-color:var(--gold)}
+.btn-prim{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 13px;background:rgba(201,168,76,.08);border:1px solid var(--gold);color:var(--gold);cursor:pointer;transition:background .1s,color .1s}
+.btn-prim:hover:not(:disabled){background:rgba(201,168,76,.18);color:var(--gold2)}
+.btn-prim:disabled{opacity:.35;cursor:not-allowed}
+.btn-sec{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 13px;background:rgba(91,153,199,.08);border:1px solid var(--blue2);color:var(--blue2);cursor:pointer;transition:background .1s,color .1s}
+.btn-sec:hover:not(:disabled){background:rgba(91,153,199,.18)}
+.btn-sec:disabled{opacity:.35;cursor:not-allowed}
+
+/* ── CHART CONTAINERS ── */
+.chart-wrap{position:relative;background:var(--bg0);border:1px solid var(--br);padding:12px;margin-bottom:14px}
+.chart-wrap canvas{display:block}
+
+/* ── TABLES ── */
+.data-table{width:100%;border-collapse:collapse;font-size:11px}
+.data-table th{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--tx2);padding:6px 8px;border-bottom:1px solid var(--br);text-align:left;background:var(--bg2)}
+.data-table td{padding:5px 8px;border-bottom:1px solid rgba(51,51,51,.4);color:var(--tx0)}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:rgba(255,255,255,.02)}
+.rank-num{font-family:var(--mono);font-size:10px;color:var(--tx2);text-align:right}
+.rank-num.r1{color:var(--gold)}.rank-num.r2{color:#aaa}.rank-num.r3{color:#7a5c14}
+.mono{font-family:var(--mono)}
+.c-gold{color:var(--gold)}.c-blue{color:var(--blue2)}.c-green{color:var(--green)}.c-red{color:var(--red2)}.c-dim{color:var(--tx2)}
+
+/* ── MINI BAR ── */
+.mini-bar-wrap{display:inline-flex;align-items:center;gap:6px;min-width:100px}
+.mini-bar-track{flex:1;min-width:60px;height:6px;background:var(--bg3);border:1px solid var(--br)}
+.mini-bar-fill{height:100%;background:var(--blue2);transition:width .3s}
+
+/* ── RESULT ROWS ── */
+.res-list{display:flex;flex-direction:column;gap:4px;margin-top:12px}
+.res-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(51,51,51,.35)}
+.res-row:last-child{border-bottom:none}
+.res-rank{font-family:var(--mono);font-size:10px;color:var(--tx2);width:20px;text-align:right;flex-shrink:0}
+.res-name{font-size:11px;flex:1;min-width:80px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.res-bar-wrap{flex:2;height:14px;background:var(--bg2);border:1px solid var(--br);position:relative;overflow:hidden}
+.res-bar-fill{height:100%;background:var(--blue2);transition:width .3s}
+.res-bar-fill.leader{background:var(--gold)}
+.res-pct{font-family:var(--mono);font-size:11px;width:52px;text-align:right;flex-shrink:0}
+
+/* ── GRID 2-COL ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.two-col{grid-template-columns:1fr}}
+
+/* ── LABEL ── */
+.lbl{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--tx2);margin-bottom:6px}
+
+/* ── SEARCH ── */
+.search-input{font-family:var(--mono);font-size:11px;background:var(--bg2);border:1px solid var(--br2);color:var(--tx0);padding:5px 10px;outline:none;width:260px}
+.search-input:focus{border-color:var(--gold)}
+
+/* ── BLOCK BADGES ── */
+.block-badge{display:inline-block;font-family:var(--mono);font-size:8px;letter-spacing:.08em;padding:1px 5px;border:1px solid var(--br2);color:var(--tx2)}
+
+/* ── STRENGTH INDICATOR ── */
+.strength-pill{display:inline-block;font-family:var(--mono);font-size:9px;padding:1px 6px;border:1px solid}
+.strength-pill.dom{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
+.strength-pill.weak{border-color:var(--red2);color:var(--red2);background:rgba(192,57,43,.06)}
+
+/* ── COMPARE ── */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.compare-grid{grid-template-columns:1fr}}
+.compare-card{background:var(--bg0);border:1px solid var(--br);padding:14px}
+.compare-card-title{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--br)}
+.adv-list{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.adv-item{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(51,51,51,.3);color:var(--tx1)}
+.adv-item:last-child{border-bottom:none}
+.adv-item strong{color:var(--tx0)}
+
+/* ── INFO BOX ── */
+.info-box{padding:10px 14px;background:var(--bg0);border:1px solid var(--br);font-size:11px;color:var(--tx1);line-height:1.65;margin-bottom:14px}
+
+/* ── SUBTABLE SCROLL ── */
+.table-scroll{max-height:420px;overflow-y:auto}
+</style>
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div id="loading-overlay">
+  <div class="loading-txt">NOMOS ENGINE v2.0 // CARICAMENTO DATI…</div>
+  <div class="loading-bar"><div class="loading-fill"></div></div>
+</div>
+
+<!-- Topbar -->
+<div id="topbar">
+  <div class="tb-logo">NOMOS ENGINE v2.0 <span>// ANALYTICS</span></div>
+  <a href="index.html" class="btn-back">◀ TORNA AL SIMULATORE</a>
+</div>
+
+<!-- Content -->
+<div id="content">
+
+  <!-- SECTION 1: Sondaggio Rapido -->
+  <div class="section" id="sec-sondaggio">
+    <div class="section-hdr" onclick="toggleSection('sec-sondaggio')">
+      <div class="section-title">⊙ SIMULATORE SONDAGGIO RAPIDO</div>
+      <div class="section-toggle open" id="toggle-sec-sondaggio">▼</div>
+    </div>
+    <div class="section-body" id="body-sec-sondaggio">
+      <div class="info-box">
+        Simulazione basata sui 5 parametri politici di ciascun candidato (establishment, populism_rural, militarism, intellect_grec, underworld_outcast). I risultati sono proiezioni demografiche, non voti ufficiali.
+      </div>
+      <div class="ctrl-row">
+        <div>
+          <div class="lbl">Distretto</div>
+          <select class="ctrl-select" id="s1-district-sel">
+            <option value="">-- seleziona distretto --</option>
+          </select>
+        </div>
+        <button class="btn-prim" id="s1-btn-district" onclick="runDistrictSurvey()">AVVIA SONDAGGIO</button>
+        <button class="btn-sec" id="s1-btn-national" onclick="runNationalSurvey()">SONDAGGIO NAZIONALE</button>
+      </div>
+      <div id="s1-results" style="display:none">
+        <div class="two-col">
+          <div>
+            <div class="lbl" id="s1-chart-label">RISULTATO DISTRETTO</div>
+            <div class="chart-wrap" style="height:320px">
+              <canvas id="s1-chart"></canvas>
+            </div>
+          </div>
+          <div>
+            <div class="lbl">CLASSIFICA</div>
+            <div class="res-list" id="s1-res-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: Analisi per candidato -->
+  <div class="section" id="sec-cand">
+    <div class="section-hdr" onclick="toggleSection('sec-cand')">
+      <div class="section-title">📊 ANALISI PER CANDIDATO</div>
+      <div class="section-toggle open" id="toggle-sec-cand">▼</div>
+    </div>
+    <div class="section-body" id="body-sec-cand">
+      <div class="ctrl-row">
+        <div>
+          <div class="lbl">Candidato</div>
+          <select class="ctrl-select" id="s2-cand-sel" onchange="runCandidateAnalysis()">
+            <option value="">-- seleziona candidato --</option>
+          </select>
+        </div>
+      </div>
+      <div id="s2-results" style="display:none">
+        <div class="two-col">
+          <div>
+            <div class="lbl">PROFILO PARAMETRI (0–2)</div>
+            <div class="chart-wrap" style="height:300px">
+              <canvas id="s2-radar"></canvas>
+            </div>
+          </div>
+          <div>
+            <div class="lbl">FORZA PER BLOCCO REGIONALE</div>
+            <table class="data-table" id="s2-block-table">
+              <thead><tr><th>Blocco</th><th>Affinità stimata</th><th>Livello</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <div style="margin-top:16px">
+          <div class="lbl">TOP 10 DISTRETTI FAVOREVOLI</div>
+          <div class="res-list" id="s2-top-dists"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: Classifica sub-distretti -->
+  <div class="section" id="sec-sub">
+    <div class="section-hdr" onclick="toggleSection('sec-sub')">
+      <div class="section-title">🗺️ CLASSIFICA SUB-DISTRETTI</div>
+      <div class="section-toggle open" id="toggle-sec-sub">▼</div>
+    </div>
+    <div class="section-body" id="body-sec-sub">
+      <div class="ctrl-row">
+        <div>
+          <div class="lbl">Candidato</div>
+          <select class="ctrl-select" id="s3-cand-sel" onchange="runSubDistrictRanking()">
+            <option value="">-- seleziona candidato --</option>
+          </select>
+        </div>
+        <div>
+          <div class="lbl">Filtra per nome o distretto</div>
+          <input class="search-input" id="s3-search" type="text" placeholder="Cerca…" oninput="filterSubTable()">
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="data-table" id="s3-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Sub-distretto</th>
+              <th>Distretto padre</th>
+              <th>Stima %</th>
+              <th style="min-width:100px">Forza</th>
+            </tr>
+          </thead>
+          <tbody id="s3-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: Confronto Diretto -->
+  <div class="section" id="sec-compare">
+    <div class="section-hdr" onclick="toggleSection('sec-compare')">
+      <div class="section-title">⚡ CONFRONTO DIRETTO</div>
+      <div class="section-toggle open" id="toggle-sec-compare">▼</div>
+    </div>
+    <div class="section-body" id="body-sec-compare">
+      <div class="ctrl-row">
+        <div>
+          <div class="lbl">Candidato A</div>
+          <select class="ctrl-select" id="s4-cand-a">
+            <option value="">-- seleziona A --</option>
+          </select>
+        </div>
+        <div>
+          <div class="lbl">Candidato B</div>
+          <select class="ctrl-select" id="s4-cand-b">
+            <option value="">-- seleziona B --</option>
+          </select>
+        </div>
+        <button class="btn-prim" onclick="runComparison()" style="align-self:flex-end;margin-bottom:0">CONFRONTA</button>
+      </div>
+      <div id="s4-results" style="display:none">
+        <div class="two-col" style="margin-bottom:16px">
+          <div>
+            <div class="lbl">RADAR PARAMETRI</div>
+            <div class="chart-wrap" style="height:320px">
+              <canvas id="s4-radar"></canvas>
+            </div>
+          </div>
+          <div>
+            <div class="lbl">CONFRONTO PER BLOCCO</div>
+            <table class="data-table" id="s4-block-table">
+              <thead><tr><th>Blocco</th><th id="s4-th-a">A</th><th id="s4-th-b">B</th><th>Vincitore</th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <div style="margin-top:16px">
+              <div class="lbl">VANTAGGIO PER DISTRETTI</div>
+              <div id="s4-district-summary" style="font-size:11px;color:var(--tx1);margin-top:6px;padding:10px;background:var(--bg0);border:1px solid var(--br)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="compare-grid">
+          <div class="compare-card" id="s4-strengths-a">
+            <div class="compare-card-title c-gold" id="s4-strengths-a-title">PUNTI DI FORZA A</div>
+            <div class="adv-list" id="s4-adv-a"></div>
+          </div>
+          <div class="compare-card" id="s4-strengths-b">
+            <div class="compare-card-title c-blue" id="s4-strengths-b-title">PUNTI DI FORZA B</div>
+            <div class="adv-list" id="s4-adv-b"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<script>
+/* ═══════════════════════════════════════
+   CONSTANTS
+═══════════════════════════════════════ */
+const STORAGE_KEY = 'nomos_state_v2';
+
+const PARAM_MAP = {
+  olimpici:   'establishment',
+  minori:     'establishment',
+  ninfe:      'populism_rural',
+  satiri:     'populism_rural',
+  ciclopi:    'militarism',
+  centauri:   'militarism',
+  semidei_ro: 'militarism',
+  semidei_gr: 'intellect_grec',
+  vento:      'intellect_grec',
+  titani:     'underworld_outcast'
+};
+
+const UNDERWORLD_BONUS_DIST = new Set(['D31','D32','D33']);
+
+const PARAM_LABELS = {
+  establishment:   'Establishment',
+  populism_rural:  'Populismo Rurale',
+  militarism:      'Militarismo',
+  intellect_grec:  'Intelletto Ellenico',
+  underworld_outcast: 'Sottomondo/Esiliati'
+};
+
+const PARAM_KEYS = ['establishment','populism_rural','militarism','intellect_grec','underworld_outcast'];
+
+const REGIONAL_BLOCKS = [
+  { id: 'ellenico',    label: 'Blocco Ellenico Antico',    districts: ['D1','D2','D3','D4','D5','D6','D7','D8','D9'] },
+  { id: 'mediterraneo',label: 'Blocco Mediterraneo Esteso',districts: ['D10','D11','D12','D13','D14','D15','D16','D17','D18','D19','D20'] },
+  { id: 'nuovo',       label: 'Blocco Nuovo Mondo',        districts: ['D21','D22','D23','D24','D25','D26','D27'] },
+  { id: 'selvaggi',    label: 'Blocchi Selvaggi e Speciali',districts: ['D28','D29','D30','D31','D32','D33'] }
+];
+
+const COLORS_20 = [
+  '#c9a84c','#5b99c7','#e74c3c','#27ae60','#8e44ad',
+  '#e67e22','#1abc9c','#c2527a','#3498db','#f39c12',
+  '#16a085','#d35400','#2980b9','#8e44ad','#27ae60',
+  '#e91e63','#00bcd4','#ff5722','#9c27b0','#4caf50'
+];
+
+/* ═══════════════════════════════════════
+   STATE
+═══════════════════════════════════════ */
+let cfg = null;
+let s1Chart = null;
+let s2RadarChart = null;
+let s4RadarChart = null;
+let s3AllRows = []; // {rank, subId, subName, parentName, score}
+
+/* ═══════════════════════════════════════
+   INIT
+═══════════════════════════════════════ */
+async function init() {
+  try {
+    const resp = await fetch('elezioni_config.json');
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    cfg = await resp.json();
+
+    // Merge localStorage
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved.candidati && Array.isArray(saved.candidati)) {
+          cfg.candidati = saved.candidati;
+        }
+        if (saved.elezione) cfg.elezione = { ...cfg.elezione, ...saved.elezione };
+      }
+    } catch(e) {}
+
+    populateSelects();
+    document.getElementById('loading-overlay').classList.add('hidden');
+  } catch(e) {
+    document.querySelector('.loading-txt').textContent = 'ERRORE CARICAMENTO: ' + e.message;
+    document.querySelector('.loading-fill').style.background = 'var(--red2)';
+    console.error(e);
+  }
+}
+
+function populateSelects() {
+  const distSel = document.getElementById('s1-district-sel');
+  cfg.distretti.forEach(d => {
+    const o = document.createElement('option');
+    o.value = d.id; o.textContent = d.id + ' — ' + d.nome;
+    distSel.appendChild(o);
+  });
+
+  const candSelectors = ['s2-cand-sel','s3-cand-sel','s4-cand-a','s4-cand-b'];
+  candSelectors.forEach(id => {
+    const sel = document.getElementById(id);
+    cfg.candidati.forEach((c, i) => {
+      const o = document.createElement('option');
+      o.value = c.id; o.textContent = c.nome + (c.epiteto ? ' "' + c.epiteto + '"' : '');
+      sel.appendChild(o);
+    });
+  });
+}
+
+/* ═══════════════════════════════════════
+   AFFINITY ENGINE
+═══════════════════════════════════════ */
+function getAffinity(god, catId, distId) {
+  const paramName = PARAM_MAP[catId] || 'establishment';
+  let val = (god.params && god.params[paramName] != null) ? god.params[paramName] : 1.0;
+  if (paramName === 'underworld_outcast' && UNDERWORLD_BONUS_DIST.has(distId)) {
+    val = Math.min(2.0, val * 1.45);
+  }
+  return val;
+}
+
+/**
+ * Simulate a single district. Returns {godId: pct} summing to 100.
+ * noise: if true, adds small random variation (for "sondaggio" feel).
+ */
+function simulateDistrict(dist, candidates, noise = true) {
+  if (!dist.categorie || !dist.categorie.length) return {};
+  const totPeso = dist.categorie.reduce((s, c) => s + (c.peso || 1), 0);
+  const scores = {};
+  candidates.forEach(g => scores[g.id] = 0);
+
+  dist.categorie.forEach(cat => {
+    const catId = cat.id;
+    const peso = (cat.peso || 1) / totPeso;
+
+    // Raw affinity for each candidate in this category
+    const raw = {};
+    candidates.forEach(g => {
+      let val = getAffinity(g, catId, dist.id);
+      if (noise) val += (Math.random() - 0.5) * 0.15;
+      raw[g.id] = Math.max(0.01, val);
+    });
+
+    // Normalize within category
+    const total = candidates.reduce((s, g) => s + raw[g.id], 0);
+    candidates.forEach(g => {
+      scores[g.id] += (raw[g.id] / total) * peso * 100;
+    });
+  });
+
+  // Re-normalize to 100
+  const tot = candidates.reduce((s, g) => s + scores[g.id], 0);
+  candidates.forEach(g => scores[g.id] = (scores[g.id] / tot) * 100);
+  return scores;
+}
+
+/**
+ * Simulate all districts, return aggregate {godId: pct}
+ */
+function simulateNational(candidates) {
+  if (!cfg) return {};
+
+  // Count total votanti weight
+  let totalWeight = 0;
+  const agg = {};
+  candidates.forEach(g => agg[g.id] = 0);
+
+  cfg.distretti.forEach(dist => {
+    const peso = dist.totale_votanti || 1000;
+    totalWeight += peso;
+    const res = simulateDistrict(dist, candidates, false);
+    candidates.forEach(g => {
+      agg[g.id] += (res[g.id] || 0) * peso;
+    });
+  });
+
+  candidates.forEach(g => agg[g.id] = agg[g.id] / totalWeight);
+  return agg;
+}
+
+/* Estimate candidate strength in a district (deterministic, no noise) */
+function estimateDistrictScore(god, dist) {
+  if (!dist.categorie || !dist.categorie.length) return 1.0;
+  const totPeso = dist.categorie.reduce((s, c) => s + (c.peso || 1), 0);
+  let score = 0;
+  dist.categorie.forEach(cat => {
+    const peso = (cat.peso || 1) / totPeso;
+    score += getAffinity(god, cat.id, dist.id) * peso;
+  });
+  return score;
+}
+
+/* ═══════════════════════════════════════
+   SECTION 1 — SONDAGGIO RAPIDO
+═══════════════════════════════════════ */
+function runDistrictSurvey() {
+  const distId = document.getElementById('s1-district-sel').value;
+  if (!distId || !cfg) return;
+
+  const dist = cfg.distretti.find(d => d.id === distId);
+  if (!dist) return;
+
+  const candidates = cfg.candidati;
+  const scores = simulateDistrict(dist, candidates, true);
+
+  const sorted = [...candidates].sort((a, b) => scores[b.id] - scores[a.id]);
+
+  document.getElementById('s1-chart-label').textContent = 'SONDAGGIO: ' + dist.id + ' — ' + dist.nome.toUpperCase();
+  renderS1Chart(sorted, scores, 'bar');
+  renderS1List(sorted, scores);
+  document.getElementById('s1-results').style.display = 'block';
+}
+
+function runNationalSurvey() {
+  if (!cfg) return;
+  const candidates = cfg.candidati;
+  const scores = simulateNational(candidates);
+  const sorted = [...candidates].sort((a, b) => scores[b.id] - scores[a.id]);
+
+  document.getElementById('s1-chart-label').textContent = 'SONDAGGIO NAZIONALE';
+  renderS1Chart(sorted, scores, 'doughnut');
+  renderS1List(sorted, scores);
+  document.getElementById('s1-results').style.display = 'block';
+}
+
+function renderS1Chart(sorted, scores, type) {
+  const labels = sorted.map(g => g.nome);
+  const data = sorted.map(g => +scores[g.id].toFixed(2));
+  const bgColors = sorted.map((g, i) => COLORS_20[i % 20] + (type === 'doughnut' ? 'dd' : '88'));
+  const borderColors = sorted.map((g, i) => COLORS_20[i % 20]);
+
+  if (s1Chart) { s1Chart.destroy(); s1Chart = null; }
+  const ctx = document.getElementById('s1-chart').getContext('2d');
+
+  const chartCfg = type === 'doughnut' ? {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data, backgroundColor: bgColors, borderColor: borderColors, borderWidth: 1 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: true, position: 'right', labels: { color: '#888', font: { family: 'Roboto Mono', size: 10 }, boxWidth: 12 } },
+        tooltip: { callbacks: { label: ctx => ctx.label + ': ' + ctx.parsed.toFixed(1) + '%' } }
+      }
+    }
+  } : {
+    type: 'bar',
+    data: { labels, datasets: [{ data, backgroundColor: bgColors, borderColor: borderColors, borderWidth: 1 }] },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.x.toFixed(1) + '%' } } },
+      scales: {
+        x: { grid: { color: '#222' }, ticks: { color: '#888', font: { family: 'Roboto Mono', size: 10 }, callback: v => v + '%' }, max: 100 },
+        y: { grid: { color: '#222' }, ticks: { color: '#aaa', font: { family: 'Roboto Mono', size: 10 } } }
+      }
+    }
+  };
+
+  s1Chart = new Chart(ctx, chartCfg);
+}
+
+function renderS1List(sorted, scores) {
+  const list = document.getElementById('s1-res-list');
+  list.innerHTML = '';
+  const max = scores[sorted[0].id] || 1;
+  sorted.forEach((g, i) => {
+    const pct = scores[g.id];
+    const row = document.createElement('div');
+    row.className = 'res-row';
+    row.innerHTML = `
+      <div class="res-rank${i===0?' r1':i===1?' r2':i===2?' r3':''}">${i+1}</div>
+      <div class="res-name" title="${g.nome}">${g.nome}</div>
+      <div class="res-bar-wrap"><div class="res-bar-fill${i===0?' leader':''}" style="width:${(pct/max*100).toFixed(1)}%;background:${COLORS_20[i%20]}88;border-right:2px solid ${COLORS_20[i%20]}"></div></div>
+      <div class="res-pct" style="color:${COLORS_20[i%20]}">${pct.toFixed(1)}%</div>
+    `;
+    list.appendChild(row);
+  });
+}
+
+/* ═══════════════════════════════════════
+   SECTION 2 — ANALISI PER CANDIDATO
+═══════════════════════════════════════ */
+function runCandidateAnalysis() {
+  const candId = document.getElementById('s2-cand-sel').value;
+  if (!candId || !cfg) return;
+
+  const god = cfg.candidati.find(g => g.id === candId);
+  if (!god) return;
+
+  // Radar chart
+  const params = god.params || {};
+  const radarData = PARAM_KEYS.map(k => params[k] != null ? params[k] : 1.0);
+
+  if (s2RadarChart) { s2RadarChart.destroy(); s2RadarChart = null; }
+  const ctx = document.getElementById('s2-radar').getContext('2d');
+  s2RadarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: PARAM_KEYS.map(k => PARAM_LABELS[k]),
+      datasets: [{
+        label: god.nome,
+        data: radarData,
+        backgroundColor: 'rgba(201,168,76,0.15)',
+        borderColor: '#c9a84c',
+        borderWidth: 2,
+        pointBackgroundColor: '#c9a84c',
+        pointRadius: 4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        r: {
+          min: 0, max: 2,
+          grid: { color: '#2a2a2a' },
+          angleLines: { color: '#2a2a2a' },
+          ticks: { color: '#555', backdropColor: 'transparent', font: { family: 'Roboto Mono', size: 9 }, stepSize: 0.5 },
+          pointLabels: { color: '#888', font: { family: 'Roboto Mono', size: 10 } }
+        }
+      }
+    }
+  });
+
+  // Block table
+  const tbody = document.querySelector('#s2-block-table tbody');
+  tbody.innerHTML = '';
+  REGIONAL_BLOCKS.forEach(block => {
+    const blockDists = cfg.distretti.filter(d => block.districts.includes(d.id));
+    if (!blockDists.length) return;
+    const avgScore = blockDists.reduce((s, d) => s + estimateDistrictScore(god, d), 0) / blockDists.length;
+    const pct = Math.min(100, (avgScore / 2) * 100);
+    const level = pct >= 65 ? '<span class="strength-pill dom">FORTE</span>' : pct >= 45 ? '<span class="strength-pill" style="border-color:#888;color:#888">MEDIO</span>' : '<span class="strength-pill weak">DEBOLE</span>';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${block.label}</td><td class="mono c-gold">${pct.toFixed(1)}%</td><td>${level}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Top 10 districts
+  const distScores = cfg.distretti.map(d => ({ dist: d, score: estimateDistrictScore(god, d) }));
+  distScores.sort((a, b) => b.score - a.score);
+  const top10 = distScores.slice(0, 10);
+
+  const topList = document.getElementById('s2-top-dists');
+  topList.innerHTML = '';
+  const maxS = top10[0]?.score || 1;
+  top10.forEach((item, i) => {
+    const pct = Math.min(100, (item.score / 2) * 100);
+    const row = document.createElement('div');
+    row.className = 'res-row';
+    row.innerHTML = `
+      <div class="res-rank${i===0?' r1':i===1?' r2':i===2?' r3':''}">${i+1}</div>
+      <div class="res-name"><span class="mono c-gold" style="font-size:10px">${item.dist.id}</span> ${item.dist.nome}</div>
+      <div class="res-bar-wrap"><div class="res-bar-fill${i===0?' leader':''}" style="width:${(item.score/maxS*100).toFixed(1)}%"></div></div>
+      <div class="res-pct">${pct.toFixed(1)}%</div>
+    `;
+    topList.appendChild(row);
+  });
+
+  document.getElementById('s2-results').style.display = 'block';
+}
+
+/* ═══════════════════════════════════════
+   SECTION 3 — CLASSIFICA SUB-DISTRETTI
+═══════════════════════════════════════ */
+function runSubDistrictRanking() {
+  const candId = document.getElementById('s3-cand-sel').value;
+  if (!candId || !cfg) { document.getElementById('s3-tbody').innerHTML = ''; return; }
+
+  const god = cfg.candidati.find(g => g.id === candId);
+  if (!god) return;
+
+  // Build sub-district list from cfg
+  s3AllRows = [];
+  cfg.distretti.forEach(dist => {
+    if (dist.sub_distretti && dist.sub_distretti.length) {
+      dist.sub_distretti.forEach(sub => {
+        // Use sub-district's own categorie if available, else parent's
+        const subDist = { ...dist, id: dist.id, categorie: sub.categorie || dist.categorie };
+        const score = estimateSubScore(god, sub, dist);
+        s3AllRows.push({
+          subId: sub.id,
+          subName: sub.nome,
+          parentId: dist.id,
+          parentName: dist.nome,
+          score
+        });
+      });
+    } else {
+      // No sub-districts: treat district itself
+      const score = estimateDistrictScore(god, dist);
+      s3AllRows.push({
+        subId: dist.id,
+        subName: dist.nome,
+        parentId: dist.id,
+        parentName: dist.nome,
+        score
+      });
+    }
+  });
+
+  s3AllRows.sort((a, b) => b.score - a.score);
+  s3AllRows.forEach((r, i) => r.rank = i + 1);
+
+  document.getElementById('s3-search').value = '';
+  renderS3Table(s3AllRows);
+}
+
+function estimateSubScore(god, sub, parentDist) {
+  // Use sub's own categorie if present, else parent's
+  const categorie = (sub.categorie && sub.categorie.length) ? sub.categorie : parentDist.categorie;
+  if (!categorie || !categorie.length) return 1.0;
+  const totPeso = categorie.reduce((s, c) => s + (c.peso || 1), 0);
+  let score = 0;
+  categorie.forEach(cat => {
+    const peso = (cat.peso || 1) / totPeso;
+    score += getAffinity(god, cat.id, parentDist.id) * peso;
+  });
+  return score;
+}
+
+function renderS3Table(rows) {
+  const tbody = document.getElementById('s3-tbody');
+  tbody.innerHTML = '';
+  const maxScore = rows.length ? rows[0].score : 1;
+  rows.forEach((r, idx) => {
+    const pct = Math.min(100, (r.score / 2) * 100);
+    const rankClass = r.rank === 1 ? 'r1' : r.rank === 2 ? 'r2' : r.rank === 3 ? 'r3' : '';
+    const barW = Math.min(100, (r.score / (maxScore || 1)) * 100).toFixed(1);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="rank-num ${rankClass}">${r.rank}</td>
+      <td><span class="mono" style="font-size:10px;color:#888">${r.subId}</span> <span style="font-size:11px">${r.subName}</span></td>
+      <td><span class="mono" style="font-size:10px;color:var(--gold)">${r.parentId}</span> ${r.parentName}</td>
+      <td class="mono" style="color:var(--gold)">${pct.toFixed(1)}%</td>
+      <td><div class="mini-bar-wrap"><div class="mini-bar-track"><div class="mini-bar-fill" style="width:${barW}%"></div></div></div></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function filterSubTable() {
+  const q = document.getElementById('s3-search').value.toLowerCase();
+  if (!q) { renderS3Table(s3AllRows); return; }
+  const filtered = s3AllRows.filter(r =>
+    r.subName.toLowerCase().includes(q) ||
+    r.subId.toLowerCase().includes(q) ||
+    r.parentName.toLowerCase().includes(q) ||
+    r.parentId.toLowerCase().includes(q)
+  );
+  renderS3Table(filtered);
+}
+
+/* ═══════════════════════════════════════
+   SECTION 4 — CONFRONTO DIRETTO
+═══════════════════════════════════════ */
+function runComparison() {
+  const idA = document.getElementById('s4-cand-a').value;
+  const idB = document.getElementById('s4-cand-b').value;
+  if (!idA || !idB || !cfg) return;
+  if (idA === idB) { alert('Seleziona due candidati diversi.'); return; }
+
+  const godA = cfg.candidati.find(g => g.id === idA);
+  const godB = cfg.candidati.find(g => g.id === idB);
+  if (!godA || !godB) return;
+
+  const colorA = '#c9a84c'; // gold
+  const colorB = '#5b99c7'; // blue
+
+  // Update header labels
+  document.getElementById('s4-th-a').textContent = godA.nome;
+  document.getElementById('s4-th-b').textContent = godB.nome;
+
+  // Radar chart
+  const paramsA = godA.params || {};
+  const paramsB = godB.params || {};
+  const dataA = PARAM_KEYS.map(k => paramsA[k] != null ? paramsA[k] : 1.0);
+  const dataB = PARAM_KEYS.map(k => paramsB[k] != null ? paramsB[k] : 1.0);
+
+  if (s4RadarChart) { s4RadarChart.destroy(); s4RadarChart = null; }
+  const ctx = document.getElementById('s4-radar').getContext('2d');
+  s4RadarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: PARAM_KEYS.map(k => PARAM_LABELS[k]),
+      datasets: [
+        {
+          label: godA.nome,
+          data: dataA,
+          backgroundColor: 'rgba(201,168,76,0.12)',
+          borderColor: colorA,
+          borderWidth: 2,
+          pointBackgroundColor: colorA,
+          pointRadius: 4
+        },
+        {
+          label: godB.nome,
+          data: dataB,
+          backgroundColor: 'rgba(91,153,199,0.12)',
+          borderColor: colorB,
+          borderWidth: 2,
+          pointBackgroundColor: colorB,
+          pointRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          labels: { color: '#888', font: { family: 'Roboto Mono', size: 10 }, boxWidth: 12 }
+        }
+      },
+      scales: {
+        r: {
+          min: 0, max: 2,
+          grid: { color: '#2a2a2a' },
+          angleLines: { color: '#2a2a2a' },
+          ticks: { color: '#555', backdropColor: 'transparent', font: { family: 'Roboto Mono', size: 9 }, stepSize: 0.5 },
+          pointLabels: { color: '#888', font: { family: 'Roboto Mono', size: 10 } }
+        }
+      }
+    }
+  });
+
+  // Block comparison table
+  const tbody = document.querySelector('#s4-block-table tbody');
+  tbody.innerHTML = '';
+  REGIONAL_BLOCKS.forEach(block => {
+    const blockDists = cfg.distretti.filter(d => block.districts.includes(d.id));
+    if (!blockDists.length) return;
+    const scoreA = blockDists.reduce((s, d) => s + estimateDistrictScore(godA, d), 0) / blockDists.length;
+    const scoreB = blockDists.reduce((s, d) => s + estimateDistrictScore(godB, d), 0) / blockDists.length;
+    const pctA = Math.min(100, (scoreA / 2) * 100);
+    const pctB = Math.min(100, (scoreB / 2) * 100);
+    const winner = pctA > pctB
+      ? `<span style="color:${colorA}">${godA.nome}</span>`
+      : pctB > pctA
+        ? `<span style="color:${colorB}">${godB.nome}</span>`
+        : '<span style="color:#555">PAREGGIO</span>';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${block.label}</td>
+      <td class="mono" style="color:${colorA}">${pctA.toFixed(1)}%</td>
+      <td class="mono" style="color:${colorB}">${pctB.toFixed(1)}%</td>
+      <td>${winner}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // District advantage
+  let winsA = 0, winsB = 0;
+  cfg.distretti.forEach(dist => {
+    const sA = estimateDistrictScore(godA, dist);
+    const sB = estimateDistrictScore(godB, dist);
+    if (sA > sB) winsA++;
+    else if (sB > sA) winsB++;
+  });
+  const total = cfg.distretti.length;
+  const sumDiv = document.getElementById('s4-district-summary');
+  if (winsA > winsB) {
+    sumDiv.innerHTML = `<span style="color:${colorA}">${godA.nome}</span> è favorito in <strong>${winsA}</strong> distretti su ${total} (${godB.nome}: <strong>${winsB}</strong>). Vantaggio: <span class="mono" style="color:${colorA}">+${winsA - winsB}</span> distretti.`;
+  } else if (winsB > winsA) {
+    sumDiv.innerHTML = `<span style="color:${colorB}">${godB.nome}</span> è favorito in <strong>${winsB}</strong> distretti su ${total} (${godA.nome}: <strong>${winsA}</strong>). Vantaggio: <span class="mono" style="color:${colorB}">+${winsB - winsA}</span> distretti.`;
+  } else {
+    sumDiv.innerHTML = `Parità perfetta: entrambi favoriti in <strong>${winsA}</strong> distretti su ${total}.`;
+  }
+
+  // Punti di forza esclusivi
+  const threshold = 0.3;
+  document.getElementById('s4-strengths-a-title').textContent = 'PUNTI DI FORZA — ' + godA.nome.toUpperCase();
+  document.getElementById('s4-strengths-b-title').textContent = 'PUNTI DI FORZA — ' + godB.nome.toUpperCase();
+
+  const advAEl = document.getElementById('s4-adv-a');
+  const advBEl = document.getElementById('s4-adv-b');
+  advAEl.innerHTML = ''; advBEl.innerHTML = '';
+
+  // Find categories where one dominates
+  const catNames = {
+    establishment: 'Olimpici & Minori (Establishment)',
+    populism_rural: 'Ninfe & Satiri (Populismo)',
+    militarism: 'Ciclopi, Centauri, Semidei (Militarismo)',
+    intellect_grec: 'Semidei Greci & Vento (Intelletto)',
+    underworld_outcast: 'Titani (Sottomondo)'
+  };
+
+  PARAM_KEYS.forEach(k => {
+    const vA = (godA.params && godA.params[k] != null) ? godA.params[k] : 1.0;
+    const vB = (godB.params && godB.params[k] != null) ? godB.params[k] : 1.0;
+    const diff = vA - vB;
+    if (diff > threshold) {
+      const el = document.createElement('div');
+      el.className = 'adv-item';
+      el.innerHTML = `<strong>${catNames[k]}</strong><br><span class="mono" style="color:${colorA}">${vA.toFixed(2)}</span> vs <span class="mono">${vB.toFixed(2)}</span> (+${diff.toFixed(2)})`;
+      advAEl.appendChild(el);
+    } else if (-diff > threshold) {
+      const el = document.createElement('div');
+      el.className = 'adv-item';
+      el.innerHTML = `<strong>${catNames[k]}</strong><br><span class="mono" style="color:${colorB}">${vB.toFixed(2)}</span> vs <span class="mono">${vA.toFixed(2)}</span> (+${(-diff).toFixed(2)})`;
+      advBEl.appendChild(el);
+    }
+  });
+
+  if (!advAEl.innerHTML) advAEl.innerHTML = '<div class="adv-item" style="color:var(--tx2)">Nessun vantaggio significativo (&gt;0.3)</div>';
+  if (!advBEl.innerHTML) advBEl.innerHTML = '<div class="adv-item" style="color:var(--tx2)">Nessun vantaggio significativo (&gt;0.3)</div>';
+
+  document.getElementById('s4-results').style.display = 'block';
+}
+
+/* ═══════════════════════════════════════
+   SECTION COLLAPSE
+═══════════════════════════════════════ */
+function toggleSection(id) {
+  const body = document.getElementById('body-' + id);
+  const tog = document.getElementById('toggle-' + id);
+  const collapsed = body.classList.toggle('collapsed');
+  tog.classList.toggle('open', !collapsed);
+}
+
+/* ═══════════════════════════════════════
+   BOOT
+═══════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
