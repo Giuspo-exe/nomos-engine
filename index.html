@@ -767,17 +767,24 @@ const NE = (() => {
 
   function updateDistrictMapColors() {
     const cands = getActiveCandidates();
+    let css = '';
     document.querySelectorAll('.d-btn').forEach(btn => {
       const id = btn.dataset.id;
       const dr = lastResMap[id];
-      if (!dr) { btn.style.setProperty('--d-color', 'transparent'); btn.style.boxShadow = ''; return; }
+      if (!dr) return;
       const leader = cands.map(g => ({ id: g.id, v: dr[g.id] || 0 })).sort((a,b) => b.v - a.v)[0];
       if (!leader || leader.v === 0) return;
       const col = candidateColors[leader.id] || '#555';
-      btn.style.background = col + '22';
-      btn.style.borderColor = col + '88';
-      btn.querySelector('.d-id').style.color = col;
+      css += `.d-btn[data-id="${id}"]:not(.scrutiny-sel):not(.scrutinized):not(.has-hitori){background:${col}22;border-color:${col}88;}\n`;
+      css += `.d-btn[data-id="${id}"] .d-id{color:${col};}\n`;
     });
+    let styleEl = document.getElementById('district-color-style');
+    if (!styleEl) {
+      styleEl = document.createElement('style');
+      styleEl.id = 'district-color-style';
+      document.head.appendChild(styleEl);
+    }
+    styleEl.textContent = css;
   }
 
   /* ══════════════════════════════════════
@@ -1507,11 +1514,11 @@ const NE = (() => {
     $('insp-body').innerHTML='<div class="empty-msg">Seleziona un distretto per visualizzare i dati demografici e impostare i modificatori di Hitori.</div>';
     document.querySelectorAll('.d-btn').forEach(btn => {
       btn.classList.remove('active','scrutinized','scrutiny-sel','has-hitori');
-      btn.style.background = ''; btn.style.borderColor = '';
-      const idSpan = btn.querySelector('.d-id'); if (idSpan) idSpan.style.color = '';
       const chk = btn.querySelector('.d-scrutiny-chk');
       if (chk) { chk.checked = false; chk.disabled = false; }
     });
+    const styleEl = document.getElementById('district-color-style');
+    if (styleEl) styleEl.textContent = '';
     populateDuelSelects();
     $('duel-history').innerHTML = '';
     if (politicalChart) { politicalChart.data.labels=[]; politicalChart.data.datasets[0].data=[]; politicalChart.update(); }
