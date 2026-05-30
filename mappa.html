@@ -76,8 +76,15 @@
   }
   #left-col {
     border-right: 1px solid var(--border);
-    overflow-y: auto;
+    overflow: hidden;
     padding: 16px;
+    display: flex;
+    flex-direction: column;
+  }
+  #map-controls-top {
+    overflow-y: auto;
+    flex-shrink: 0;
+    max-height: 40vh;
   }
   #right-col {
     overflow-y: auto;
@@ -185,59 +192,51 @@
   #cand-stats .stat-line { color: var(--text-dim); margin-bottom: 3px; }
   #cand-stats .stat-val { color: var(--gold); font-weight: 700; }
 
-  /* DISTRICT GRID */
-  #district-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 5px;
-    margin-bottom: 16px;
-  }
-  .district-tile {
+  /* MAP */
+  #map {
+    flex: 1;
+    width: 100%;
+    height: 0; /* forces flex to control height */
+    min-height: 300px;
+    border: 1px solid var(--border2);
+    margin-bottom: 8px;
     position: relative;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    padding: 8px 7px;
+    overflow: hidden;
+    background: #050d18;
+    box-sizing: border-box;
+  }
+  #world-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .district-poly {
+    transition: fill 0.5s ease, stroke 0.3s ease;
     cursor: pointer;
-    transition: background-color 0.5s ease, border-color 0.2s;
-    min-height: 70px;
-    overflow: hidden;
   }
-  .district-tile:hover { border-color: var(--gold); z-index: 1; }
-  .district-tile.selected { border-color: var(--gold) !important; outline: 2px solid var(--gold); }
-  .district-tile.dimmed { opacity: 0.25; }
-  .district-tile .d-id {
+  .district-poly:hover {
+    filter: brightness(1.3);
+  }
+  .district-label {
+    pointer-events: none;
     font-family: 'Roboto Mono', monospace;
-    font-size: 15px;
+    font-size: 8px;
     font-weight: 700;
-    color: rgba(255,255,255,0.9);
-    line-height: 1;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    fill: rgba(255,255,255,0.75);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.9);
   }
-  .district-tile .d-name {
-    font-size: 9px;
-    color: rgba(255,255,255,0.7);
-    margin-top: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  .district-name-label {
+    pointer-events: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 6px;
+    fill: rgba(255,255,255,0.45);
   }
-  .district-tile .d-bottom {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    margin-top: 6px;
+  /* Region dim overlay */
+  .district-poly.region-hidden {
+    opacity: 0.12;
   }
-  .district-tile .d-dot {
-    width: 8px; height: 8px;
-    flex-shrink: 0;
-    background: #555;
-  }
-  .district-tile .d-pct {
-    font-family: 'Roboto Mono', monospace;
-    font-size: 9px;
-    color: rgba(255,255,255,0.85);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  .district-poly.cand-dimmed {
+    opacity: 0.18;
   }
 
   /* LEGEND */
@@ -384,35 +383,39 @@
 <div id="main-layout">
   <!-- LEFT COLUMN -->
   <div id="left-col">
-    <div class="section-title">▦ Mappa dei Distretti Olimpici</div>
+    <div id="map-controls-top">
+      <div class="section-title">▦ Mappa dei Distretti Olimpici</div>
 
-    <div id="toolbar">
-      <button class="btn gold" id="btn-simulate">▶ SIMULA TUTTI I DISTRETTI</button>
-      <button class="btn" id="btn-sondaggio">◎ SONDAGGIO CONTINUO</button>
-      <button class="btn" id="btn-reset-filter" style="display:none">✕ RESET FILTRO</button>
+      <div id="toolbar">
+        <button class="btn gold" id="btn-simulate">▶ SIMULA TUTTI I DISTRETTI</button>
+        <button class="btn" id="btn-sondaggio">◎ SONDAGGIO CONTINUO</button>
+        <button class="btn" id="btn-reset-filter" style="display:none">✕ RESET FILTRO</button>
+      </div>
+
+      <div id="region-filters">
+        <span style="font-family:'Roboto Mono',monospace;font-size:10px;color:var(--text-muted);align-self:center">REGIONI:</span>
+        <button class="region-btn active" data-region="all">TUTTI</button>
+        <button class="region-btn" data-region="Blocco Ellenico Antico">ELLENICO</button>
+        <button class="region-btn" data-region="Blocco Mediterraneo Esteso">MEDITERRANEO</button>
+        <button class="region-btn" data-region="Blocco Nuovo Mondo">NUOVO MONDO</button>
+        <button class="region-btn" data-region="Blocchi Selvaggi e Speciali">SELVAGGI</button>
+      </div>
+
+      <div id="cand-stats">
+        <div class="stat-line">Candidato selezionato: <span id="stat-cand-name" class="stat-val">—</span></div>
+        <div class="stat-line">Distretti vinti: <span id="stat-wins" class="stat-val">0</span>/33</div>
+        <div class="stat-line">Peso politico controllato: <span id="stat-peso" class="stat-val">0</span></div>
+      </div>
+
+      <div id="cand-filters"></div>
     </div>
 
-    <div id="region-filters">
-      <span style="font-family:'Roboto Mono',monospace;font-size:10px;color:var(--text-muted);align-self:center">REGIONI:</span>
-      <button class="region-btn active" data-region="all">TUTTI</button>
-      <button class="region-btn" data-region="Blocco Ellenico Antico">ELLENICO</button>
-      <button class="region-btn" data-region="Blocco Mediterraneo Esteso">MEDITERRANEO</button>
-      <button class="region-btn" data-region="Blocco Nuovo Mondo">NUOVO MONDO</button>
-      <button class="region-btn" data-region="Blocchi Selvaggi e Speciali">SELVAGGI</button>
+    <div id="map">
+      <svg id="world-svg" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid meet"></svg>
     </div>
 
-    <div id="cand-stats">
-      <div class="stat-line">Candidato selezionato: <span id="stat-cand-name" class="stat-val">—</span></div>
-      <div class="stat-line">Distretti vinti: <span id="stat-wins" class="stat-val">0</span>/33</div>
-      <div class="stat-line">Peso politico controllato: <span id="stat-peso" class="stat-val">0</span></div>
-    </div>
-
-    <div id="cand-filters"></div>
-
-    <div id="district-grid"></div>
-
-    <div class="section-title" style="margin-top:8px">◉ Legenda Candidati</div>
-    <div id="legend"></div>
+    <div class="section-title" style="margin-top:8px;flex-shrink:0">◉ Legenda Candidati</div>
+    <div id="legend" style="flex-shrink:0"></div>
   </div>
 
   <!-- RIGHT COLUMN -->
@@ -480,6 +483,55 @@ const PARAM_MAP = {
 const UNDERWORLD_BONUS = new Set(['D31','D32','D33']);
 
 // ============================================================
+//  IMAGINARY WORLD MAP — SVG POLYGON SHAPES
+//  ViewBox: 0 0 960 540
+// ============================================================
+const DISTRICT_SHAPES = {
+  // ── BLOCCO ELLENICO ANTICO ─────────────────────────────
+  // Penisola Ellenica (centro-destra)
+  D11: { pts:"440,130 530,122 526,62 444,58",           lx:487, ly:93  }, // Dodona — nord-ovest
+  D1:  { pts:"530,122 638,114 634,58 526,62",           lx:584, ly:88  }, // Monte Olimpo — nord
+  D5:  { pts:"440,130 505,122 502,188 438,195",         lx:472, ly:158 }, // Delfi
+  D7:  { pts:"505,122 570,115 565,182 502,188",         lx:537, ly:152 }, // Tebe
+  D6:  { pts:"570,115 638,108 634,174 565,182",         lx:601, ly:147 }, // Eleusi
+  D2:  { pts:"638,114 706,106 702,172 636,178",         lx:671, ly:142 }, // Atene
+  D4:  { pts:"438,195 505,188 500,255 435,262",         lx:470, ly:225 }, // Olimpia
+  D8:  { pts:"505,188 638,174 634,242 500,255",         lx:569, ly:212 }, // Corinto
+  D9:  { pts:"505,255 570,248 565,315 500,322",         lx:536, ly:283 }, // Argo
+  D10: { pts:"570,248 638,242 634,308 565,315",         lx:602, ly:277 }, // Micene
+  D3:  { pts:"435,320 638,308 634,392 436,400",         lx:535, ly:356 }, // Sparta
+  // Isole Elleniche
+  D12: { pts:"710,168 800,160 796,232 708,238",         lx:754, ly:199 }, // Cicladi
+  D13: { pts:"460,410 660,394 656,460 458,467",         lx:558, ly:433 }, // Creta
+
+  // ── BLOCCO MEDITERRANEO ESTESO ─────────────────────────
+  D16: { pts:"710,100 800,92 796,162 710,170",          lx:754, ly:131 }, // Lesbo
+  D15: { pts:"770,238 848,230 844,296 768,303",         lx:808, ly:264 }, // Rodi
+  D14: { pts:"804,148 892,140 888,213 802,220",         lx:847, ly:177 }, // Cipro
+  D17: { pts:"220,272 368,260 370,328 222,335",         lx:295, ly:297 }, // Sicilia
+  D18: { pts:"222,105 340,95 342,185 224,192",          lx:282, ly:143 }, // Roma
+  D19: { pts:"340,95 408,88 410,178 342,185",           lx:374, ly:136 }, // Napoli-Magna Grecia
+
+  // ── BLOCCHI SELVAGGI E SPECIALI ────────────────────────
+  D30: { pts:"636,112 724,104 718,50 632,52",           lx:678, ly:78  }, // Tracia — nord-est
+  D29: { pts:"435,262 505,255 500,322 432,328",         lx:467, ly:291 }, // Arcadia — nelle montagne
+  D31: { pts:"662,318 900,305 896,398 660,408",         lx:778, ly:357 }, // Egitto
+  D32: { pts:"232,400 302,392 304,458 234,465",         lx:268, ly:428 }, // Esperidi (isola atlantica)
+  D33: { pts:"334,342 407,335 410,398 336,405",         lx:372, ly:368 }, // Itinerante (isola med)
+
+  // ── BLOCCO NUOVO MONDO ────────────────────────────────
+  D28: { pts:"22,68 112,60 114,130 22,137",             lx:68,  ly:97  }, // Seattle
+  D23: { pts:"114,60 202,52 204,122 114,130",           lx:159, ly:89  }, // Boston
+  D26: { pts:"20,188 110,180 112,252 20,258",           lx:65,  ly:218 }, // Los Angeles
+  D27: { pts:"114,130 204,122 206,194 114,200",         lx:160, ly:160 }, // Chicago
+  D21: { pts:"114,200 165,194 167,264 114,270",         lx:140, ly:231 }, // Nuova Roma
+  D20: { pts:"165,194 204,188 206,257 167,264",         lx:186, ly:224 }, // Long Island
+  D22: { pts:"114,270 167,264 169,334 114,340",         lx:140, ly:300 }, // Manhattan
+  D24: { pts:"167,264 206,257 208,327 169,334",         lx:188, ly:294 }, // Filadelfia
+  D25: { pts:"20,372 150,362 152,430 20,437",           lx:86,  ly:399 }, // New Orleans
+};
+
+// ============================================================
 //  STATE
 // ============================================================
 let cfg = null;
@@ -492,6 +544,7 @@ let activeRegion = 'all';
 let sondaggioTimer = null;
 let chartBar = null;
 let chartDemo = null;
+let mapPolys = {};       // districtId -> SVG polygon element
 
 // ============================================================
 //  LOAD DATA
@@ -529,7 +582,7 @@ async function loadData() {
   });
 
   buildCandFilters();
-  buildDistrictGrid();
+  initMap();
   buildLegend();
 }
 
@@ -627,29 +680,302 @@ function runFullSimulation(noise = 0.08) {
 }
 
 // ============================================================
-//  BUILD UI
+//  BUILD UI — SVG IMAGINARY MAP
 // ============================================================
-function buildDistrictGrid() {
-  const grid = document.getElementById('district-grid');
-  grid.innerHTML = '';
-  cfg.distretti.forEach(d => {
-    const tile = document.createElement('div');
-    tile.className = 'district-tile';
-    tile.id = 'tile-' + d.id;
-    tile.dataset.id = d.id;
-    tile.dataset.region = d.regione;
-    const shortName = d.nome.split(' ')[0];
-    tile.innerHTML = `
-      <div class="d-id mono">${d.id}</div>
-      <div class="d-name">${shortName}</div>
-      <div class="d-bottom">
-        <div class="d-dot" id="dot-${d.id}"></div>
-        <div class="d-pct mono" id="pct-${d.id}">—</div>
-      </div>`;
-    tile.addEventListener('click', () => showDetail(d.id, true));
-    grid.appendChild(tile);
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+function initMap() {
+  const svg = document.getElementById('world-svg');
+  svg.innerHTML = '';
+
+  // ── Ocean background ──────────────────────────────────────
+  const defs = document.createElementNS(SVG_NS, 'defs');
+
+  // Radial gradient for ocean depth effect
+  const oceanGrad = document.createElementNS(SVG_NS, 'radialGradient');
+  oceanGrad.id = 'ocean-grad';
+  oceanGrad.setAttribute('cx', '50%'); oceanGrad.setAttribute('cy', '50%');
+  oceanGrad.setAttribute('r', '70%');
+  [['0%','#0a1828'],['100%','#04090f']].forEach(([o,c]) => {
+    const s = document.createElementNS(SVG_NS, 'stop');
+    s.setAttribute('offset', o); s.setAttribute('stop-color', c);
+    oceanGrad.appendChild(s);
   });
-  applyRegionFilter();
+  defs.appendChild(oceanGrad);
+
+  // Land base gradient
+  const landGrad = document.createElementNS(SVG_NS, 'linearGradient');
+  landGrad.id = 'land-grad';
+  landGrad.setAttribute('x1','0%'); landGrad.setAttribute('y1','0%');
+  landGrad.setAttribute('x2','0%'); landGrad.setAttribute('y2','100%');
+  [['0%','#1c2438'],['100%','#141824']].forEach(([o,c]) => {
+    const s = document.createElementNS(SVG_NS, 'stop');
+    s.setAttribute('offset', o); s.setAttribute('stop-color', c);
+    landGrad.appendChild(s);
+  });
+  defs.appendChild(landGrad);
+
+  // Glow filter
+  const filter = document.createElementNS(SVG_NS, 'filter');
+  filter.id = 'glow';
+  const fe = document.createElementNS(SVG_NS, 'feGaussianBlur');
+  fe.setAttribute('stdDeviation', '3'); fe.setAttribute('result', 'blur');
+  const feMerge = document.createElementNS(SVG_NS, 'feMerge');
+  const n1 = document.createElementNS(SVG_NS, 'feMergeNode'); n1.setAttribute('in','blur');
+  const n2 = document.createElementNS(SVG_NS, 'feMergeNode'); n2.setAttribute('in','SourceGraphic');
+  feMerge.appendChild(n1); feMerge.appendChild(n2);
+  filter.appendChild(fe); filter.appendChild(feMerge);
+  defs.appendChild(filter);
+  svg.appendChild(defs);
+
+  // Ocean rect
+  const ocean = document.createElementNS(SVG_NS, 'rect');
+  ocean.setAttribute('width', '960'); ocean.setAttribute('height', '540');
+  ocean.setAttribute('fill', 'url(#ocean-grad)');
+  svg.appendChild(ocean);
+
+  // ── Subtle grid lines ─────────────────────────────────────
+  const grid = document.createElementNS(SVG_NS, 'g');
+  grid.setAttribute('opacity', '0.06');
+  for (let x = 0; x <= 960; x += 60) {
+    const l = document.createElementNS(SVG_NS, 'line');
+    l.setAttribute('x1', x); l.setAttribute('y1', 0); l.setAttribute('x2', x); l.setAttribute('y2', 540);
+    l.setAttribute('stroke', '#c9a84c'); l.setAttribute('stroke-width', '0.5');
+    grid.appendChild(l);
+  }
+  for (let y = 0; y <= 540; y += 60) {
+    const l = document.createElementNS(SVG_NS, 'line');
+    l.setAttribute('x1', 0); l.setAttribute('y1', y); l.setAttribute('x2', 960); l.setAttribute('y2', y);
+    l.setAttribute('stroke', '#c9a84c'); l.setAttribute('stroke-width', '0.5');
+    grid.appendChild(l);
+  }
+  svg.appendChild(grid);
+
+  // ── Continent labels ──────────────────────────────────────
+  const continents = [
+    { x: 112, y: 490, text: 'BLOCCO NUOVO MONDO' },
+    { x: 315, y: 490, text: 'MARE INTERNO' },
+    { x: 540, y: 490, text: 'PENISOLA ELLENICA' },
+    { x: 800, y: 490, text: 'ORIENTE' },
+  ];
+  continents.forEach(c => {
+    const t = document.createElementNS(SVG_NS, 'text');
+    t.setAttribute('x', c.x); t.setAttribute('y', c.y);
+    t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('font-family', 'Roboto Mono, monospace');
+    t.setAttribute('font-size', '8');
+    t.setAttribute('fill', '#c9a84c');
+    t.setAttribute('opacity', '0.25');
+    t.setAttribute('letter-spacing', '2');
+    t.setAttribute('pointer-events', 'none');
+    t.textContent = c.text;
+    svg.appendChild(t);
+  });
+
+  // ── District polygons ─────────────────────────────────────
+  cfg.distretti.forEach(d => {
+    const shape = DISTRICT_SHAPES[d.id];
+    if (!shape) return;
+
+    const g = document.createElementNS(SVG_NS, 'g');
+
+    // Shadow polygon (slightly offset)
+    const shadow = document.createElementNS(SVG_NS, 'polygon');
+    shadow.setAttribute('points', shape.pts.split(' ').map(p => {
+      const [x,y] = p.split(',');
+      return `${+x+2},${+y+2}`;
+    }).join(' '));
+    shadow.setAttribute('fill', 'rgba(0,0,0,0.4)');
+    shadow.setAttribute('pointer-events', 'none');
+    g.appendChild(shadow);
+
+    // Main polygon
+    const poly = document.createElementNS(SVG_NS, 'polygon');
+    poly.setAttribute('points', shape.pts);
+    poly.setAttribute('fill', 'url(#land-grad)');
+    poly.setAttribute('stroke', '#3a4860');
+    poly.setAttribute('stroke-width', '1.5');
+    poly.setAttribute('stroke-linejoin', 'round');
+    poly.setAttribute('class', 'district-poly');
+    poly.setAttribute('data-id', d.id);
+
+    poly.addEventListener('click', () => {
+      showDetail(d.id, true);
+      highlightDistrict(d.id);
+    });
+    poly.addEventListener('mouseenter', () => showMapTooltip(d, poly));
+    poly.addEventListener('mouseleave', hideMapTooltip);
+
+    g.appendChild(poly);
+    mapPolys[d.id] = poly;
+
+    // ID label
+    const numLabel = document.createElementNS(SVG_NS, 'text');
+    numLabel.setAttribute('x', shape.lx); numLabel.setAttribute('y', shape.ly - 3);
+    numLabel.setAttribute('text-anchor', 'middle');
+    numLabel.setAttribute('class', 'district-label');
+    numLabel.setAttribute('pointer-events', 'none');
+    numLabel.textContent = d.id;
+    g.appendChild(numLabel);
+
+    // Short name label
+    const shortName = d.nome.split('(')[0].trim().split(' e ')[0].split(' ')[0];
+    const nameLabel = document.createElementNS(SVG_NS, 'text');
+    nameLabel.setAttribute('x', shape.lx); nameLabel.setAttribute('y', shape.ly + 7);
+    nameLabel.setAttribute('text-anchor', 'middle');
+    nameLabel.setAttribute('class', 'district-name-label');
+    nameLabel.setAttribute('pointer-events', 'none');
+    nameLabel.textContent = shortName;
+    g.appendChild(nameLabel);
+
+    svg.appendChild(g);
+  });
+
+  // ── Tooltip element ───────────────────────────────────────
+  const tip = document.createElementNS(SVG_NS, 'g');
+  tip.id = 'map-tooltip';
+  tip.setAttribute('display', 'none');
+  tip.setAttribute('pointer-events', 'none');
+  const tipRect = document.createElementNS(SVG_NS, 'rect');
+  tipRect.id = 'tip-rect';
+  tipRect.setAttribute('fill', '#111'); tipRect.setAttribute('stroke', '#c9a84c');
+  tipRect.setAttribute('stroke-width', '1'); tipRect.setAttribute('rx', '0');
+  tipRect.setAttribute('height', '32');
+  const tipText = document.createElementNS(SVG_NS, 'text');
+  tipText.id = 'tip-text';
+  tipText.setAttribute('font-family', 'Roboto Mono, monospace');
+  tipText.setAttribute('font-size', '10'); tipText.setAttribute('fill', '#e0e0e0');
+  tip.appendChild(tipRect); tip.appendChild(tipText);
+  svg.appendChild(tip);
+
+  // ── Delegated click on entire SVG ────────────────────────
+  svg.addEventListener('click', e => {
+    const target = e.target.closest('[data-id]');
+    if (target) {
+      const id = target.getAttribute('data-id');
+      showDetail(id, true);
+      highlightDistrict(id);
+    }
+  });
+
+  // ── Compass rose ─────────────────────────────────────────
+  drawCompass(svg, 910, 40);
+
+  // ── Map title ─────────────────────────────────────────────
+  const title = document.createElementNS(SVG_NS, 'text');
+  title.setAttribute('x', 480); title.setAttribute('y', 18);
+  title.setAttribute('text-anchor', 'middle');
+  title.setAttribute('font-family', 'Roboto Mono, monospace');
+  title.setAttribute('font-size', '9'); title.setAttribute('fill', '#c9a84c');
+  title.setAttribute('opacity', '0.5'); title.setAttribute('letter-spacing', '3');
+  title.setAttribute('pointer-events', 'none');
+  title.textContent = 'ORBIS OLYMPICUS  —  ANNO OLIMPICO CORRENTE';
+  svg.appendChild(title);
+}
+
+function drawCompass(svg, cx, cy) {
+  const pts = [
+    `${cx},${cy-14} ${cx-5},${cy+2} ${cx},${cy-2}`,
+    `${cx},${cy-14} ${cx+5},${cy+2} ${cx},${cy-2}`,
+    `${cx},${cy+14} ${cx-5},${cy-2} ${cx},${cy+2}`,
+    `${cx},${cy+14} ${cx+5},${cy-2} ${cx},${cy+2}`,
+  ];
+  const colors = ['#c9a84c','#555','#555','#555'];
+  pts.forEach((p, i) => {
+    const tri = document.createElementNS(SVG_NS, 'polygon');
+    tri.setAttribute('points', p);
+    tri.setAttribute('fill', colors[i]);
+    tri.setAttribute('pointer-events', 'none');
+    svg.appendChild(tri);
+  });
+  const circle = document.createElementNS(SVG_NS, 'circle');
+  circle.setAttribute('cx', cx); circle.setAttribute('cy', cy);
+  circle.setAttribute('r', '3'); circle.setAttribute('fill', '#111');
+  circle.setAttribute('stroke', '#c9a84c'); circle.setAttribute('stroke-width', '1');
+  circle.setAttribute('pointer-events', 'none');
+  svg.appendChild(circle);
+  const N = document.createElementNS(SVG_NS, 'text');
+  N.setAttribute('x', cx); N.setAttribute('y', cy - 17);
+  N.setAttribute('text-anchor', 'middle');
+  N.setAttribute('font-family', 'Roboto Mono, monospace');
+  N.setAttribute('font-size', '7'); N.setAttribute('fill', '#c9a84c');
+  N.setAttribute('pointer-events', 'none');
+  N.textContent = 'N';
+  svg.appendChild(N);
+}
+
+function showMapTooltip(d, poly) {
+  const result = simResults[d.id];
+  const winnerName = result ? (candidati.find(c => c.id === result.winner)?.nome || '—') : '—';
+  const pct = result ? result.pct.toFixed(1) + '%' : '—';
+
+  const tip = document.getElementById('map-tooltip');
+  const tipRect = document.getElementById('tip-rect');
+  const tipText = document.getElementById('tip-text');
+  if (!tip) return;
+
+  const text = `${d.id} ${d.nome.split('(')[0].trim()}  |  ${winnerName} ${pct}`;
+  tipText.textContent = text;
+  const w = Math.max(text.length * 6.5, 120);
+  tipRect.setAttribute('width', w);
+
+  const pts = poly.getAttribute('points').split(' ').map(p => p.split(',').map(Number));
+  const avgX = pts.reduce((s,p)=>s+p[0],0)/pts.length;
+  const minY = Math.min(...pts.map(p=>p[1]));
+  const tx = Math.min(Math.max(avgX - w/2, 4), 956 - w);
+  const ty = Math.max(minY - 40, 4);
+
+  tipRect.setAttribute('x', tx); tipRect.setAttribute('y', ty);
+  tipText.setAttribute('x', tx + 8); tipText.setAttribute('y', ty + 21);
+  tip.setAttribute('display', '');
+}
+function hideMapTooltip() {
+  const tip = document.getElementById('map-tooltip');
+  if (tip) tip.setAttribute('display', 'none');
+}
+
+function highlightDistrict(districtId) {
+  Object.entries(mapPolys).forEach(([id, poly]) => {
+    if (id === districtId) {
+      poly.setAttribute('stroke', '#c9a84c');
+      poly.setAttribute('stroke-width', '3');
+      poly.setAttribute('filter', 'url(#glow)');
+    } else {
+      const result = simResults[id];
+      const color = result ? (candColorMap[result.winner] || '#3a4860') : '#3a4860';
+      poly.setAttribute('stroke', color);
+      poly.setAttribute('stroke-width', '1.5');
+      poly.removeAttribute('filter');
+    }
+  });
+}
+
+function updateMapMarkers() {
+  cfg.distretti.forEach(d => {
+    const poly = mapPolys[d.id];
+    if (!poly) return;
+    const result = simResults[d.id];
+    if (!result) return;
+
+    const color = candColorMap[result.winner] || '#555';
+    const [r, g, b] = hexToRgb(color);
+    const dimmed = activeCandFilter && result.winner !== activeCandFilter;
+    const hidden = activeRegion !== 'all' && d.regione !== activeRegion;
+
+    if (hidden) {
+      poly.setAttribute('fill', '#0c1220');
+      poly.setAttribute('stroke', '#1a2030');
+      poly.setAttribute('opacity', '0.25');
+    } else if (dimmed) {
+      poly.setAttribute('fill', `rgba(${r},${g},${b},0.12)`);
+      poly.setAttribute('stroke', '#1a2030');
+      poly.setAttribute('opacity', '0.4');
+    } else {
+      poly.setAttribute('fill', `rgba(${r},${g},${b},0.55)`);
+      poly.setAttribute('stroke', `rgba(${r},${g},${b},0.85)`);
+      poly.setAttribute('opacity', '1');
+    }
+  });
 }
 
 function buildLegend() {
@@ -690,20 +1016,7 @@ function hexToRgb(hex) {
 }
 
 function updateGridColors() {
-  cfg.distretti.forEach(d => {
-    const result = simResults[d.id];
-    if (!result) return;
-    const tile = document.getElementById('tile-' + d.id);
-    const dot = document.getElementById('dot-' + d.id);
-    const pctEl = document.getElementById('pct-' + d.id);
-    if (!tile) return;
-    const color = candColorMap[result.winner] || '#555';
-    const [r,g,b] = hexToRgb(color);
-    tile.style.backgroundColor = `rgba(${r},${g},${b},0.22)`;
-    tile.style.borderColor = `rgba(${r},${g},${b},0.5)`;
-    if (dot) dot.style.background = color;
-    if (pctEl) pctEl.textContent = result.pct.toFixed(1) + '%';
-  });
+  updateMapMarkers();
   applyCandFilter();
   applyRegionFilter();
 }
@@ -738,30 +1051,19 @@ function applyCandFilter() {
   });
 
   if (!activeCandFilter) {
-    cfg.distretti.forEach(d => {
-      const tile = document.getElementById('tile-' + d.id);
-      if (tile) tile.classList.remove('dimmed');
-    });
+    updateMapMarkers();
     return;
   }
 
   let wins = 0, totalPeso = 0;
   cfg.distretti.forEach(d => {
     const result = simResults[d.id];
-    const tile = document.getElementById('tile-' + d.id);
-    if (!tile) return;
-    if (!result) {
-      tile.classList.add('dimmed');
-      return;
-    }
-    if (result.winner === activeCandFilter) {
-      tile.classList.remove('dimmed');
+    if (result && result.winner === activeCandFilter) {
       wins++;
       totalPeso += d.peso_politico;
-    } else {
-      tile.classList.add('dimmed');
     }
   });
+  updateMapMarkers();
 
   const cand = candidati.find(c => c.id === activeCandFilter);
   document.getElementById('stat-cand-name').textContent = cand ? cand.nome : activeCandFilter;
@@ -770,15 +1072,7 @@ function applyCandFilter() {
 }
 
 function applyRegionFilter() {
-  const tiles = document.querySelectorAll('.district-tile');
-  tiles.forEach(tile => {
-    const region = tile.dataset.region;
-    if (activeRegion === 'all' || region === activeRegion) {
-      tile.style.display = '';
-    } else {
-      tile.style.display = 'none';
-    }
-  });
+  updateMapMarkers();
 }
 
 // ============================================================
@@ -789,10 +1083,8 @@ function showDetail(districtId, scroll) {
   const d = cfg.distretti.find(x => x.id === districtId);
   if (!d) return;
 
-  // Mark tile
-  document.querySelectorAll('.district-tile').forEach(t => t.classList.remove('selected'));
-  const selTile = document.getElementById('tile-' + districtId);
-  if (selTile) selTile.classList.add('selected');
+  // Highlight district on SVG map
+  highlightDistrict(districtId);
 
   const result = simResults[districtId];
 
