@@ -241,6 +241,27 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
 #notif-inner{white-space:nowrap;animation:nticker 45s linear infinite}
 @keyframes nticker{0%{transform:translateX(120vw)}100%{transform:translateX(-120%)}}
 
+/* ── PARAM BLOCK (Lab + Modal) ── */
+.param-block{background:var(--bg0);border:1px solid var(--br);padding:5px 8px;margin-bottom:3px}
+.param-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1px}
+.param-name{font-size:10px;color:var(--tx0);font-weight:600}
+.param-quality{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.param-desc{font-size:8px;color:var(--tx2);margin-bottom:3px;line-height:1.3}
+.pq-nullo{color:#555}.pq-basso{color:var(--red2)}.pq-medio{color:var(--tx1)}.pq-alto{color:var(--blue2)}.pq-dominante{color:var(--gold)}
+.param-slider-row{display:flex;align-items:center;gap:5px}
+.param-slider{flex:1;accent-color:var(--gold);cursor:pointer}
+.param-val{font-family:var(--mono);font-size:11px;color:var(--gold);width:30px;text-align:right;flex-shrink:0}
+
+/* ── LEGGE ELETTORALE ── */
+#legge-sect{flex-shrink:0;border-bottom:1px solid var(--br)}
+#legge-hdr{display:flex;align-items:center;gap:6px;padding:0 12px;height:28px;background:var(--bg1);border-bottom:1px solid var(--br);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--blue2);flex-shrink:0;cursor:pointer;user-select:none}
+#legge-body{padding:8px 12px;background:var(--bg0)}
+.legge-row{margin-bottom:6px}
+.legge-lbl{display:flex;justify-content:space-between;align-items:baseline;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--tx2);margin-bottom:2px}
+.legge-lbl-val{font-family:var(--mono);font-size:11px;color:var(--gold)}
+.legge-desc{font-size:8px;color:var(--tx2);margin-top:1px;line-height:1.3}
+.legge-slider{width:100%;accent-color:var(--blue2)}
+
 /* ── LAB DEMAGOGHI ── */
 #lab-sect{flex-shrink:0;border-bottom:1px solid var(--br)}
 #lab-hdr{display:flex;align-items:center;justify-content:space-between;padding:0 12px;height:28px;background:var(--bg1);border-bottom:1px solid var(--br);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--red2);flex-shrink:0;cursor:pointer;user-select:none}
@@ -435,6 +456,42 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
 
       </div>
 
+      <!-- LEGGE ELETTORALE -->
+      <div id="legge-sect">
+        <div id="legge-hdr" onclick="NE.toggleLegge()">
+          ⚖ LEGGE ELETTORALE // SOGLIE &amp; PREMI <span id="legge-arrow">▶</span>
+        </div>
+        <div id="legge-body" style="display:none">
+          <div class="legge-row">
+            <div class="legge-lbl">Soglia Ballottaggio <span class="legge-lbl-val" id="lv-ball">30%</span></div>
+            <input class="legge-slider" id="ls-ball" type="range" min="10" max="60" step="1" value="30" oninput="NE.leggeSlider('lv-ball',this.value,'%')">
+            <div class="legge-desc">Se nessuno supera questa soglia scatta il ballottaggio tra top-2 M e top-2 F.</div>
+          </div>
+          <div class="legge-row">
+            <div class="legge-lbl">Soglia Maggioranza Assoluta <span class="legge-lbl-val" id="lv-coal">51%</span></div>
+            <input class="legge-slider" id="ls-coal" type="range" min="30" max="70" step="1" value="51" oninput="NE.leggeSlider('lv-coal',this.value,'%')">
+            <div class="legge-desc">Peso minimo per governare senza alleanze.</div>
+          </div>
+          <div class="legge-row">
+            <div class="legge-lbl">Soglia Maggioranza Suprema <span class="legge-lbl-val" id="lv-supre">66%</span></div>
+            <input class="legge-slider" id="ls-supre" type="range" min="51" max="90" step="1" value="66" oninput="NE.leggeSlider('lv-supre',this.value,'%')">
+            <div class="legge-desc">Veto assoluto su ogni delibera del Pantheon.</div>
+          </div>
+          <div class="legge-row" style="border-top:1px solid var(--br);padding-top:6px;margin-top:6px">
+            <div class="legge-lbl" style="color:var(--gold)">Premio di Maggioranza <span class="legge-lbl-val" id="lv-premio">0%</span></div>
+            <input class="legge-slider" id="ls-premio" type="range" min="0" max="25" step="1" value="0" oninput="NE.leggeSlider('lv-premio',this.value,'%')" style="accent-color:var(--gold)">
+            <div class="legge-desc">Bonus seggi aggiuntivi assegnati al vincitore assoluto. 0 = sistema proporzionale puro.</div>
+          </div>
+          <div class="legge-row">
+            <div class="legge-lbl">Soglia Attivazione Premio <span class="legge-lbl-val" id="lv-premio-soglia">0%</span></div>
+            <input class="legge-slider" id="ls-premio-soglia" type="range" min="0" max="60" step="1" value="0" oninput="NE.leggeSlider('lv-premio-soglia',this.value,'%')" style="accent-color:var(--gold)">
+            <div class="legge-desc">Percentuale minima che il vincitore deve ottenere per ricevere il premio.</div>
+          </div>
+          <button class="btn-prim" style="width:100%;margin-top:6px;font-size:10px" onclick="NE.saveElectoralLaw()">✓ APPLICA LEGGE ELETTORALE</button>
+          <div id="legge-status" style="font-family:var(--mono);font-size:9px;color:var(--tx2);margin-top:3px;text-align:center;min-height:13px"></div>
+        </div>
+      </div>
+
       <!-- LAB DEMAGOGHI -->
       <div id="lab-sect">
         <div id="lab-hdr" onclick="NE.toggleLab()">
@@ -451,13 +508,32 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
             <label style="font-size:10px;color:var(--tx1);margin-right:12px;cursor:pointer"><input type="radio" name="lab-gen" value="M" checked style="accent-color:var(--blue2)"> ♂ Dio</label>
             <label style="font-size:10px;color:var(--tx1);cursor:pointer"><input type="radio" name="lab-gen" value="F" style="accent-color:var(--pink)"> ♀ Dea</label>
           </div>
-          <div class="lab-field">
-            <div class="lab-lbl">Parametri Politici (0.0 — 2.0)</div>
-            <div class="lab-slider-row"><span class="lab-slider-lbl">Establishment</span><input class="lab-slider" id="ls-estab" type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-estab',this.value)"><span class="lab-slider-val" id="lv-estab">1.00</span></div>
-            <div class="lab-slider-row"><span class="lab-slider-lbl">Populism Rural</span><input class="lab-slider" id="ls-popu"  type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-popu',this.value)"><span class="lab-slider-val" id="lv-popu">1.00</span></div>
-            <div class="lab-slider-row"><span class="lab-slider-lbl">Militarism</span><input class="lab-slider" id="ls-mili"  type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-mili',this.value)"><span class="lab-slider-val" id="lv-mili">1.00</span></div>
-            <div class="lab-slider-row"><span class="lab-slider-lbl">Intellect Grec</span><input class="lab-slider" id="ls-intel" type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-intel',this.value)"><span class="lab-slider-val" id="lv-intel">1.00</span></div>
-            <div class="lab-slider-row"><span class="lab-slider-lbl">Underworld Outcast</span><input class="lab-slider" id="ls-under" type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-under',this.value)"><span class="lab-slider-val" id="lv-under">1.00</span></div>
+          <div style="margin-bottom:5px">
+            <div class="param-block">
+              <div class="param-head"><span class="param-name">🏛 Consenso Establishment</span><span class="param-quality pq-medio" id="lq-estab">Medio</span></div>
+              <div class="param-desc">Peso nelle istituzioni divine — Senato Olimpico, Consiglio dei Dodici, corporazioni sacre.</div>
+              <div class="param-slider-row"><input class="param-slider" id="ls-estab" type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-estab','lq-estab',this.value)"><span class="param-val" id="lv-estab">1.00</span></div>
+            </div>
+            <div class="param-block">
+              <div class="param-head"><span class="param-name">🌾 Populismo Rurale</span><span class="param-quality pq-medio" id="lq-popu">Medio</span></div>
+              <div class="param-desc">Presa sulle masse — ninfe delle campagne, satiri, contadini e pescatori del Mediterraneo.</div>
+              <div class="param-slider-row"><input class="param-slider" id="ls-popu" type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-popu','lq-popu',this.value)"><span class="param-val" id="lv-popu">1.00</span></div>
+            </div>
+            <div class="param-block">
+              <div class="param-head"><span class="param-name">⚔ Militarismo</span><span class="param-quality pq-medio" id="lq-mili">Medio</span></div>
+              <div class="param-desc">Appeal tra guerrieri, ciclopi armati, centauri e legioni di semidei romani.</div>
+              <div class="param-slider-row"><input class="param-slider" id="ls-mili" type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-mili','lq-mili',this.value)"><span class="param-val" id="lv-mili">1.00</span></div>
+            </div>
+            <div class="param-block">
+              <div class="param-head"><span class="param-name">📜 Intelletto Greco</span><span class="param-quality pq-medio" id="lq-intel">Medio</span></div>
+              <div class="param-desc">Favore tra semidei greci, filosofi, venti ispirati e accademie di Atene e Alessandria.</div>
+              <div class="param-slider-row"><input class="param-slider" id="ls-intel" type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-intel','lq-intel',this.value)"><span class="param-val" id="lv-intel">1.00</span></div>
+            </div>
+            <div class="param-block">
+              <div class="param-head"><span class="param-name">💀 Favore degli Inferi</span><span class="param-quality pq-medio" id="lq-under">Medio</span></div>
+              <div class="param-desc">Potere tra esclusi, titani imprigionati, ombre dell'Ade e coloni del Nuovo Mondo.</div>
+              <div class="param-slider-row"><input class="param-slider" id="ls-under" type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-under','lq-under',this.value)"><span class="param-val" id="lv-under">1.00</span></div>
+            </div>
           </div>
           <button class="btn-reg" onclick="NE.registerChallenger()">⚡ REGISTRA CANDIDATO</button>
           <div id="lab-status" style="font-family:var(--mono);font-size:9px;color:var(--tx2);margin-top:4px;text-align:center;min-height:14px"></div>
@@ -483,12 +559,13 @@ html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--u
       <div class="lab-lbl">Nome</div>
       <input class="lab-input" id="edit-modal-name" type="text">
     </div>
-    <div class="lab-lbl" style="margin-bottom:4px">Parametri Politici (0.0 — 2.0)</div>
-    <div class="lab-slider-row"><span class="lab-slider-lbl">Establishment</span><input class="lab-slider" id="em-estab" type="range" min="0" max="2" step="0.05" oninput="document.getElementById('emv-estab').textContent=parseFloat(this.value).toFixed(2)"><span class="lab-slider-val" id="emv-estab">1.00</span></div>
-    <div class="lab-slider-row"><span class="lab-slider-lbl">Populism Rural</span><input class="lab-slider" id="em-popu"  type="range" min="0" max="2" step="0.05" oninput="document.getElementById('emv-popu').textContent=parseFloat(this.value).toFixed(2)"><span class="lab-slider-val" id="emv-popu">1.00</span></div>
-    <div class="lab-slider-row"><span class="lab-slider-lbl">Militarism</span><input class="lab-slider" id="em-mili"  type="range" min="0" max="2" step="0.05" oninput="document.getElementById('emv-mili').textContent=parseFloat(this.value).toFixed(2)"><span class="lab-slider-val" id="emv-mili">1.00</span></div>
-    <div class="lab-slider-row"><span class="lab-slider-lbl">Intellect Grec</span><input class="lab-slider" id="em-intel" type="range" min="0" max="2" step="0.05" oninput="document.getElementById('emv-intel').textContent=parseFloat(this.value).toFixed(2)"><span class="lab-slider-val" id="emv-intel">1.00</span></div>
-    <div class="lab-slider-row"><span class="lab-slider-lbl">Underworld Outcast</span><input class="lab-slider" id="em-under" type="range" min="0" max="2" step="0.05" oninput="document.getElementById('emv-under').textContent=parseFloat(this.value).toFixed(2)"><span class="lab-slider-val" id="emv-under">1.00</span></div>
+    <div style="margin-bottom:4px">
+      <div class="param-block"><div class="param-head"><span class="param-name">🏛 Establishment</span><span class="param-quality" id="emq-estab">Medio</span></div><div class="param-slider-row"><input class="param-slider" id="em-estab" type="range" min="0" max="2" step="0.05" oninput="NE.modalSlider('emv-estab','emq-estab',this.value)"><span class="param-val" id="emv-estab">1.00</span></div></div>
+      <div class="param-block"><div class="param-head"><span class="param-name">🌾 Populismo Rurale</span><span class="param-quality" id="emq-popu">Medio</span></div><div class="param-slider-row"><input class="param-slider" id="em-popu"  type="range" min="0" max="2" step="0.05" oninput="NE.modalSlider('emv-popu','emq-popu',this.value)"><span class="param-val" id="emv-popu">1.00</span></div></div>
+      <div class="param-block"><div class="param-head"><span class="param-name">⚔ Militarismo</span><span class="param-quality" id="emq-mili">Medio</span></div><div class="param-slider-row"><input class="param-slider" id="em-mili"  type="range" min="0" max="2" step="0.05" oninput="NE.modalSlider('emv-mili','emq-mili',this.value)"><span class="param-val" id="emv-mili">1.00</span></div></div>
+      <div class="param-block"><div class="param-head"><span class="param-name">📜 Intelletto Greco</span><span class="param-quality" id="emq-intel">Medio</span></div><div class="param-slider-row"><input class="param-slider" id="em-intel" type="range" min="0" max="2" step="0.05" oninput="NE.modalSlider('emv-intel','emq-intel',this.value)"><span class="param-val" id="emv-intel">1.00</span></div></div>
+      <div class="param-block"><div class="param-head"><span class="param-name">💀 Favore Inferi</span><span class="param-quality" id="emq-under">Medio</span></div><div class="param-slider-row"><input class="param-slider" id="em-under" type="range" min="0" max="2" step="0.05" oninput="NE.modalSlider('emv-under','emq-under',this.value)"><span class="param-val" id="emv-under">1.00</span></div></div>
+    </div>
     <div class="modal-btns">
       <button class="btn-prim" style="flex:1" onclick="NE.saveEditModal()">✓ SALVA</button>
       <button class="btn-sec" style="flex:1" onclick="NE.closeEditModal()">ANNULLA</button>
@@ -688,6 +765,7 @@ const NE = (() => {
 
     assignColors();
     initChart();
+    initLeggeSliders();
     buildDistrictGrid();
     buildResultPlaceholders();
     buildLeaderboard(null);
@@ -1257,11 +1335,19 @@ const NE = (() => {
       const v = document.getElementById(slid.replace('em-','emv-'));
       if (s) { s.value = val; if (v) v.textContent = parseFloat(val).toFixed(2); }
     };
-    set('em-estab', p.establishment ?? 1);
-    set('em-popu',  p.populism_rural ?? 1);
-    set('em-mili',  p.militarism ?? 1);
-    set('em-intel', p.intellect_grec ?? 1);
-    set('em-under', p.underworld_outcast ?? 1);
+    const pairs = [
+      ['em-estab','emv-estab','emq-estab', p.establishment ?? 1],
+      ['em-popu', 'emv-popu', 'emq-popu',  p.populism_rural ?? 1],
+      ['em-mili', 'emv-mili', 'emq-mili',  p.militarism ?? 1],
+      ['em-intel','emv-intel','emq-intel', p.intellect_grec ?? 1],
+      ['em-under','emv-under','emq-under', p.underworld_outcast ?? 1]
+    ];
+    pairs.forEach(([sid, vid, qid, val]) => {
+      const s = $(sid), v = $(vid), q = $(qid);
+      if (s) s.value = val;
+      if (v) v.textContent = parseFloat(val).toFixed(2);
+      if (q) { const pq = paramQuality(val); q.textContent = pq.label; q.className = `param-quality ${pq.cls}`; }
+    });
     document.getElementById('edit-modal').classList.add('open');
   }
 
@@ -1320,6 +1406,14 @@ const NE = (() => {
     const partial = scrutinizedSet.size < cfg.distretti.length;
     const partialNote = partial ? `<div style="font-size:9px;color:var(--gold);border:1px solid rgba(201,168,76,.3);padding:3px 6px;margin-bottom:6px">⚠ Dati parziali — ${scrutinizedSet.size}/${cfg.distretti.length} distretti scrutinati.</div>` : '';
 
+    const premioBonus  = cfg.elezione.premio_bonus  ?? 0;
+    const premioSoglia = cfg.elezione.premio_soglia ?? 0;
+    const hasPremio    = premioBonus > 0 && leader.pct >= (premioSoglia || soglia);
+    const premioHtml   = hasPremio
+      ? `<div style="font-size:9px;color:var(--gold);border:1px solid rgba(201,168,76,.3);padding:3px 6px;margin-top:4px">
+           ★ PREMIO DI MAGGIORANZA: +${premioBonus}% seggi aggiuntivi → peso effettivo ${(leader.pct + premioBonus).toFixed(2)}%
+         </div>` : '';
+
     if (leader.pct >= soglia) {
       bc.innerHTML = partialNote + `
         <div class="ballot-alert win">✓ VINCITORE DIRETTO — ${leader.nome.toUpperCase()} con ${leader.pct.toFixed(2)}%<br>Supera la soglia del ${soglia}%. Nessun ballottaggio.</div>
@@ -1327,7 +1421,7 @@ const NE = (() => {
           <span class="ballot-winner-title">RE DELL'OLIMPO</span>
           <span class="ballot-winner-name">${leader.nome}</span>
           <span class="ballot-winner-pct">${leader.pct.toFixed(2)}%</span>
-        </div>`;
+        </div>${premioHtml}`;
       ballotRes = { re: leader, regina: null };
     } else {
       const top2M = sorted.filter(c=>c.genere==='M').slice(0,2);
@@ -1627,15 +1721,76 @@ const NE = (() => {
   /* ══════════════════════════════════════
      LAB DEMAGOGHI
   ══════════════════════════════════════ */
+  /* ══════════════════════════════════════
+     LEGGE ELETTORALE
+  ══════════════════════════════════════ */
+  let leggeOpen = false;
+
+  function toggleLegge() {
+    leggeOpen = !leggeOpen;
+    $('legge-body').style.display = leggeOpen ? 'block' : 'none';
+    $('legge-arrow').textContent = leggeOpen ? '▼' : '▶';
+  }
+
+  function leggeSlider(valId, value, suffix) {
+    const el = $(valId);
+    if (el) el.textContent = value + (suffix || '');
+  }
+
+  function initLeggeSliders() {
+    const e = cfg.elezione;
+    const set = (sid, vid, val) => {
+      const s = $(sid), v = $(vid);
+      if (s) s.value = val;
+      if (v) v.textContent = val + '%';
+    };
+    set('ls-ball',          'lv-ball',          e.soglia_ballottaggio ?? 30);
+    set('ls-coal',          'lv-coal',          e.soglia_coalizione   ?? 51);
+    set('ls-supre',         'lv-supre',         e.soglia_suprema      ?? 66);
+    set('ls-premio',        'lv-premio',        e.premio_bonus        ?? 0);
+    set('ls-premio-soglia', 'lv-premio-soglia', e.premio_soglia       ?? 0);
+  }
+
+  function saveElectoralLaw() {
+    cfg.elezione.soglia_ballottaggio = parseInt($('ls-ball').value);
+    cfg.elezione.soglia_coalizione   = parseInt($('ls-coal').value);
+    cfg.elezione.soglia_suprema      = parseInt($('ls-supre').value);
+    cfg.elezione.premio_bonus        = parseInt($('ls-premio').value);
+    cfg.elezione.premio_soglia       = parseInt($('ls-premio-soglia').value);
+    saveToStorage();
+    /* aggiorna le label nell'UI */
+    setText('ball-thr-txt', cfg.elezione.soglia_ballottaggio + '%');
+    setText('s-ball',       cfg.elezione.soglia_ballottaggio + '%');
+    setText('s-coal',       cfg.elezione.soglia_coalizione   + '%');
+    const st = $('legge-status');
+    if (st) { st.textContent = '✓ Legge elettorale applicata e salvata.'; st.style.color = 'var(--green2)'; }
+    tick(`[Legge] Soglie aggiornate — Ballottaggio ${cfg.elezione.soglia_ballottaggio}% · Coalizione ${cfg.elezione.soglia_coalizione}% · Suprema ${cfg.elezione.soglia_suprema}% · Premio ${cfg.elezione.premio_bonus}%`, 'ok');
+    if (Object.keys(finalScores).length) { updateBallottaggio(); updateCoalizioniTab(); generateRP(false, finalScores); }
+  }
+
   function toggleLab() {
     labOpen = !labOpen;
     $('lab-body').style.display = labOpen ? 'block' : 'none';
     $('lab-arrow').textContent = labOpen ? '▼' : '▶';
   }
 
-  function labSlider(valId, value) {
-    const el = $(valId);
-    if (el) el.textContent = parseFloat(value).toFixed(2);
+  function paramQuality(v) {
+    const n = parseFloat(v);
+    if (n < 0.40) return { label:'Nullo',     cls:'pq-nullo' };
+    if (n < 0.80) return { label:'Basso',      cls:'pq-basso' };
+    if (n < 1.20) return { label:'Medio',      cls:'pq-medio' };
+    if (n < 1.60) return { label:'Alto',       cls:'pq-alto' };
+    return             { label:'Dominante',  cls:'pq-dominante' };
+  }
+
+  function labSlider(valId, qualId, value) {
+    const ve = $(valId), qe = $(qualId);
+    if (ve) ve.textContent = parseFloat(value).toFixed(2);
+    if (qe) { const q = paramQuality(value); qe.textContent = q.label; qe.className = `param-quality ${q.cls}`; }
+  }
+
+  function modalSlider(valId, qualId, value) {
+    labSlider(valId, qualId, value);
   }
 
   function registerChallenger() {
@@ -1731,9 +1886,10 @@ const NE = (() => {
 
   /* ── Expose per inline event handlers ── */
   return { init, setHitori, liveHitoriStyle, runBallotScrutiny,
-           toggleLab, labSlider, registerChallenger, localSurvey, copyDistrictReport,
+           toggleLab, labSlider, modalSlider, registerChallenger, localSurvey, copyDistrictReport,
            runSandboxDuel, eliminateCandidate, openEditModal, saveEditModal, closeEditModal,
-           copyNationalReport, copySelectedDistrictReport, populateDuelSelects, clearStorage };
+           copyNationalReport, copySelectedDistrictReport, populateDuelSelects, clearStorage,
+           toggleLegge, leggeSlider, saveElectoralLaw };
 })();
 
 document.addEventListener('DOMContentLoaded', NE.init);
