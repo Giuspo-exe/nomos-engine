@@ -7,708 +7,228 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════════════════════════
-   RESET & ROOT VARIABLES
-═══════════════════════════════════════════════════════════════════ */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  border-radius: 0 !important;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;border-radius:0!important}
+:root{
+  --bg0:#0a0a0a;--bg1:#111111;--bg2:#1a1a1a;--bg3:#222222;
+  --br:#333333;--br2:#444444;
+  --tx0:#cccccc;--tx1:#888888;--tx2:#555555;
+  --gold:#c9a84c;--gold2:#e8c56a;
+  --blue:#4a7fa5;--blue2:#5b99c7;
+  --red:#c0392b;--red2:#e74c3c;
+  --green:#27ae60;--green2:#2ecc71;
+  --pink:#c2527a;--purple:#8e44ad;
+  --ui:'Inter',sans-serif;--mono:'Roboto Mono','Consolas',monospace;
 }
+html,body{height:100%;background:var(--bg0);color:var(--tx0);font-family:var(--ui);font-size:13px;line-height:1.4;overflow:hidden}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:var(--bg0)}
+::-webkit-scrollbar-thumb{background:var(--br2)}
 
-:root {
-  --bg0:     #0a0a0a;
-  --bg1:     #111111;
-  --bg2:     #1a1a1a;
-  --bg3:     #222222;
-  --br:      #333333;
-  --br2:     #444444;
-  --tx0:     #cccccc;
-  --tx1:     #888888;
-  --tx2:     #555555;
-  --tx3:     #333333;
-  --gold:    #c9a84c;
-  --gold2:   #e8c56a;
-  --blue:    #4a7fa5;
-  --blue2:   #5b99c7;
-  --red:     #c0392b;
-  --red2:    #e74c3c;
-  --green:   #27ae60;
-  --pink:    #c2527a;
-  --ui:      'Inter', 'Roboto', sans-serif;
-  --mono:    'Roboto Mono', 'Consolas', 'Courier New', monospace;
-}
+/* ── SHELL ── */
+#shell{display:flex;flex-direction:column;height:100vh;padding-bottom:22px}
 
-html, body {
-  height: 100%;
-  background: var(--bg0);
-  color: var(--tx0);
-  font-family: var(--ui);
-  font-size: 13px;
-  line-height: 1.4;
-  overflow: hidden;
-}
+/* ── TOPBAR ── */
+#topbar{display:flex;align-items:center;justify-content:space-between;height:44px;padding:0 14px;background:var(--bg1);border-bottom:1px solid var(--gold);flex-shrink:0;z-index:10}
+.tb-left{display:flex;align-items:baseline;gap:10px}
+.tb-logo{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--gold);letter-spacing:.08em}
+.tb-tag{font-size:10px;color:var(--tx2);letter-spacing:.12em;text-transform:uppercase}
+.tb-right{display:flex;gap:20px;align-items:center}
+.tb-stat{font-size:10px;color:var(--tx1);text-transform:uppercase;letter-spacing:.06em}
+.tb-val{font-family:var(--mono);font-size:11px;margin-left:5px}
+.c-gold{color:var(--gold)}.c-blue{color:var(--blue2)}.c-red{color:var(--red2)}.c-green{color:var(--green)}.c-dim{color:var(--tx2)}.c-purple{color:var(--purple)}
+.mono{font-family:var(--mono)}
 
-::-webkit-scrollbar { width: 3px; height: 3px; }
-::-webkit-scrollbar-track { background: var(--bg0); }
-::-webkit-scrollbar-thumb { background: var(--br2); }
+/* ── MAIN GRID ── */
+#grid{display:grid;grid-template-columns:270px 1fr 316px;flex:1;min-height:0;overflow:hidden}
 
-/* ═══════════════════════════════════════════════════════════════════
-   SHELL
-═══════════════════════════════════════════════════════════════════ */
-#shell {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  padding-bottom: 22px; /* notif bar */
-}
+/* ── COLUMN COMMONS ── */
+.col{display:flex;flex-direction:column;overflow:hidden;min-height:0;border-right:1px solid var(--br)}
+.col:last-child{border-right:none}
+.col-hdr{display:flex;align-items:center;justify-content:space-between;padding:0 12px;height:30px;background:var(--bg1);border-bottom:1px solid var(--br);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tx1);flex-shrink:0}
+.hdr-badge{font-family:var(--mono);font-size:10px;color:var(--gold);background:rgba(201,168,76,.08);padding:1px 7px;border:1px solid rgba(201,168,76,.25)}
 
-/* ═══════════════════════════════════════════════════════════════════
-   TOPBAR
-═══════════════════════════════════════════════════════════════════ */
-#topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 44px;
-  padding: 0 14px;
-  background: var(--bg1);
-  border-bottom: 1px solid var(--gold);
-  flex-shrink: 0;
-  z-index: 10;
-}
-.tb-left { display: flex; align-items: baseline; gap: 10px; }
-.tb-logo {
-  font-family: var(--mono);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--gold);
-  letter-spacing: .08em;
-}
-.tb-tag {
-  font-size: 10px;
-  color: var(--tx2);
-  letter-spacing: .12em;
-  text-transform: uppercase;
-}
-.tb-right { display: flex; gap: 20px; align-items: center; }
-.tb-stat {
-  font-size: 10px;
-  color: var(--tx1);
-  text-transform: uppercase;
-  letter-spacing: .06em;
-}
-.tb-val {
-  font-family: var(--mono);
-  font-size: 11px;
-  margin-left: 5px;
-}
-.c-gold  { color: var(--gold);  }
-.c-blue  { color: var(--blue2); }
-.c-red   { color: var(--red2);  }
-.c-green { color: var(--green); }
-.c-dim   { color: var(--tx2);   }
-.mono    { font-family: var(--mono); }
-
-/* ═══════════════════════════════════════════════════════════════════
-   MAIN GRID
-═══════════════════════════════════════════════════════════════════ */
-#grid {
-  display: grid;
-  grid-template-columns: 262px 1fr 308px;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   COLUMN COMMONS
-═══════════════════════════════════════════════════════════════════ */
-.col {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  min-height: 0;
-  border-right: 1px solid var(--br);
-}
-.col:last-child { border-right: none; }
-
-.col-hdr {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 12px;
-  height: 30px;
-  background: var(--bg1);
-  border-bottom: 1px solid var(--br);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--tx1);
-  flex-shrink: 0;
-}
-.hdr-badge {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--gold);
-  background: rgba(201,168,76,.08);
-  padding: 1px 7px;
-  border: 1px solid rgba(201,168,76,.25);
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   LEFT COL — DISTRICT MAP
-═══════════════════════════════════════════════════════════════════ */
-#district-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 4px;
-  padding: 8px;
-  background: var(--bg0);
-  flex-shrink: 0;
-}
-
-.d-btn {
-  aspect-ratio: 1;
-  background: var(--bg1);
-  border: 1px solid var(--br);
-  color: var(--tx1);
-  font-family: var(--mono);
-  font-size: 9px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  transition: background .1s, border-color .1s, color .1s;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-  line-height: 1.2;
-}
-.d-btn:hover { background: var(--bg3); border-color: var(--blue2); color: var(--blue2); }
-.d-btn.active { background: rgba(74,127,165,.12); border-color: var(--blue2); color: var(--blue2); }
-.d-id { font-size: 13px; font-weight: 700; }
-.d-nm { font-size: 8px; text-align: center; }
+/* ── LEFT: DISTRICT MAP ── */
+#district-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:6px;background:var(--bg0);flex-shrink:0;max-height:190px;overflow-y:auto}
+.d-btn{aspect-ratio:1;background:var(--bg1);border:1px solid var(--br);color:var(--tx2);font-family:var(--mono);font-size:8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:background .1s,border-color .1s,color .1s;text-transform:uppercase;letter-spacing:.03em;line-height:1.2;padding:2px}
+.d-btn:hover{background:var(--bg3);border-color:var(--blue2);color:var(--blue2)}
+.d-btn.active{background:rgba(74,127,165,.15);border-color:var(--blue2);color:var(--blue2)}
+.d-btn.has-hitori{border-color:var(--gold)!important;background:rgba(201,168,76,.06)!important}
+.d-id{font-size:11px;font-weight:700}
+.d-nm{font-size:7px;text-align:center;line-height:1.1}
 
 /* Inspector */
-#inspector {
-  border-top: 1px solid var(--br);
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  min-height: 0;
-}
-.insp-hdr {
-  padding: 6px 12px;
-  background: var(--bg1);
-  border-bottom: 1px solid var(--br);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--blue2);
-  flex-shrink: 0;
-}
-#insp-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 10px 12px;
-}
-.empty-msg {
-  color: var(--tx2);
-  font-size: 11px;
-  font-style: italic;
-  text-align: center;
-  padding: 20px 0;
-}
-.insp-name { font-size: 12px; font-weight: 600; color: var(--tx0); margin-bottom: 3px; }
-.insp-desc {
-  font-size: 11px;
-  color: var(--tx1);
-  margin-bottom: 10px;
-  border-left: 2px solid var(--blue);
-  padding-left: 8px;
-  line-height: 1.5;
-}
-.insp-section-title {
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  color: var(--tx2);
-  margin-bottom: 5px;
-  padding-bottom: 3px;
-  border-bottom: 1px solid var(--br);
-}
-.cat-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 0;
-  border-bottom: 1px solid rgba(51,51,51,.4);
-  font-size: 11px;
-}
-.cat-row:last-child { border-bottom: none; }
-.cat-name { color: var(--tx1); }
-.cat-peso { font-family: var(--mono); color: var(--gold); font-size: 11px; }
+#inspector{border-top:1px solid var(--br);flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.insp-hdr{padding:6px 12px;background:var(--bg1);border-bottom:1px solid var(--br);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--blue2);flex-shrink:0}
+#insp-body{flex:1;overflow-y:auto;padding:10px 12px}
+.empty-msg{color:var(--tx2);font-size:11px;font-style:italic;text-align:center;padding:20px 0}
+.insp-name{font-size:12px;font-weight:600;color:var(--tx0);margin-bottom:2px}
+.insp-sub{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--tx2);margin-bottom:6px}
+.insp-desc{font-size:11px;color:var(--tx1);margin-bottom:10px;border-left:2px solid var(--blue);padding-left:8px;line-height:1.5}
+.insp-st{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--tx2);margin-bottom:5px;padding-bottom:3px;border-bottom:1px solid var(--br)}
+.cat-row{display:flex;align-items:center;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(51,51,51,.4);font-size:10px}
+.cat-row:last-child{border-bottom:none}
+.cat-name{color:var(--tx1);flex:1}
+.cat-vot{font-family:var(--mono);color:var(--tx2);font-size:9px;width:40px;text-align:right;margin-right:6px}
+.cat-peso{font-family:var(--mono);color:var(--gold);font-size:10px;width:36px;text-align:right}
 
-.cat-block { margin-top: 10px; }
-.cat-block-title {
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: var(--blue);
-  margin-bottom: 4px;
-  padding-bottom: 2px;
-  border-bottom: 1px solid var(--br);
-}
-.vote-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 2px 0;
-  font-size: 10px;
-  border-bottom: 1px solid rgba(51,51,51,.25);
-}
-.vote-row:last-child { border-bottom: none; }
-.vr-god  { width: 68px; color: var(--tx1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.vr-bar  { flex: 1; height: 3px; background: var(--bg2); }
-.vr-fill { height: 100%; background: var(--blue); }
-.vr-pct  { font-family: var(--mono); color: var(--blue2); width: 42px; text-align: right; }
+/* Hitori section */
+.hitori-sect{margin-top:12px}
+.hitori-title{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);padding-bottom:3px;border-bottom:1px solid rgba(201,168,76,.3);margin-bottom:6px}
+.hitori-row{display:flex;align-items:center;gap:6px;padding:3px 0;border-bottom:1px solid rgba(51,51,51,.25);font-size:11px}
+.hitori-row:last-child{border-bottom:none}
+.hitori-name{flex:1;color:var(--tx1)}
+.hitori-input{font-family:var(--mono);font-size:11px;width:60px;background:var(--bg2);border:1px solid var(--br2);color:var(--tx0);padding:2px 5px;text-align:center;outline:none}
+.hitori-input:focus{border-color:var(--gold)}
+.hitori-input.pos{color:var(--green);border-color:rgba(39,174,96,.5)}
+.hitori-input.neg{color:var(--red2);border-color:rgba(192,57,43,.5)}
+.hitori-badge{font-family:var(--mono);font-size:9px;color:var(--gold);width:14px}
 
-/* ═══════════════════════════════════════════════════════════════════
-   CENTER COL — SCRUTINY
-═══════════════════════════════════════════════════════════════════ */
-#scrutiny-ctrl {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  background: var(--bg1);
-  border-bottom: 1px solid var(--br);
-  flex-shrink: 0;
-}
-.btn-prim {
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  padding: 6px 14px;
-  background: rgba(201,168,76,.08);
-  border: 1px solid var(--gold);
-  color: var(--gold);
-  cursor: pointer;
-  transition: background .1s, color .1s;
-}
-.btn-prim:hover:not(:disabled) { background: rgba(201,168,76,.18); color: var(--gold2); }
-.btn-prim:disabled { opacity: .35; cursor: not-allowed; }
-
-.btn-sec {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: .07em;
-  text-transform: uppercase;
-  padding: 6px 10px;
-  background: transparent;
-  border: 1px solid var(--br2);
-  color: var(--tx1);
-  cursor: pointer;
-  transition: background .1s, color .1s;
-}
-.btn-sec:hover { background: var(--bg3); color: var(--tx0); }
-
-.prog-wrap { display: flex; align-items: center; gap: 6px; margin-left: auto; }
-.prog-track {
-  width: 80px;
-  height: 4px;
-  background: var(--bg2);
-  border: 1px solid var(--br);
-}
-.prog-fill { height: 100%; background: var(--gold); transition: width .3s; }
-.prog-label { font-family: var(--mono); font-size: 10px; color: var(--tx2); }
+/* ── CENTER: SCRUTINY ── */
+#scrutiny-ctrl{display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--bg1);border-bottom:1px solid var(--br);flex-shrink:0}
+.btn-prim{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 13px;background:rgba(201,168,76,.08);border:1px solid var(--gold);color:var(--gold);cursor:pointer;transition:background .1s,color .1s}
+.btn-prim:hover:not(:disabled){background:rgba(201,168,76,.18);color:var(--gold2)}
+.btn-prim:disabled{opacity:.35;cursor:not-allowed}
+.btn-sec{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:5px 9px;background:transparent;border:1px solid var(--br2);color:var(--tx1);cursor:pointer;transition:background .1s,color .1s}
+.btn-sec:hover{background:var(--bg3);color:var(--tx0)}
+.btn-sm{font-family:var(--mono);font-size:10px;padding:3px 8px;background:transparent;border:1px solid var(--br);color:var(--tx2);cursor:pointer;text-transform:uppercase;letter-spacing:.06em;transition:all .1s}
+.btn-sm:hover{border-color:var(--blue2);color:var(--blue2)}
+.btn-sm.ok{border-color:var(--green);color:var(--green)}
+.btn-sm.warn{border-color:var(--red2);color:var(--red2)}
+.prog-wrap{display:flex;align-items:center;gap:5px;margin-left:auto}
+.prog-track{width:80px;height:4px;background:var(--bg2);border:1px solid var(--br)}
+.prog-fill{height:100%;background:var(--gold);transition:width .3s}
+.prog-label{font-family:var(--mono);font-size:10px;color:var(--tx2)}
 
 /* Results */
-#results-box {
-  flex: 1;
-  overflow-y: auto;
-  padding: 8px 12px;
-  min-height: 0;
-}
-.res-row {
-  display: flex;
-  align-items: center;
-  padding: 3px 0;
-  border-bottom: 1px solid rgba(51,51,51,.35);
-  gap: 7px;
-}
-.res-row:last-child { border-bottom: none; }
-.res-rank {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--tx2);
-  width: 18px;
-  text-align: right;
-  flex-shrink: 0;
-}
-.res-rank.r1 { color: var(--gold);  }
-.res-rank.r2 { color: #aaaaaa; }
-.res-rank.r3 { color: #7a5c14; }
-.res-name {
-  font-size: 11px;
-  width: 82px;
-  flex-shrink: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.res-bar-wrap {
-  flex: 1;
-  height: 15px;
-  background: var(--bg1);
-  border: 1px solid var(--br);
-  position: relative;
-  overflow: hidden;
-}
-.res-bar-fill {
-  height: 100%;
-  background: var(--blue);
-  transition: width .35s ease-out;
-}
-.res-bar-fill.leader { background: var(--gold); }
-.thr-line {
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 1px;
-  background: var(--red);
-  z-index: 2;
-}
-.res-pct {
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 500;
-  width: 50px;
-  text-align: right;
-  flex-shrink: 0;
-}
-.res-delta {
-  font-family: var(--mono);
-  font-size: 10px;
-  width: 36px;
-  text-align: right;
-  flex-shrink: 0;
-  color: var(--tx2);
-}
+#results-box{flex:1;overflow-y:auto;padding:7px 12px;min-height:0}
+.res-row{display:flex;align-items:center;padding:3px 0;border-bottom:1px solid rgba(51,51,51,.35);gap:6px}
+.res-row:last-child{border-bottom:none}
+.res-rank{font-family:var(--mono);font-size:10px;color:var(--tx2);width:18px;text-align:right;flex-shrink:0}
+.res-rank.r1{color:var(--gold)}.res-rank.r2{color:#aaa}.res-rank.r3{color:#7a5c14}
+.res-name{font-size:11px;width:80px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.res-bar-wrap{flex:1;height:15px;background:var(--bg1);border:1px solid var(--br);position:relative;overflow:hidden}
+.res-bar-fill{height:100%;background:var(--blue);transition:width .35s ease-out}
+.res-bar-fill.leader{background:var(--gold)}
+.thr-line{position:absolute;top:0;bottom:0;width:1px;background:var(--red);z-index:2}
+.res-pct{font-family:var(--mono);font-size:11px;font-weight:500;width:50px;text-align:right;flex-shrink:0}
+.res-delta{font-family:var(--mono);font-size:10px;width:36px;text-align:right;flex-shrink:0;color:var(--tx2)}
 
 /* Ticker */
-#ticker-sect {
-  flex-shrink: 0;
-  height: 108px;
-  border-top: 1px solid var(--br);
-  display: flex;
-  flex-direction: column;
-}
-#ticker-hdr {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 5px 12px;
-  background: var(--bg1);
-  border-bottom: 1px solid var(--br);
-  font-size: 9px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--red2);
-  flex-shrink: 0;
-}
-.t-dot {
-  width: 6px; height: 6px;
-  background: var(--red2);
-  display: inline-block;
-  animation: blink 1s step-end infinite;
-}
-@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
-#ticker-log {
-  flex: 1;
-  overflow-y: auto;
-  padding: 5px 12px;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--tx1);
-}
-.t-line { line-height: 1.65; border-bottom: 1px solid rgba(51,51,51,.2); }
-.t-line.hl { color: var(--gold); }
-.t-line.ok { color: var(--green); }
+#ticker-sect{flex-shrink:0;height:100px;border-top:1px solid var(--br);display:flex;flex-direction:column}
+#ticker-hdr{display:flex;align-items:center;gap:7px;padding:4px 12px;background:var(--bg1);border-bottom:1px solid var(--br);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--red2);flex-shrink:0}
+.t-dot{width:6px;height:6px;background:var(--red2);display:inline-block;animation:blink 1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+#ticker-log{flex:1;overflow-y:auto;padding:4px 12px;font-family:var(--mono);font-size:10px;color:var(--tx1)}
+.t-line{line-height:1.65;border-bottom:1px solid rgba(51,51,51,.2)}
+.t-line.hl{color:var(--gold)}.t-line.ok{color:var(--green)}.t-line.err{color:var(--red2)}
 
 /* RP Export */
-#rp-sect {
-  flex-shrink: 0;
-  border-top: 1px solid var(--br);
-  display: flex;
-  flex-direction: column;
-}
-#rp-hdr {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 5px 12px;
-  background: var(--bg1);
-  border-bottom: 1px solid var(--br);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--tx1);
-  flex-shrink: 0;
-}
-.btn-copy {
-  font-family: var(--mono);
-  font-size: 10px;
-  padding: 3px 9px;
-  background: transparent;
-  border: 1px solid var(--br2);
-  color: var(--tx2);
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  transition: all .1s;
-}
-.btn-copy:hover { border-color: var(--green); color: var(--green); }
-.btn-copy.copied { border-color: var(--green); color: var(--green); background: rgba(39,174,96,.08); }
-#rp-ta {
-  font-family: var(--mono);
-  font-size: 10px;
-  line-height: 1.65;
-  background: var(--bg1);
-  color: var(--tx0);
-  border: none;
-  padding: 8px 12px;
-  resize: none;
-  height: 118px;
-  width: 100%;
-  outline: none;
-}
-#rp-ta:focus { background: var(--bg2); }
+#rp-sect{flex-shrink:0;border-top:1px solid var(--br);display:flex;flex-direction:column}
+#rp-hdr{display:flex;align-items:center;justify-content:space-between;padding:4px 12px;background:var(--bg1);border-bottom:1px solid var(--br);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tx1);flex-shrink:0}
+.btn-copy{font-family:var(--mono);font-size:10px;padding:2px 8px;background:transparent;border:1px solid var(--br2);color:var(--tx2);cursor:pointer;text-transform:uppercase;letter-spacing:.06em;transition:all .1s}
+.btn-copy:hover{border-color:var(--green);color:var(--green)}
+.btn-copy.copied{border-color:var(--green);color:var(--green);background:rgba(39,174,96,.08)}
+#rp-ta{font-family:var(--mono);font-size:10px;line-height:1.65;background:var(--bg1);color:var(--tx0);border:none;padding:7px 12px;resize:none;height:108px;width:100%;outline:none}
+#rp-ta:focus{background:var(--bg2)}
 
-/* ═══════════════════════════════════════════════════════════════════
-   RIGHT COL — PHASES & LEADERBOARD
-═══════════════════════════════════════════════════════════════════ */
-#phase-tabs {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  border-bottom: 1px solid var(--br);
-  flex-shrink: 0;
-}
-.tab-btn {
-  font-family: var(--mono);
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  padding: 7px 2px;
-  background: var(--bg1);
-  border: none;
-  border-right: 1px solid var(--br);
-  color: var(--tx2);
-  cursor: pointer;
-  transition: background .1s, color .1s;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.tab-btn:last-child { border-right: none; }
-.tab-btn:hover { background: var(--bg3); color: var(--tx1); }
-.tab-btn.active { background: var(--bg0); color: var(--gold); border-bottom: 1px solid var(--gold); }
-
-#tab-content {
-  flex-shrink: 0;
-  max-height: 215px;
-  overflow-y: auto;
-  border-bottom: 1px solid var(--br);
-}
-.tab-pane { display: none; padding: 10px 12px; }
-.tab-pane.active { display: block; }
-
-.tab-info {
-  font-size: 11px;
-  color: var(--tx1);
-  line-height: 1.55;
-  margin-bottom: 8px;
-  border-left: 2px solid var(--gold);
-  padding-left: 8px;
-}
+/* ── RIGHT: PHASES & LEADERBOARD ── */
+#phase-tabs{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--br);flex-shrink:0}
+.tab-btn{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:7px 2px;background:var(--bg1);border:none;border-right:1px solid var(--br);color:var(--tx2);cursor:pointer;transition:background .1s,color .1s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tab-btn:last-child{border-right:none}
+.tab-btn:hover{background:var(--bg3);color:var(--tx1)}
+.tab-btn.active{background:var(--bg0);color:var(--gold);border-bottom:1px solid var(--gold)}
+#tab-content{flex-shrink:0;max-height:230px;overflow-y:auto;border-bottom:1px solid var(--br)}
+.tab-pane{display:none;padding:10px 12px}
+.tab-pane.active{display:block}
+.tab-info{font-size:11px;color:var(--tx1);line-height:1.55;margin-bottom:8px;border-left:2px solid var(--gold);padding-left:8px}
 
 /* Primarie stats */
-.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 6px; }
-.stat-box { background: var(--bg1); border: 1px solid var(--br); padding: 7px 10px; }
-.stat-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: var(--tx2); margin-bottom: 3px; }
-.stat-val { font-family: var(--mono); font-size: 17px; font-weight: 700; }
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}
+.stat-box{background:var(--bg1);border:1px solid var(--br);padding:6px 10px}
+.stat-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--tx2);margin-bottom:2px}
+.stat-val{font-family:var(--mono);font-size:16px;font-weight:700}
 
-/* Generali */
-.gen-row {
-  display: flex;
-  align-items: center;
-  padding: 4px 10px;
-  gap: 7px;
-  border-bottom: 1px solid rgba(51,51,51,.4);
-  font-size: 11px;
-}
-.gen-row:last-child { border-bottom: none; }
-.gen-rank { font-family: var(--mono); font-size: 10px; color: var(--tx2); width: 18px; }
-.gen-name { flex: 1; }
-.gen-bar-w { width: 55px; height: 4px; background: var(--bg2); }
-.gen-bar-f { height: 100%; background: var(--blue); }
-.gen-bar-f.l { background: var(--gold); }
-.gen-pct { font-family: var(--mono); font-size: 11px; width: 50px; text-align: right; }
-.gen-delta { font-family: var(--mono); font-size: 10px; width: 36px; text-align: right; color: var(--tx2); }
+/* Duel UI */
+.duel-grid{display:flex;flex-direction:column;gap:3px;margin-top:8px}
+.duel-row{display:flex;align-items:center;gap:6px;padding:4px 6px;background:var(--bg1);border:1px solid var(--br);font-size:11px}
+.duel-god{flex:1;font-weight:500}
+.duel-sfidante{font-size:10px;color:var(--tx2);flex:1;text-align:center}
+.duel-result{font-family:var(--mono);font-size:10px;width:70px;text-align:right}
+.duel-result.win{color:var(--green)}.duel-result.lose{color:var(--red2)}.duel-result.pending{color:var(--tx2)}
+.duel-btn{font-family:var(--mono);font-size:9px;padding:2px 6px;background:transparent;border:1px solid var(--br2);color:var(--tx2);cursor:pointer;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;flex-shrink:0}
+.duel-btn:hover{border-color:var(--gold);color:var(--gold)}
+.duel-btn:disabled{opacity:.4;cursor:default}
+
+/* Generali results */
+.gen-row{display:flex;align-items:center;padding:4px 10px;gap:6px;border-bottom:1px solid rgba(51,51,51,.4);font-size:11px}
+.gen-row:last-child{border-bottom:none}
+.gen-rank{font-family:var(--mono);font-size:10px;color:var(--tx2);width:18px}
+.gen-name{flex:1}.gen-bar-w{width:50px;height:4px;background:var(--bg2)}
+.gen-bar-f{height:100%;background:var(--blue)}.gen-bar-f.l{background:var(--gold)}
+.gen-pct{font-family:var(--mono);font-size:11px;width:50px;text-align:right}
+.gen-delta{font-family:var(--mono);font-size:10px;width:36px;text-align:right;color:var(--tx2)}
 
 /* Ballottaggio */
-.ballot-alert {
-  padding: 6px 8px;
-  font-size: 10px;
-  margin-bottom: 8px;
-  border: 1px solid;
-}
-.ballot-alert.win { border-color: var(--green); color: var(--green); background: rgba(39,174,96,.06); }
-.ballot-alert.run { border-color: var(--red); color: var(--red2); background: rgba(192,57,43,.06); }
-.ballot-sect { margin-bottom: 8px; }
-.ballot-sect-title {
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  color: var(--tx2);
-  border-bottom: 1px solid var(--br);
-  padding-bottom: 3px;
-  margin-bottom: 5px;
-}
-.ballot-cand {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 6px;
-  background: var(--bg1);
-  border: 1px solid var(--gold);
-  background: rgba(201,168,76,.06);
-  margin-bottom: 3px;
-  font-size: 11px;
-}
-.ballot-cand-name { color: var(--tx0); }
-.ballot-cand-pct { font-family: var(--mono); color: var(--gold); }
+.ballot-alert{padding:5px 8px;font-size:10px;margin-bottom:7px;border:1px solid}
+.ballot-alert.win{border-color:var(--green);color:var(--green);background:rgba(39,174,96,.06)}
+.ballot-alert.run{border-color:var(--red);color:var(--red2);background:rgba(192,57,43,.06)}
+.ballot-sect{margin-bottom:7px}
+.ballot-sect-title{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--tx2);border-bottom:1px solid var(--br);padding-bottom:3px;margin-bottom:4px}
+.ballot-cand{display:flex;align-items:center;justify-content:space-between;padding:4px 6px;border:1px solid var(--gold);background:rgba(201,168,76,.06);margin-bottom:3px;font-size:11px}
+.ballot-cand-name{color:var(--tx0)}.ballot-cand-pct{font-family:var(--mono);color:var(--gold)}
+.ballot-winner{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;border:1px solid;margin-bottom:4px;font-size:11px}
+.ballot-winner.re{border-color:var(--gold);background:rgba(201,168,76,.1);color:var(--gold)}
+.ballot-winner.regina{border-color:var(--pink);background:rgba(194,82,122,.1);color:var(--pink)}
+.ballot-winner-title{font-size:9px;text-transform:uppercase;letter-spacing:.1em;opacity:.7;margin-right:8px}
+.ballot-winner-name{font-weight:600;flex:1}
+.ballot-winner-pct{font-family:var(--mono)}
 
 /* Coalizioni */
-.coal-item {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 4px 6px;
-  border-bottom: 1px solid rgba(51,51,51,.4);
-  font-size: 11px;
-}
-.coal-item:last-child { border-bottom: none; }
-.coal-chk { accent-color: var(--gold); width: 12px; height: 12px; cursor: pointer; }
-.coal-name { flex: 1; color: var(--tx1); }
-.coal-pct { font-family: var(--mono); color: var(--blue2); width: 44px; text-align: right; }
-.coal-total-box {
-  margin-top: 10px;
-  padding: 8px 10px;
-  background: var(--bg1);
-  border: 1px solid var(--br);
-}
-.coal-total-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: var(--tx2); margin-bottom: 3px; }
-.coal-total-val { font-family: var(--mono); font-size: 22px; font-weight: 700; }
-.coal-total-val.above { color: var(--green); }
-.coal-total-val.below { color: var(--red2); }
-.coal-thr-line { font-size: 10px; color: var(--tx2); margin-top: 3px; }
+.coal-item{display:flex;align-items:center;gap:6px;padding:3px 6px;border-bottom:1px solid rgba(51,51,51,.4);font-size:11px}
+.coal-item:last-child{border-bottom:none}
+.coal-chk{accent-color:var(--gold);width:12px;height:12px;cursor:pointer}
+.coal-name{flex:1;color:var(--tx1)}.coal-pct{font-family:var(--mono);color:var(--blue2);width:44px;text-align:right}
+.coal-bars{margin-top:8px;padding:8px 10px;background:var(--bg1);border:1px solid var(--br)}
+.coal-bar-row{margin-bottom:8px}
+.coal-bar-row:last-child{margin-bottom:0}
+.coal-bar-label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--tx2);margin-bottom:3px;display:flex;justify-content:space-between}
+.coal-track{height:8px;background:var(--bg2);border:1px solid var(--br);position:relative}
+.coal-fill{height:100%;transition:width .3s}
+.coal-fill-51{background:var(--blue2)}
+.coal-fill-66{background:var(--purple)}
+.coal-fill.reached{background:var(--green)!important}
+.coal-marker{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,255,255,.2)}
+.coal-total-label{font-size:20px;font-weight:700;font-family:var(--mono);text-align:center;padding:4px 0}
+.coal-total-label.below-51{color:var(--red2)}
+.coal-total-label.above-51{color:var(--blue2)}
+.coal-total-label.above-66{color:var(--green)}
 
 /* Leaderboard */
-#lb-sect {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  min-height: 0;
-}
-#lb-hdr {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 12px;
-  height: 30px;
-  background: var(--bg1);
-  border-bottom: 1px solid var(--br);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--tx1);
-  flex-shrink: 0;
-}
-#lb-list { flex: 1; overflow-y: auto; }
-.lb-row {
-  display: flex;
-  align-items: center;
-  padding: 5px 12px;
-  border-bottom: 1px solid rgba(51,51,51,.35);
-  gap: 7px;
-  transition: background .1s;
-}
-.lb-row:hover { background: var(--bg3); }
-.lb-row:last-child { border-bottom: none; }
-.lb-rank { font-family: var(--mono); font-size: 11px; font-weight: 700; width: 20px; color: var(--tx2); }
-.lb-rank.r1 { color: var(--gold);  }
-.lb-rank.r2 { color: #aaaaaa; }
-.lb-rank.r3 { color: #7a5c14; }
-.lb-g {
-  font-family: var(--mono);
-  font-size: 9px;
-  width: 13px;
-  text-align: center;
-  color: var(--tx2);
-}
-.lb-g.M { color: var(--blue2); }
-.lb-g.F { color: var(--pink); }
-.lb-name { flex: 1; font-size: 11px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.lb-bar-w { width: 55px; height: 4px; background: var(--bg2); flex-shrink: 0; }
-.lb-bar-f { height: 100%; background: var(--blue); transition: width .5s; }
-.lb-bar-f.l { background: var(--gold); }
-.lb-pct { font-family: var(--mono); font-size: 12px; font-weight: 700; width: 52px; text-align: right; flex-shrink: 0; }
-.lb-delta { font-family: var(--mono); font-size: 10px; width: 36px; text-align: right; flex-shrink: 0; color: var(--tx2); }
+#lb-sect{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+#lb-hdr{display:flex;align-items:center;justify-content:space-between;padding:0 12px;height:30px;background:var(--bg1);border-bottom:1px solid var(--br);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tx1);flex-shrink:0}
+#lb-list{flex:1;overflow-y:auto}
+.lb-row{display:flex;align-items:center;padding:4px 12px;border-bottom:1px solid rgba(51,51,51,.35);gap:6px;transition:background .1s}
+.lb-row:hover{background:var(--bg3)}
+.lb-row:last-child{border-bottom:none}
+.lb-rank{font-family:var(--mono);font-size:11px;font-weight:700;width:20px;color:var(--tx2)}
+.lb-rank.r1{color:var(--gold)}.lb-rank.r2{color:#aaa}.lb-rank.r3{color:#7a5c14}
+.lb-g{font-family:var(--mono);font-size:9px;width:13px;text-align:center;color:var(--tx2)}
+.lb-g.M{color:var(--blue2)}.lb-g.F{color:var(--pink)}
+.lb-name{flex:1;font-size:11px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-bar-w{width:50px;height:4px;background:var(--bg2);flex-shrink:0}
+.lb-bar-f{height:100%;background:var(--blue);transition:width .5s}.lb-bar-f.l{background:var(--gold)}
+.lb-pct{font-family:var(--mono);font-size:12px;font-weight:700;width:52px;text-align:right;flex-shrink:0}
+.lb-delta{font-family:var(--mono);font-size:10px;width:36px;text-align:right;flex-shrink:0;color:var(--tx2)}
+.lb-bonus{font-family:var(--mono);font-size:9px;width:28px;text-align:right;flex-shrink:0;color:var(--green)}
 
-/* ═══════════════════════════════════════════════════════════════════
-   NOTIFICATION BAR
-═══════════════════════════════════════════════════════════════════ */
-#notif {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  height: 22px;
-  background: var(--bg1);
-  border-top: 1px solid var(--br);
-  display: flex;
-  align-items: center;
-  padding: 0 12px;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--tx2);
-  z-index: 999;
-  overflow: hidden;
-}
-#notif-inner {
-  white-space: nowrap;
-  animation: nticker 40s linear infinite;
-}
-@keyframes nticker {
-  0%   { transform: translateX(120vw); }
-  100% { transform: translateX(-120%); }
-}
+/* Notif bar */
+#notif{position:fixed;bottom:0;left:0;right:0;height:22px;background:var(--bg1);border-top:1px solid var(--br);display:flex;align-items:center;padding:0 12px;font-family:var(--mono);font-size:10px;color:var(--tx2);z-index:999;overflow:hidden}
+#notif-inner{white-space:nowrap;animation:nticker 45s linear infinite}
+@keyframes nticker{0%{transform:translateX(120vw)}100%{transform:translateX(-120%)}}
 </style>
 </head>
 <body>
 <div id="shell">
-
-  <!-- ═══ TOPBAR ═══ -->
   <header id="topbar">
     <div class="tb-left">
       <span class="tb-logo">NOMOS ENGINE v2.0</span>
@@ -718,33 +238,23 @@ html, body {
       <span class="tb-stat">FASE <span class="tb-val c-gold" id="t-phase">—</span></span>
       <span class="tb-stat">STATO <span class="tb-val c-blue" id="t-stato">IN ATTESA</span></span>
       <span class="tb-stat">DISTRETTI <span class="tb-val mono" id="t-dist">0/0</span></span>
-      <span class="tb-stat">ELEZIONE <span class="tb-val mono c-dim" id="t-nome">—</span></span>
+      <span class="tb-stat">PESO TOT. <span class="tb-val mono c-dim" id="t-pesoTot">—</span></span>
     </div>
   </header>
 
-  <!-- ═══ MAIN GRID ═══ -->
   <div id="grid">
 
-    <!-- ══════════════════════════════
-         LEFT — DISTRICT MAP
-    ══════════════════════════════ -->
+    <!-- ══ LEFT: MAP ══ -->
     <section class="col">
-      <div class="col-hdr">
-        MAPPA DISTRETTI
-        <span class="hdr-badge" id="d-count-badge">0</span>
-      </div>
+      <div class="col-hdr">MAPPA DISTRETTI <span class="hdr-badge" id="d-badge">0</span></div>
       <div id="district-grid"></div>
       <div id="inspector">
         <div class="insp-hdr">// DISTRICT INSPECTOR</div>
-        <div id="insp-body">
-          <div class="empty-msg">Seleziona un distretto per visualizzare i dati demografici interni.</div>
-        </div>
+        <div id="insp-body"><div class="empty-msg">Seleziona un distretto per visualizzare i dati demografici e impostare i modificatori di Hitori.</div></div>
       </div>
     </section>
 
-    <!-- ══════════════════════════════
-         CENTER — SCRUTINY
-    ══════════════════════════════ -->
+    <!-- ══ CENTER: SCRUTINY ══ -->
     <section class="col">
       <div class="col-hdr">
         SPOGLIO ELETTORALE
@@ -754,29 +264,22 @@ html, body {
         </div>
       </div>
       <div id="scrutiny-ctrl">
-        <button class="btn-prim" id="btn-start">▶ INIZIA SCRUTINIO</button>
+        <button class="btn-prim" id="btn-start" disabled>▶ INIZIA SCRUTINIO</button>
         <button class="btn-sec"  id="btn-reset">RESET</button>
         <span class="mono c-dim" id="step-lbl" style="font-size:10px;margin-left:auto"></span>
       </div>
-      <div id="results-box">
-        <div class="empty-msg" style="margin-top:16px">In attesa dello scrutinio…</div>
-      </div>
+      <div id="results-box"><div class="empty-msg" style="margin-top:16px">Vai al tab <strong>GENERALI</strong> e premi <strong>INIZIA SCRUTINIO</strong> per avviare lo spoglio.</div></div>
       <div id="ticker-sect">
         <div id="ticker-hdr"><span class="t-dot"></span>LIVE FEED</div>
         <div id="ticker-log"></div>
       </div>
       <div id="rp-sect">
-        <div id="rp-hdr">
-          TEXT EXPORT // ROLEPLAY
-          <button class="btn-copy" id="btn-copy">COPIA</button>
-        </div>
-        <textarea id="rp-ta" readonly placeholder="Il comunicato stampa verrà generato al termine dello scrutinio."></textarea>
+        <div id="rp-hdr">TEXT EXPORT // <span id="rp-phase-label">ROLEPLAY</span> <button class="btn-copy" id="btn-copy">COPIA</button></div>
+        <textarea id="rp-ta" readonly placeholder="Il comunicato sarà generato contestualmente alla fase attiva."></textarea>
       </div>
     </section>
 
-    <!-- ══════════════════════════════
-         RIGHT — PHASES & LEADERBOARD
-    ══════════════════════════════ -->
+    <!-- ══ RIGHT: PHASES & LEADERBOARD ══ -->
     <section class="col">
       <div class="col-hdr">FASI ELETTORALI</div>
       <div id="phase-tabs">
@@ -786,213 +289,249 @@ html, body {
         <button class="tab-btn" data-tab="coalizioni">COALIZ.</button>
       </div>
       <div id="tab-content">
+
         <!-- PRIMARIE -->
         <div class="tab-pane active" id="pane-primarie">
-          <div class="tab-info">La fase primaria determina il Peso Politico iniziale di ciascuna divinità nei singoli distretti, ponderato per categoria demografica. Avvia lo scrutinio per popolare il sistema.</div>
+          <div class="tab-info">Fase pre-elettorale. Ogni Dio può affrontare il proprio sfidante in un duello RNG. La vittoria garantisce un bonus di affinità del <span class="mono c-gold">+8%</span> su tutte le categorie per la fase Generali.</div>
           <div class="stat-grid">
             <div class="stat-box"><div class="stat-lbl">Candidati</div><div class="stat-val c-gold" id="s-cand">—</div></div>
             <div class="stat-box"><div class="stat-lbl">Distretti</div><div class="stat-val c-blue" id="s-dist">—</div></div>
             <div class="stat-box"><div class="stat-lbl">Soglia Ballottaggio</div><div class="stat-val c-red"  id="s-ball">—</div></div>
             <div class="stat-box"><div class="stat-lbl">Soglia Coalizione</div><div class="stat-val c-green" id="s-coal">—</div></div>
           </div>
+          <div class="duel-grid" id="duel-grid"></div>
         </div>
+
         <!-- GENERALI -->
         <div class="tab-pane" id="pane-generali">
-          <div class="tab-info">Risultati aggregati su tutti i distretti. Peso Politico Totale normalizzato per l'insieme del Pantheon.</div>
+          <div class="tab-info">Fase elettorale principale su tutti i <span class="mono c-gold" id="gen-dist-count">33</span> distretti. Lo scrutinio integra i modificatori di Hitori e i bonus dai duelli primari. Premi <strong>INIZIA SCRUTINIO</strong> nella colonna centrale.</div>
           <div id="gen-rows"></div>
         </div>
+
         <!-- BALLOTTAGGIO -->
         <div class="tab-pane" id="pane-ballottaggio">
-          <div class="tab-info">Se nessun candidato supera la soglia del <span class="mono c-red" id="ball-thr-txt">30%</span>, si procede al ballottaggio. Vengono selezionati automaticamente i 2 Dei e le 2 Dee in testa.</div>
-          <div id="ballot-content"><div class="empty-msg">Esegui lo scrutinio per calcolare il ballottaggio.</div></div>
+          <div class="tab-info">Se nessun candidato supera il <span class="mono c-red" id="ball-thr-txt">30%</span>, vengono selezionati i 2 Dei e le 2 Dee in testa. Il ballottaggio ri-esegue uno spoglio rapido solo tra i 4 qualificati per decretare Re e Regina dell'Olimpo.</div>
+          <div id="ballot-content"><div class="empty-msg">Esegui lo scrutinio Generali per sbloccare il Ballottaggio.</div></div>
         </div>
+
         <!-- COALIZIONI -->
         <div class="tab-pane" id="pane-coalizioni">
-          <div class="tab-info">Seleziona più divinità per formare una coalizione. Vincente se supera il <span class="mono c-gold" id="coal-thr-txt">51%</span>.</div>
-          <div id="coal-list"><div class="empty-msg">Esegui lo scrutinio per abilitare le coalizioni.</div></div>
-          <div class="coal-total-box" id="coal-total-box" style="display:none">
-            <div class="coal-total-lbl">PESO COALIZIONE</div>
-            <div class="coal-total-val below" id="coal-total-val">0.00%</div>
-            <div class="coal-thr-line">Soglia di governo: <span class="mono c-gold" id="coal-thr-disp">51%</span></div>
+          <div class="tab-info">Seleziona più divinità per formare una coalizione di governo. Soglia <span class="mono c-blue">51%</span> = Maggioranza Assoluta. Soglia <span class="mono c-purple">66%</span> = Maggioranza Suprema (potere di veto assoluto).</div>
+          <div id="coal-list"><div class="empty-msg">Esegui lo scrutinio Generali per abilitare le coalizioni.</div></div>
+          <div id="coal-bars" style="display:none">
+            <div class="coal-bars">
+              <div class="coal-total-label below-51" id="coal-total-val">0.00%</div>
+              <div class="coal-bar-row">
+                <div class="coal-bar-label"><span class="c-blue">MAGG. ASSOLUTA</span><span class="mono" id="coal-lbl-51">0.00% / 51%</span></div>
+                <div class="coal-track"><div class="coal-fill coal-fill-51" id="coal-fill-51" style="width:0%"></div><div class="coal-marker" style="left:77.27%"></div></div>
+              </div>
+              <div class="coal-bar-row" style="margin-top:6px">
+                <div class="coal-bar-label"><span class="c-purple">MAGG. SUPREMA</span><span class="mono" id="coal-lbl-66">0.00% / 66%</span></div>
+                <div class="coal-track"><div class="coal-fill coal-fill-66" id="coal-fill-66" style="width:0%"></div></div>
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
 
       <!-- Leaderboard -->
       <div id="lb-sect">
-        <div id="lb-hdr">
-          LEADERBOARD // PESO POLITICO
-          <span class="mono c-dim" style="font-size:10px">ord. decr.</span>
-        </div>
+        <div id="lb-hdr">LEADERBOARD // PESO POLITICO <span class="mono c-dim" style="font-size:10px">ord. decr.</span></div>
         <div id="lb-list"><div class="empty-msg" style="padding:18px">In attesa dei dati…</div></div>
       </div>
     </section>
 
-  </div><!-- /#grid -->
-</div><!-- /#shell -->
-
-<div id="notif">
-  <span id="notif-inner">
-    NOMOS ENGINE v2.0 // Sistema Psefologico Olimpico — Caricamento database in corso //
-    OLYMPUS ELECTORAL COMMISSION // Ogni voto è una preghiera, ogni preghiera è un voto //
-    Sistema riservato alla Commissione Elettorale dell'Olimpo // Uso narrativo/GDR //
-  </span>
+  </div>
 </div>
 
+<div id="notif"><span id="notif-inner">NOMOS ENGINE v2.0 // Sistema Psefologico Olimpico — 33 Distretti Attivi // OLYMPUS ELECTORAL COMMISSION // Ogni voto è una preghiera, ogni preghiera è un voto // Modificatori di Hitori attivi — intervieni con saggezza // Sistema riservato alla Commissione Elettorale</span></div>
+
 <script>
-/* ═══════════════════════════════════════════════════════════════════
-   NOMOS ENGINE v2.0 — Core Logic
-═══════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   NOMOS ENGINE v2.0 — Full Logic
+═══════════════════════════════════════════════════════════════ */
 const NE = (() => {
 
-  /* ── State ── */
-  let cfg    = null;      // loaded JSON
-  let distRes = {};       // { distId: { godId: pct, `${catId}_${godId}`: pct } }
-  let final   = {};       // { godId: pct (0–100, sum=100) }
-  let running = false;
-  let done    = false;
-  let selDist = null;
-  let coalSel = new Set();
-  const PHASE_LABELS = {
-    primarie: 'PRIMARIE', generali: 'GENERALI',
-    ballottaggio: 'BALLOTTAGGIO RE/REGINA', coalizioni: 'COALIZIONI'
+  /* ── Challengers per duelli primari ── */
+  const CHALLENGERS = {
+    zeus:      {nome:'Crono',     titolo:'Signore del Tempo',     forza:0.82},
+    era:       {nome:'Nemesi',    titolo:'Dea della Retribuzione',forza:0.68},
+    poseidone: {nome:'Tritone',   titolo:'Araldo dei Mari',       forza:0.71},
+    demetra:   {nome:'Gaia',      titolo:'Madre Terra',           forza:0.78},
+    ares:      {nome:'Enyo',      titolo:'Dea del Furore',        forza:0.73},
+    atena:     {nome:'Medusa',    titolo:'Gorgone Primordiale',   forza:0.65},
+    apollo:    {nome:'Helios',    titolo:'Dio del Sole Antico',   forza:0.73},
+    artemide:  {nome:'Selene',    titolo:'Dea della Luna',        forza:0.70},
+    afrodite:  {nome:'Psiche',    titolo:'Anima Immortalata',     forza:0.66},
+    efesto:    {nome:'Dedalo',    titolo:'Artefice Mortale',      forza:0.70},
+    hermes:    {nome:'Pan',       titolo:'Dio dei Boschi',        forza:0.67},
+    dioniso:   {nome:'Sileno',    titolo:'Vecchio Satiro Saggio', forza:0.72},
+    estia:     {nome:'Vesta',     titolo:'Fiamma di Roma',        forza:0.68},
+    persefone: {nome:'Ecate',     titolo:'Dea della Magia Oscura',forza:0.76}
   };
+
+  /* ── State ── */
+  let cfg         = null;
+  let distRes     = {};   // {distId: {catId_godId: pct, godId: pct}}
+  let finalScores = {};   // {godId: pct}
+  let ballotFinal = {};   // {godId: pct} — ballottaggio
+  let hitori      = {};   // {distId: {godId: modifier_as_%}}
+  let affinBonus  = {};   // {godId: 0.08 or 0}
+  let duels       = {};   // {godId: {rival,won,done}}
+  let ballotRes   = null; // {re:{...}, regina:{...}}
+  let running     = false;
+  let done        = false;
+  let phase       = 'primarie';
+  let selDist     = null;
+  const PHASES = {primarie:'PRIMARIE',generali:'GENERALI',ballottaggio:'BALLOTTAGGIO RE/REGINA',coalizioni:'COALIZIONI'};
 
   /* ── Boot ── */
   async function init() {
-    tick('Sistema avviato. Caricamento database…', '');
+    tick('Sistema avviato — caricamento configurazione…','');
     try {
       const r = await fetch('elezioni_config.json');
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       cfg = await r.json();
-      tick(`Database caricato: "${cfg.elezione.nome}"`, 'ok');
-      setupUI();
-    } catch (e) {
-      tick(`ERRORE: ${e.message}`, 'hl');
-      document.getElementById('insp-body').innerHTML =
-        `<div style="color:var(--red2);font-family:var(--mono);font-size:11px;padding:10px">
-          ERRORE CARICAMENTO DATABASE<br>${e.message}<br><br>
-          Assicurati che elezioni_config.json sia nella stessa cartella di index.html<br>
-          e che il file sia aperto tramite un server locale (es. Live Server in VS Code).
-        </div>`;
+      const pesoTot = cfg.distretti.reduce((s,d)=>s+d.peso_politico,0);
+      tick(`Database caricato: "${cfg.elezione.nome}" — ${cfg.distretti.length} distretti — Peso totale: ${pesoTot.toLocaleString('it')}`, 'ok');
+      setupUI(pesoTot);
+    } catch(e) {
+      tick(`ERRORE: ${e.message}`, 'err');
+      $('insp-body').innerHTML = `<div style="color:var(--red2);font-family:var(--mono);font-size:11px;padding:10px">ERRORE CARICAMENTO<br>${e.message}<br><br>Aprire tramite server locale (es. Live Server in VS Code o python -m http.server).</div>`;
     }
   }
 
-  /* ── Setup ── */
-  function setupUI() {
-    // Topbar
-    setTB('t-nome', cfg.elezione.nome);
-    setTB('t-dist', `0/${cfg.distretti.length}`);
-    switchTab('primarie');
-
-    // Stats (primarie pane)
-    setText('s-cand', cfg.candidati.length);
-    setText('s-dist', cfg.distretti.length);
-    setText('s-ball', cfg.elezione.soglia_ballottaggio + '%');
-    setText('s-coal', cfg.elezione.soglia_coalizione + '%');
+  function setupUI(pesoTot) {
+    setText('t-dist',    `0/${cfg.distretti.length}`);
+    setText('t-pesoTot', pesoTot.toLocaleString('it'));
+    setText('d-badge',   cfg.distretti.length);
+    setText('s-cand',    cfg.candidati.length);
+    setText('s-dist',    cfg.distretti.length);
+    setText('s-ball',    cfg.elezione.soglia_ballottaggio + '%');
+    setText('s-coal',    cfg.elezione.soglia_coalizione + '%');
     setText('ball-thr-txt', cfg.elezione.soglia_ballottaggio + '%');
-    setText('coal-thr-txt', cfg.elezione.soglia_coalizione + '%');
-    setText('coal-thr-disp', cfg.elezione.soglia_coalizione + '%');
-    setText('d-count-badge', cfg.distretti.length);
+    setText('gen-dist-count', cfg.distretti.length);
 
     buildDistrictGrid();
     buildResultPlaceholders();
     buildLeaderboard(null);
+    buildDuelGrid();
 
-    // Events
     $('btn-start').addEventListener('click', startScrutiny);
     $('btn-reset').addEventListener('click', resetScrutiny);
     $('btn-copy').addEventListener('click', copyRP);
-    document.querySelectorAll('.tab-btn').forEach(b =>
-      b.addEventListener('click', () => switchTab(b.dataset.tab))
-    );
+    document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
 
-    tick(`Pronti. ${cfg.candidati.length} candidati — ${cfg.distretti.length} distretti.`, 'ok');
+    switchTab('primarie');
+    tick(`Pronti: ${cfg.candidati.length} candidati, ${cfg.distretti.length} distretti.`, 'ok');
   }
 
-  /* ── District Grid ── */
+  /* ══════════════════════════════════════
+     DISTRICT GRID
+  ══════════════════════════════════════ */
   function buildDistrictGrid() {
-    const grid = $('district-grid');
-    grid.innerHTML = '';
+    const g = $('district-grid'); g.innerHTML = '';
     cfg.distretti.forEach(d => {
       const btn = document.createElement('button');
-      btn.className = 'district-btn d-btn';
-      btn.dataset.id = d.id;
-      btn.innerHTML = `<span class="d-id">${d.id}</span><span class="d-nm">${d.nome}</span>`;
+      btn.className = 'd-btn'; btn.dataset.id = d.id;
+      btn.innerHTML = `<span class="d-id">${d.id}</span><span class="d-nm">${d.nome.split(' ')[0]}</span>`;
       btn.addEventListener('click', () => selectDistrict(d.id));
-      grid.appendChild(btn);
+      g.appendChild(btn);
     });
   }
 
   function selectDistrict(id) {
     selDist = id;
-    document.querySelectorAll('.d-btn').forEach(b =>
-      b.classList.toggle('active', b.dataset.id === id));
+    document.querySelectorAll('.d-btn').forEach(b => b.classList.toggle('active', b.dataset.id === id));
     renderInspector(id);
   }
 
+  /* ══════════════════════════════════════
+     INSPECTOR
+  ══════════════════════════════════════ */
   function renderInspector(id) {
     const d   = cfg.distretti.find(x => x.id === id);
     const res = distRes[id] || null;
-    let h     = `<div class="insp-name">${d.id} — ${d.nome}</div>
-                 <div class="insp-desc">${d.descrizione}</div>
-                 <div class="insp-section-title" style="margin-bottom:6px">Composizione Demografica</div>`;
+    let h = `<div class="insp-name">${d.id} — ${d.nome}</div>
+             <div class="insp-sub">${d.regione} · Votanti: ${d.votanti.toLocaleString('it')} · Peso: ${d.peso_politico.toLocaleString('it')}</div>
+             <div class="insp-desc">${d.descrizione}</div>
+             <div class="insp-st">COMPOSIZIONE DEMOGRAFICA</div>`;
 
     d.categorie.forEach(c => {
+      const pctVot = ((c.votanti / d.votanti) * 100).toFixed(1);
       h += `<div class="cat-row">
               <span class="cat-name">${c.nome}</span>
-              <span class="cat-peso">${(c.peso * 100).toFixed(0)}%</span>
+              <span class="cat-vot">${c.votanti.toLocaleString('it')} (${pctVot}%)</span>
+              <span class="cat-peso">${(c.peso*100).toFixed(1)}%p</span>
             </div>`;
     });
 
     if (res) {
-      h += `<div style="margin-top:12px"><div class="insp-section-title">Voti per Categoria</div></div>`;
+      h += `<div class="insp-st" style="margin-top:10px">RISULTATI PER CATEGORIA</div>`;
       d.categorie.forEach(cat => {
-        const catVotes = cfg.candidati
-          .map(g => ({ nome: g.nome, id: g.id, v: res[`${cat.id}_${g.id}`] ?? 0 }))
-          .sort((a, b) => b.v - a.v);
-        const mx = catVotes[0]?.v || 1;
-        h += `<div class="cat-block">
-                <div class="cat-block-title">${cat.nome} (peso ${(cat.peso*100).toFixed(0)}%)</div>`;
-        catVotes.forEach(row => {
-          h += `<div class="vote-row">
-                  <span class="vr-god">${row.nome}</span>
-                  <div class="vr-bar"><div class="vr-fill" style="width:${(row.v/mx*100).toFixed(1)}%"></div></div>
-                  <span class="vr-pct">${row.v.toFixed(1)}%</span>
+        const votes = cfg.candidati.map(g => ({nome:g.nome,id:g.id,v:res[`${cat.id}_${g.id}`]??0})).sort((a,b)=>b.v-a.v);
+        const mx = votes[0]?.v||1;
+        h += `<div style="margin-bottom:7px"><div style="font-size:9px;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--br);padding-bottom:2px;margin-bottom:3px">${cat.nome}</div>`;
+        votes.forEach(row => {
+          h += `<div style="display:flex;align-items:center;gap:5px;padding:2px 0;font-size:10px;border-bottom:1px solid rgba(51,51,51,.2)">
+                  <span style="width:68px;color:var(--tx1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${row.nome}</span>
+                  <div style="flex:1;height:3px;background:var(--bg2)"><div style="height:100%;background:var(--blue);width:${(row.v/mx*100).toFixed(1)}%"></div></div>
+                  <span style="font-family:var(--mono);color:var(--blue2);width:40px;text-align:right">${row.v.toFixed(1)}%</span>
                 </div>`;
         });
         h += `</div>`;
       });
-
-      // District totals
-      const totals = cfg.candidati
-        .map(g => ({ nome: g.nome, v: res[g.id] ?? 0 }))
-        .sort((a, b) => b.v - a.v);
-      const mx2 = totals[0]?.v || 1;
-      h += `<div class="cat-block">
-              <div class="cat-block-title" style="color:var(--gold)">Totale Distretto</div>`;
-      totals.forEach(row => {
-        h += `<div class="vote-row">
-                <span class="vr-god">${row.nome}</span>
-                <div class="vr-bar"><div class="vr-fill" style="width:${(row.v/mx2*100).toFixed(1)}%;background:var(--gold)"></div></div>
-                <span class="vr-pct" style="color:var(--gold)">${row.v.toFixed(2)}%</span>
-              </div>`;
-      });
-      h += `</div>`;
     }
+
+    /* Hitori inputs */
+    h += `<div class="hitori-sect">
+            <div class="hitori-title">// INTERVENTO DI HITORI (MODIFICATORE %)</div>`;
+    cfg.candidati.forEach(g => {
+      const stored = hitori[id]?.[g.id] ?? '';
+      const cls    = stored === '' ? '' : parseFloat(stored) >= 0 ? ' pos' : ' neg';
+      h += `<div class="hitori-row">
+              <span class="hitori-name">${g.nome}</span>
+              <input class="hitori-input${cls}" type="text" placeholder="±%" value="${stored}"
+                data-dist="${id}" data-god="${g.id}"
+                onchange="NE.setHitori('${id}','${g.id}',this.value)"
+                oninput="NE.liveHitoriStyle(this)">
+            </div>`;
+    });
+    h += `</div>`;
 
     $('insp-body').innerHTML = h;
   }
 
-  /* ── Result Placeholders ── */
+  function setHitori(distId, godId, val) {
+    if (!hitori[distId]) hitori[distId] = {};
+    const num = parseFloat(val);
+    if (isNaN(num) || val.trim() === '') {
+      delete hitori[distId][godId];
+    } else {
+      hitori[distId][godId] = num;
+    }
+    /* Mark district button if has modifiers */
+    const hasAny = Object.keys(hitori[distId]||{}).length > 0;
+    const btn = document.querySelector(`.d-btn[data-id="${distId}"]`);
+    if (btn) btn.classList.toggle('has-hitori', hasAny);
+    tick(`[Hitori] ${cfg.distretti.find(d=>d.id===distId)?.nome} · ${cfg.candidati.find(g=>g.id===godId)?.nome}: ${val||'rimosso'}`, '');
+  }
+
+  function liveHitoriStyle(el) {
+    const v = parseFloat(el.value);
+    el.className = 'hitori-input' + (isNaN(v)||el.value.trim()==='' ? '' : v>=0 ? ' pos' : ' neg');
+  }
+
+  /* ══════════════════════════════════════
+     RESULT PLACEHOLDERS
+  ══════════════════════════════════════ */
   function buildResultPlaceholders() {
-    const box = $('results-box');
-    box.innerHTML = '';
-    cfg.candidati.forEach((g, i) => {
-      const thr = cfg.elezione.soglia_ballottaggio;
+    const box = $('results-box'); box.innerHTML = '';
+    const thr = cfg?.elezione.soglia_ballottaggio ?? 30;
+    cfg.candidati.forEach((g,i) => {
       const row = document.createElement('div');
-      row.className = 'res-row';
-      row.id = `rrow-${g.id}`;
+      row.className = 'res-row'; row.id = `rrow-${g.id}`;
       row.innerHTML = `
         <span class="res-rank" id="rrk-${g.id}">${i+1}</span>
         <span class="res-name">${g.nome}</span>
@@ -1006,117 +545,133 @@ const NE = (() => {
     });
   }
 
-  /* ═══════════════════════════════════════════════
+  /* ══════════════════════════════════════
+     DUEL GRID (Primarie)
+  ══════════════════════════════════════ */
+  function buildDuelGrid() {
+    const grid = $('duel-grid'); grid.innerHTML = '';
+    cfg.candidati.forEach(g => {
+      const ch   = CHALLENGERS[g.id];
+      const d    = duels[g.id];
+      const res  = d ? (d.won ? `<span class="c-green">VINCE +8%</span>` : `<span class="c-red">PERDE</span>`) : '';
+      const row  = document.createElement('div');
+      row.className = 'duel-row'; row.id = `duel-${g.id}`;
+      row.innerHTML = `
+        <span class="duel-god">${g.nome}</span>
+        <span class="duel-sfidante">vs <em>${ch?.nome??'?'}</em></span>
+        <span class="duel-result ${d?d.won?'win':'lose':'pending'}">${d ? (d.won ? '+8% aff.':'—') : 'non giocato'}</span>
+        <button class="duel-btn" onclick="NE.runDuel('${g.id}')" ${d?'disabled':''}>DUELLA</button>`;
+      grid.appendChild(row);
+    });
+  }
+
+  function runDuel(godId) {
+    const god = cfg.candidati.find(g => g.id === godId);
+    const ch  = CHALLENGERS[godId];
+    if (!god || !ch) return;
+    const godStr  = Object.values(god.affinita).reduce((s,v)=>s+v,0) / Object.keys(god.affinita).length;
+    const winProb = godStr / (godStr + ch.forza);
+    const won     = Math.random() < winProb;
+    duels[godId]  = { rival: ch.nome, won };
+    affinBonus[godId] = won ? 0.08 : 0;
+
+    /* Update row */
+    const row = $(`duel-${godId}`);
+    if (row) {
+      row.querySelector('.duel-result').className = `duel-result ${won?'win':'lose'}`;
+      row.querySelector('.duel-result').innerHTML = won ? `<span class="c-green">+8% aff.</span>` : `<span class="c-red">—</span>`;
+      row.querySelector('.duel-btn').disabled = true;
+    }
+    buildLeaderboard(done ? finalScores : null);
+    tick(`DUELLO: ${god.nome} vs ${ch.nome} — ${won ? god.nome.toUpperCase()+' VINCE! (+8% affinità globale)' : ch.nome.toUpperCase()+' VINCE. (nessun bonus)'}`, won ? 'ok' : '');
+  }
+
+  /* ══════════════════════════════════════
      CALCULATION ENGINE
-  ═══════════════════════════════════════════════ */
-  function computeScores() {
+  ══════════════════════════════════════ */
+  function computeScores(candidateSubset) {
+    const cands = candidateSubset || cfg.candidati;
+    const distS = {};
     distRes = {};
-    const distScores = {};
 
     cfg.distretti.forEach(dist => {
       distRes[dist.id] = {};
-      const godWeightedSum = {};
-      cfg.candidati.forEach(g => { godWeightedSum[g.id] = 0; });
+      const wSum = {};
+      cands.forEach(g => { wSum[g.id] = 0; });
 
       dist.categorie.forEach(cat => {
-        /* Raw votes per god within this category */
         const raw = {};
-        cfg.candidati.forEach(g => {
-          const aff = (g.affinita && g.affinita[cat.id] != null) ? g.affinita[cat.id] : 0.3;
-          const rng = (Math.random() * 0.06) - 0.03;          // ±3%
-          let evtMod = 0;
-          cfg.eventi.forEach(ev => {
-            if ((ev.target_god === g.id || ev.target_god === '*') &&
-                (!ev.target_district || ev.target_district === dist.id)) {
-              evtMod += ev.modifier || 0;
-            }
-          });
-          raw[g.id] = Math.max(0.001, aff + rng + evtMod);
+        cands.forEach(g => {
+          const aff      = Math.min(1, (g.affinita[cat.id] ?? 0.3) + (affinBonus[g.id] ?? 0));
+          const rng      = (Math.random() * 0.06) - 0.03;
+          const hitoriV  = ((hitori[dist.id]?.[g.id] ?? 0)) / 100;
+          raw[g.id]      = Math.max(0.001, aff + rng + hitoriV);
         });
-
-        /* Normalise within category → per-category % */
-        const catTot = Object.values(raw).reduce((s, v) => s + v, 0);
-        cfg.candidati.forEach(g => {
-          const pct = catTot > 0 ? (raw[g.id] / catTot) * 100 : 0;
+        const catTot = cands.reduce((s,g)=>s+raw[g.id],0);
+        cands.forEach(g => {
+          const pct = catTot > 0 ? (raw[g.id]/catTot)*100 : 0;
           distRes[dist.id][`${cat.id}_${g.id}`] = pct;
-          /* Weighted contribution to district total */
-          godWeightedSum[g.id] += pct * cat.peso;
+          wSum[g.id] += pct * cat.peso;
         });
       });
 
-      /* Normalise district totals */
-      const distTot = Object.values(godWeightedSum).reduce((s, v) => s + v, 0);
-      cfg.candidati.forEach(g => {
-        distRes[dist.id][g.id] = distTot > 0 ? (godWeightedSum[g.id] / distTot) * 100 : 0;
-      });
-
-      distScores[dist.id] = {};
-      cfg.candidati.forEach(g => { distScores[dist.id][g.id] = distRes[dist.id][g.id]; });
+      const distTot = cands.reduce((s,g)=>s+wSum[g.id],0);
+      cands.forEach(g => { distRes[dist.id][g.id] = distTot > 0 ? (wSum[g.id]/distTot)*100 : 0; });
+      distS[dist.id] = {};
+      cands.forEach(g => { distS[dist.id][g.id] = distRes[dist.id][g.id]; });
     });
 
-    /* Aggregate across districts (equal weight) */
-    final = {};
-    cfg.candidati.forEach(g => {
-      let s = 0;
-      cfg.distretti.forEach(d => { s += distScores[d.id][g.id] || 0; });
-      final[g.id] = s / cfg.distretti.length;
+    const agg = {};
+    cands.forEach(g => {
+      const s = cfg.distretti.reduce((acc,d)=>acc+(distS[d.id][g.id]||0),0);
+      agg[g.id] = s / cfg.distretti.length;
     });
-
-    /* Final normalisation */
-    const ft = Object.values(final).reduce((s, v) => s + v, 0);
-    cfg.candidati.forEach(g => { final[g.id] = ft > 0 ? (final[g.id] / ft) * 100 : 0; });
+    const ft = cands.reduce((s,g)=>s+agg[g.id],0);
+    cands.forEach(g => { agg[g.id] = ft > 0 ? (agg[g.id]/ft)*100 : 0; });
+    return agg;
   }
 
-  function computePartial(numDist) {
+  function computePartial(numDist, cands) {
     const p = {};
-    cfg.candidati.forEach(g => { p[g.id] = 0; });
+    (cands||cfg.candidati).forEach(g => { p[g.id] = 0; });
     for (let i = 0; i < numDist && i < cfg.distretti.length; i++) {
       const d = cfg.distretti[i];
-      cfg.candidati.forEach(g => { p[g.id] += distRes[d.id][g.id] || 0; });
+      (cands||cfg.candidati).forEach(g => { p[g.id] += (distRes[d.id]?.[g.id]||0); });
     }
-    cfg.candidati.forEach(g => { p[g.id] /= numDist; });
-    const pt = Object.values(p).reduce((s, v) => s + v, 0);
-    cfg.candidati.forEach(g => { p[g.id] = pt > 0 ? (p[g.id] / pt) * 100 : 0; });
+    (cands||cfg.candidati).forEach(g => { p[g.id] /= numDist; });
+    const pt = (cands||cfg.candidati).reduce((s,g)=>s+p[g.id],0);
+    (cands||cfg.candidati).forEach(g => { p[g.id] = pt>0?(p[g.id]/pt)*100:0; });
     return p;
   }
 
-  /* ═══════════════════════════════════════════════
+  /* ══════════════════════════════════════
      SCRUTINY ANIMATION
-  ═══════════════════════════════════════════════ */
+  ══════════════════════════════════════ */
   function startScrutiny() {
-    if (running || done) return;
+    if (running || done || phase !== 'generali') return;
     running = true;
     $('btn-start').disabled = true;
-    setTB('t-stato', 'SCRUTINIO');
+    setText('t-stato', 'SCRUTINIO');
     document.getElementById('t-stato').className = 'tb-val c-red';
-    tick('═══ SCRUTINIO AVVIATO ═══', 'hl');
-    computeScores();
-    let di = 0;
+    tick('═══ SCRUTINIO GENERALI AVVIATO ═══','hl');
 
+    /* pre-compute all scores */
+    finalScores = computeScores();
+
+    let di = 0;
     function step() {
       if (!running) return;
       if (di < cfg.distretti.length) {
         const d = cfg.distretti[di];
-        tick(`Spoglio ${d.id} — ${d.nome}: ${d.categorie.length} categorie`, '');
-        /* Random "partial reveal" for drama */
-        cfg.candidati.forEach(g => {
-          const cat = d.categorie[Math.floor(Math.random() * d.categorie.length)];
-          if (cat) {
-            const v = distRes[d.id][`${cat.id}_${g.id}`];
-            if (v != null) {
-              tick(`  ${g.nome} · ${cat.nome} → ${v.toFixed(1)}%`, '');
-            }
-          }
-        });
-        const partial = computePartial(di + 1);
-        renderResultBars(partial, false);
-        const pct = ((di + 1) / cfg.distretti.length * 100).toFixed(0);
-        $('prog-bar').style.width = pct + '%';
-        $('prog-lbl').textContent = pct + '%';
-        setTB('t-dist', `${di+1}/${cfg.distretti.length}`);
-        setText('step-lbl', `Distretto ${di+1}/${cfg.distretti.length}`);
+        const winner = cfg.candidati.map(g=>({nome:g.nome,v:distRes[d.id][g.id]||0})).sort((a,b)=>b.v-a.v)[0];
+        tick(`${d.id} ${d.nome} → ${winner.nome} (${winner.v.toFixed(1)}%)`, '');
+        renderResultBars(computePartial(di+1), false);
+        const pct = Math.round((di+1)/cfg.distretti.length*100);
+        $('prog-bar').style.width = pct+'%'; setText('prog-lbl', pct+'%');
+        setText('t-dist', `${di+1}/${cfg.distretti.length}`);
+        setText('step-lbl', `D${di+1}/${cfg.distretti.length}`);
         di++;
-        setTimeout(step, 900);
+        setTimeout(step, cfg.distretti.length > 10 ? 250 : 600);
       } else {
         finishScrutiny();
       }
@@ -1125,77 +680,66 @@ const NE = (() => {
   }
 
   function finishScrutiny() {
-    running = false;
-    done    = true;
-    renderResultBars(final, true);
-    $('prog-bar').style.width = '100%';
-    $('prog-lbl').textContent = '100%';
-    setTB('t-stato', 'COMPLETATO');
-    document.getElementById('t-stato').className = 'tb-val c-green';
-    setText('step-lbl', 'Scrutinio terminato');
-    tick('═══ SCRUTINIO COMPLETATO ═══', 'ok');
-
-    const sorted = sortedCands();
-    sorted.slice(0, 3).forEach((c, i) => tick(`#${i+1} ${c.nome}: ${c.pct.toFixed(2)}%`, i === 0 ? 'hl' : ''));
-
-    buildLeaderboard(final);
+    running = false; done = true;
+    renderResultBars(finalScores, true);
+    $('prog-bar').style.width = '100%'; setText('prog-lbl', '100%');
+    setText('t-stato','COMPLETATO'); document.getElementById('t-stato').className = 'tb-val c-green';
+    setText('step-lbl','');
+    tick('═══ SCRUTINIO COMPLETATO ═══','ok');
+    const s = sortedCands();
+    s.slice(0,3).forEach((c,i) => tick(`#${i+1} ${c.nome}: ${c.pct.toFixed(2)}%`, i===0?'hl':''));
+    buildLeaderboard(finalScores);
     updateGeneraliTab();
     updateBallottaggio();
     updateCoalizioniTab();
-    generateRP();
     if (selDist) renderInspector(selDist);
+    generateRP();
   }
 
-  /* ── Render result bars ── */
   function renderResultBars(scores, isFinal) {
-    const sorted = Object.entries(scores).sort(([, a], [, b]) => b - a);
+    const sorted = Object.entries(scores).sort(([,a],[,b])=>b-a);
     const leader = sorted[0];
     sorted.forEach(([gid, pct], rank) => {
-      const rkEl  = $(`rrk-${gid}`);
-      const barEl = $(`rbar-${gid}`);
-      const pctEl = $(`rpct-${gid}`);
-      const delEl = $(`rdel-${gid}`);
-      if (!rkEl) return;
-      rkEl.textContent = rank + 1;
-      rkEl.className = `res-rank${rank < 3 ? ` r${rank+1}` : ''}`;
-      barEl.style.width = pct.toFixed(2) + '%';
-      barEl.className = `res-bar-fill${rank === 0 ? ' leader' : ''}`;
-      pctEl.textContent = pct.toFixed(2) + '%';
-      pctEl.style.color = rank === 0 ? 'var(--gold)' : '';
-      if (isFinal && rank > 0 && leader) {
-        delEl.textContent = (pct - leader[1]).toFixed(1) + '%';
-      }
+      const rk = $(`rrk-${gid}`), bar = $(`rbar-${gid}`), pc = $(`rpct-${gid}`), dl = $(`rdel-${gid}`);
+      if (!rk) return;
+      rk.textContent = rank+1; rk.className = `res-rank${rank<3?` r${rank+1}`:''}`;
+      bar.style.width = pct.toFixed(2)+'%'; bar.className = `res-bar-fill${rank===0?' leader':''}`;
+      pc.textContent = pct.toFixed(2)+'%'; pc.style.color = rank===0?'var(--gold)':'';
+      if (isFinal && rank>0 && leader) { dl.textContent=(pct-leader[1]).toFixed(1)+'%'; }
     });
-    /* Reorder DOM rows by rank */
     const box = $('results-box');
-    sorted.forEach(([gid]) => {
-      const row = $(`rrow-${gid}`);
-      if (row) box.appendChild(row);
-    });
+    sorted.forEach(([gid]) => { const r=$(`rrow-${gid}`); if(r) box.appendChild(r); });
   }
 
-  /* ── Leaderboard ── */
+  /* ══════════════════════════════════════
+     LEADERBOARD
+  ══════════════════════════════════════ */
   function buildLeaderboard(scores) {
     const list = $('lb-list');
-    if (!scores) { list.innerHTML = '<div class="empty-msg" style="padding:18px">In attesa dei dati…</div>'; return; }
+    if (!scores) { list.innerHTML='<div class="empty-msg" style="padding:18px">In attesa dei dati…</div>'; return; }
     const sorted = sortedCands(scores);
-    const top    = sorted[0]?.pct || 1;
-    list.innerHTML = sorted.map((c, i) => `
-      <div class="lb-row">
+    const top    = sorted[0]?.pct||1;
+    list.innerHTML = sorted.map((c,i) => {
+      const bonus = affinBonus[c.id] ? `+8%` : '';
+      return `<div class="lb-row">
         <span class="lb-rank${i<3?` r${i+1}`:''}">${i+1}</span>
         <span class="lb-g ${c.genere}">${c.genere}</span>
         <span class="lb-name">${c.nome}</span>
         <div class="lb-bar-w"><div class="lb-bar-f${i===0?' l':''}" style="width:${(c.pct/top*100).toFixed(1)}%"></div></div>
         <span class="lb-pct${i===0?' c-gold':''}">${c.pct.toFixed(2)}%</span>
         <span class="lb-delta">${i>0?(c.pct-sorted[0].pct).toFixed(1)+'%':''}</span>
-      </div>`).join('');
+        <span class="lb-bonus">${bonus}</span>
+      </div>`;
+    }).join('');
   }
 
-  /* ── Tab: Generali ── */
+  /* ══════════════════════════════════════
+     TAB: GENERALI
+  ══════════════════════════════════════ */
   function updateGeneraliTab() {
     const sorted = sortedCands();
-    const top    = sorted[0]?.pct || 1;
-    $('gen-rows').innerHTML = sorted.map((c, i) => `
+    const top    = sorted[0]?.pct||1;
+    $('gen-rows').innerHTML = sorted.map((c,i) => `
       <div class="gen-row">
         <span class="gen-rank${i<3?` r${i+1}`:''}">${i+1}</span>
         <span class="gen-name">${c.nome}</span>
@@ -1205,180 +749,287 @@ const NE = (() => {
       </div>`).join('');
   }
 
-  /* ── Tab: Ballottaggio ── */
+  /* ══════════════════════════════════════
+     TAB: BALLOTTAGGIO
+  ══════════════════════════════════════ */
   function updateBallottaggio() {
     const soglia = cfg.elezione.soglia_ballottaggio;
     const sorted = sortedCands();
     const leader = sorted[0];
-    let html = '';
+    const bc     = $('ballot-content');
+
     if (leader.pct >= soglia) {
-      html = `
-        <div class="ballot-alert win">
-          ✓ VINCITORE DIRETTO: ${leader.nome.toUpperCase()} — ${leader.pct.toFixed(2)}%<br>
-          Supera la soglia del ${soglia}%. Nessun ballottaggio necessario.
+      bc.innerHTML = `
+        <div class="ballot-alert win">✓ VINCITORE DIRETTO — ${leader.nome.toUpperCase()} con ${leader.pct.toFixed(2)}%<br>Supera la soglia del ${soglia}%. Nessun ballottaggio.</div>
+        <div class="ballot-winner re">
+          <span class="ballot-winner-title">RE DELL'OLIMPO</span>
+          <span class="ballot-winner-name">${leader.nome}</span>
+          <span class="ballot-winner-pct">${leader.pct.toFixed(2)}%</span>
         </div>`;
+      ballotRes = { re: leader, regina: null };
     } else {
-      const males   = sorted.filter(c => c.genere === 'M').slice(0, 2);
-      const females = sorted.filter(c => c.genere === 'F').slice(0, 2);
-      html = `
-        <div class="ballot-alert run">
-          ✗ Nessun candidato supera il ${soglia}% — Ballottaggio attivato.
+      const top2M = sorted.filter(c=>c.genere==='M').slice(0,2);
+      const top2F = sorted.filter(c=>c.genere==='F').slice(0,2);
+      bc.innerHTML = `
+        <div class="ballot-alert run">✗ Nessun candidato supera il ${soglia}% — Ballottaggio attivato.</div>
+        <div class="ballot-sect">
+          <div class="ballot-sect-title">♂ REI — TOP 2 DEI</div>
+          ${top2M.map(c=>`<div class="ballot-cand"><span class="ballot-cand-name">${c.nome}</span><span class="ballot-cand-pct">${c.pct.toFixed(2)}%</span></div>`).join('')}
         </div>
         <div class="ballot-sect">
-          <div class="ballot-sect-title">♂ REI — Top 2 Dei</div>
-          ${males.map(c => `<div class="ballot-cand"><span class="ballot-cand-name">${c.nome}</span><span class="ballot-cand-pct">${c.pct.toFixed(2)}%</span></div>`).join('')}
+          <div class="ballot-sect-title">♀ REGINE — TOP 2 DEE</div>
+          ${top2F.map(c=>`<div class="ballot-cand"><span class="ballot-cand-name">${c.nome}</span><span class="ballot-cand-pct">${c.pct.toFixed(2)}%</span></div>`).join('')}
         </div>
-        <div class="ballot-sect">
-          <div class="ballot-sect-title">♀ REGINE — Top 2 Dee</div>
-          ${females.map(c => `<div class="ballot-cand"><span class="ballot-cand-name">${c.nome}</span><span class="ballot-cand-pct">${c.pct.toFixed(2)}%</span></div>`).join('')}
-        </div>`;
+        <div id="ballot-result"></div>
+        <button class="btn-prim" style="margin-top:8px;font-size:10px;padding:5px 10px" onclick="NE.runBallotScrutiny()">⚡ AVVIA BALLOTTAGGIO</button>`;
     }
-    $('ballot-content').innerHTML = html;
   }
 
-  /* ── Tab: Coalizioni ── */
+  function runBallotScrutiny() {
+    if (!done) return;
+    const sorted = sortedCands();
+    const top2M  = sorted.filter(c=>c.genere==='M').slice(0,2);
+    const top2F  = sorted.filter(c=>c.genere==='F').slice(0,2);
+    const bcands = [...top2M,...top2F].map(c=>cfg.candidati.find(g=>g.id===c.id));
+
+    tick('═══ BALLOTTAGGIO AVVIATO ═══','hl');
+    const bScores = computeScores(bcands);
+
+    const mSorted = top2M.map(c=>({...c,pct:bScores[c.id]||0})).sort((a,b)=>b.pct-a.pct);
+    const fSorted = top2F.map(c=>({...c,pct:bScores[c.id]||0})).sort((a,b)=>b.pct-a.pct);
+    ballotFinal  = bScores;
+    ballotRes    = { re: mSorted[0], regina: fSorted[0] };
+
+    const br = $('ballot-result');
+    if (br) {
+      br.innerHTML = `
+        <div style="margin-top:10px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--tx2);border-top:1px solid var(--br);padding-top:8px;margin-bottom:6px">═ PROCLAMAZIONE ═</div>
+        <div class="ballot-winner re">
+          <span class="ballot-winner-title">RE DELL'OLIMPO</span>
+          <span class="ballot-winner-name">${mSorted[0].nome}</span>
+          <span class="ballot-winner-pct">${(bScores[mSorted[0].id]||0).toFixed(2)}%</span>
+        </div>
+        <div class="ballot-winner regina">
+          <span class="ballot-winner-title">REGINA DELL'OLIMPO</span>
+          <span class="ballot-winner-name">${fSorted[0].nome}</span>
+          <span class="ballot-winner-pct">${(bScores[fSorted[0].id]||0).toFixed(2)}%</span>
+        </div>`;
+    }
+    tick(`PROCLAMATO RE: ${mSorted[0].nome} (${(bScores[mSorted[0].id]||0).toFixed(2)}%)`, 'ok');
+    tick(`PROCLAMATA REGINA: ${fSorted[0].nome} (${(bScores[fSorted[0].id]||0).toFixed(2)}%)`, 'ok');
+    generateRP();
+  }
+
+  /* ══════════════════════════════════════
+     TAB: COALIZIONI
+  ══════════════════════════════════════ */
   function updateCoalizioniTab() {
     const sorted = sortedCands();
-    coalSel.clear();
+    const list   = $('coal-list');
+    list.innerHTML = '';
     const wrapper = document.createElement('div');
     sorted.forEach(c => {
-      const item = document.createElement('div');
-      item.className = 'coal-item';
+      const item = document.createElement('div'); item.className='coal-item';
       item.innerHTML = `
         <input type="checkbox" class="coal-chk" id="chk-${c.id}" data-id="${c.id}" data-pct="${c.pct.toFixed(4)}">
         <label class="coal-name" for="chk-${c.id}">${c.nome}</label>
         <span class="coal-pct">${c.pct.toFixed(2)}%</span>`;
       wrapper.appendChild(item);
     });
-    $('coal-list').innerHTML = '';
-    $('coal-list').appendChild(wrapper);
-    $('coal-total-box').style.display = 'block';
-    wrapper.querySelectorAll('.coal-chk').forEach(chk =>
-      chk.addEventListener('change', updateCoalTotal));
+    list.appendChild(wrapper);
+    $('coal-bars').style.display = 'block';
+    wrapper.querySelectorAll('.coal-chk').forEach(chk => chk.addEventListener('change', updateCoalTotal));
     updateCoalTotal();
   }
 
   function updateCoalTotal() {
     let total = 0;
-    document.querySelectorAll('.coal-chk:checked').forEach(chk => {
-      total += parseFloat(chk.dataset.pct);
-    });
-    const soglia = cfg.elezione.soglia_coalizione;
-    const el = $('coal-total-val');
-    el.textContent = total.toFixed(2) + '%';
-    el.className = `coal-total-val ${total >= soglia ? 'above' : 'below'}`;
+    document.querySelectorAll('.coal-chk:checked').forEach(chk => { total += parseFloat(chk.dataset.pct); });
+    const s51 = cfg.elezione.soglia_coalizione || 51;
+    const s66 = cfg.elezione.soglia_suprema   || 66;
+
+    const valEl   = $('coal-total-val');
+    valEl.textContent = total.toFixed(2)+'%';
+    valEl.className = `coal-total-label ${total>=s66?'above-66':total>=s51?'above-51':'below-51'}`;
+
+    const w51 = Math.min(100, (total/s51)*100);
+    const w66 = Math.min(100, (total/s66)*100);
+    const f51 = $('coal-fill-51'); const f66 = $('coal-fill-66');
+    f51.style.width = w51.toFixed(1)+'%'; f51.className = `coal-fill coal-fill-51${total>=s51?' reached':''}`;
+    f66.style.width = w66.toFixed(1)+'%'; f66.className = `coal-fill coal-fill-66${total>=s66?' reached':''}`;
+    setText('coal-lbl-51', `${total.toFixed(1)}% / ${s51}%`);
+    setText('coal-lbl-66', `${total.toFixed(1)}% / ${s66}%`);
+
+    if (phase === 'coalizioni') generateRP();
   }
 
-  /* ── RP Text Generator ── */
+  /* ══════════════════════════════════════
+     CONTEXT-AWARE RP EXPORT
+  ══════════════════════════════════════ */
   function generateRP() {
-    const sorted = sortedCands();
-    const leader = sorted[0];
-    const soglia = cfg.elezione.soglia_ballottaggio;
-    const now    = new Date();
-    const ts     = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()} — ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    const now = new Date();
+    const ts  = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()} — ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    let t = '';
 
-    let t = `[AGENZIA OLIMPICA STAMPA — ${ts}]\n`;
-    t += `[${cfg.elezione.nome.toUpperCase()} — RISULTATI UFFICIALI]\n`;
-    t += `${'═'.repeat(52)}\n\n`;
+    if (phase === 'primarie') {
+      t  = `[COMMISSIONE OLIMPICA — ESITO DUELLI PRIMARI]\n[${ts}]\n${'═'.repeat(52)}\n\n`;
+      const duelDone = cfg.candidati.filter(g=>duels[g.id]);
+      if (!duelDone.length) {
+        t += `Nessun duello primario ancora disputato.\nPremi "DUELLA" accanto a ciascun Dio per avviare il confronto.\n`;
+      } else {
+        duelDone.forEach(g => {
+          const d  = duels[g.id];
+          const ch = CHALLENGERS[g.id];
+          t += `${d.won?'✓':'✗'} ${g.nome.padEnd(12)} vs ${ch.nome.padEnd(14)} → ${d.won?'VINCE (+8% affinità)':'PERDE (nessun bonus)'}\n`;
+        });
+        const vince = cfg.candidati.filter(g=>duels[g.id]?.won).length;
+        t += `\nDuelli completati: ${duelDone.length}/${cfg.candidati.length} — Vittorie: ${vince}\n`;
+      }
+      t += `\n${'─'.repeat(52)}\nFonte: NOMOS ENGINE v2.0 // Commissione Olimpica\n`;
 
-    if (leader.pct >= soglia) {
-      t += `VINCITORE AL PRIMO TURNO: ${leader.nome.toUpperCase()}\n`;
-      t += `Peso Politico: ${leader.pct.toFixed(2)}% — supera la soglia del ${soglia}%.\n`;
-      t += `Distacco sul secondo classificato: ${(leader.pct - (sorted[1]?.pct || 0)).toFixed(2)} punti percentuali.\n\n`;
-    } else {
-      t += `NESSUN CANDIDATO SUPERA LA SOGLIA DEL ${soglia}%.\n`;
-      t += `Si procederà al ballottaggio tra i candidati qualificati.\n`;
-      t += `In testa: ${leader.nome} (${leader.pct.toFixed(2)}%) — distacco di ${(leader.pct - (sorted[1]?.pct||0)).toFixed(2)}pp.\n\n`;
+    } else if (phase === 'generali' || phase === 'ballottaggio' && !ballotRes) {
+      if (!done) { $('rp-ta').value = 'Esegui lo scrutinio Generali per generare il bollettino.'; return; }
+      const sorted = sortedCands();
+      const leader = sorted[0];
+      const soglia = cfg.elezione.soglia_ballottaggio;
+      t  = `[AGENZIA OLIMPICA STAMPA — ${ts}]\n[${cfg.elezione.nome.toUpperCase()} — BOLLETTINO GENERALI]\n${'═'.repeat(52)}\n\n`;
+      if (leader.pct >= soglia) {
+        t += `VINCITORE AL PRIMO TURNO: ${leader.nome.toUpperCase()} — ${leader.pct.toFixed(2)}%\nSupera la soglia del ${soglia}%.\n\n`;
+      } else {
+        t += `NESSUN CANDIDATO SUPERA IL ${soglia}% — BALLOTTAGGIO ATTIVATO.\nIn testa: ${leader.nome} (${leader.pct.toFixed(2)}%)\n\n`;
+      }
+      t += `CLASSIFICA — 33 DISTRETTI:\n`;
+      sorted.forEach((c,i)=>{
+        const del = i>0 ? ` [${(c.pct-leader.pct).toFixed(2)}pp]` : ' [TESTA]';
+        t += `${pad2(i+1)}. ${c.nome.padEnd(12)} ${c.pct.toFixed(2).padStart(6)}%${del}\n`;
+      });
+      t += `\nDETTAGLIO DISTRETTI (top in ciascuno):\n`;
+      cfg.distretti.forEach(d => {
+        const dr = distRes[d.id]; if(!dr) return;
+        const ds = cfg.candidati.map(g=>({nome:g.nome,v:dr[g.id]||0})).sort((a,b)=>b.v-a.v);
+        t += `  [${d.id}] ${d.nome.slice(0,22).padEnd(22)}: ${ds[0].nome} (${ds[0].v.toFixed(1)}%)\n`;
+      });
+      t += `\n${'─'.repeat(52)}\nFonte: NOMOS ENGINE v2.0 // ${cfg.elezione.anno}\n[Uso narrativo/GDR]\n`;
+
+    } else if (phase === 'ballottaggio' && ballotRes) {
+      t  = `[PROCLAMAZIONE UFFICIALE — RE E REGINA DELL'OLIMPO]\n[${ts}]\n${'═'.repeat(52)}\n\n`;
+      if (ballotRes.re) {
+        t += `╔══════════════════════════════════════╗\n`;
+        t += `║  RE DELL'OLIMPO:  ${ballotRes.re.nome.toUpperCase().padEnd(18)} ║\n`;
+        t += `║  Peso Politico:   ${((ballotFinal[ballotRes.re.id]||0).toFixed(2)+'%').padEnd(18)} ║\n`;
+        t += `╚══════════════════════════════════════╝\n\n`;
+      }
+      if (ballotRes.regina) {
+        t += `╔══════════════════════════════════════╗\n`;
+        t += `║  REGINA DELL'OLIMPO: ${ballotRes.regina.nome.toUpperCase().padEnd(15)} ║\n`;
+        t += `║  Peso Politico:      ${((ballotFinal[ballotRes.regina.id]||0).toFixed(2)+'%').padEnd(15)} ║\n`;
+        t += `╚══════════════════════════════════════╝\n\n`;
+      }
+      const sorted = sortedCands();
+      t += `CLASSIFICA BALLOTTAGGIO:\n`;
+      Object.entries(ballotFinal).sort(([,a],[,b])=>b-a).forEach(([gid,pct],i)=>{
+        const g = cfg.candidati.find(c=>c.id===gid);
+        t += `  ${i+1}. ${g?.nome.padEnd(12)} ${pct.toFixed(2)}%\n`;
+      });
+      t += `\n${'─'.repeat(52)}\nFonte: NOMOS ENGINE v2.0\n[Uso narrativo/GDR]\n`;
+
+    } else if (phase === 'coalizioni') {
+      const checked = [];
+      document.querySelectorAll('.coal-chk:checked').forEach(chk => {
+        const g = cfg.candidati.find(c=>c.id===chk.dataset.id);
+        if(g) checked.push({...g, pct: parseFloat(chk.dataset.pct)});
+      });
+      const total = checked.reduce((s,c)=>s+c.pct,0);
+      const s51   = cfg.elezione.soglia_coalizione;
+      const s66   = cfg.elezione.soglia_suprema;
+      t  = `[PATTO DI GOVERNO OLIMPICO]\n[${ts}]\n${'═'.repeat(52)}\n\n`;
+      if (!checked.length) {
+        t += `Nessun firmatario selezionato.\n`;
+      } else {
+        t += `FIRMATARI DEL PATTO (${checked.length}):\n`;
+        checked.forEach(c => { t += `  · ${c.nome.padEnd(12)} ${c.pct.toFixed(2)}%\n`; });
+        t += `\nPESO COALIZIONE: ${total.toFixed(2)}%\n`;
+        t += `\nVERIFICA SOGLIE:\n`;
+        t += `  Maggioranza Assoluta (${s51}%): ${total>=s51?'✓ RAGGIUNTA':'✗ INSUFFICIENTE (mancano '+(s51-total).toFixed(2)+'pp)'}\n`;
+        t += `  Maggioranza Suprema  (${s66}%): ${total>=s66?'✓ RAGGIUNTA':'✗ INSUFFICIENTE (mancano '+(s66-total).toFixed(2)+'pp)'}\n`;
+        if (total>=s66) t += `\n► La coalizione detiene il POTERE DI VETO ASSOLUTO sull'Olimpo.\n`;
+        else if (total>=s51) t += `\n► La coalizione può governare ma non esercitare il veto supremo.\n`;
+        else t += `\n► La coalizione non ha i numeri per governare l'Olimpo.\n`;
+      }
+      t += `\n${'─'.repeat(52)}\nFonte: NOMOS ENGINE v2.0\n[Uso narrativo/GDR]\n`;
     }
 
-    t += `CLASSIFICA DEFINITIVA — PESO POLITICO TOTALE:\n`;
-    sorted.forEach((c, i) => {
-      const mk  = i === 0 ? '▶' : ' ';
-      const del = i > 0 ? ` [${(c.pct - leader.pct).toFixed(2)}pp]` : ' [TESTA]';
-      t += `${mk} ${pad2(i+1)}. ${c.nome.padEnd(12)} ${c.pct.toFixed(2).padStart(6)}%${del}\n`;
-    });
-
-    t += `\n${'─'.repeat(52)}\nDETTAGLIO DISTRETTI:\n`;
-    cfg.distretti.forEach(d => {
-      const dr = distRes[d.id];
-      if (!dr) return;
-      const ds = cfg.candidati.map(g => ({ nome: g.nome, v: dr[g.id] || 0 })).sort((a, b) => b.v - a.v);
-      t += `  [${d.id}] ${d.nome}: ${ds[0].nome} (${ds[0].v.toFixed(1)}%) — ${ds[1].nome} (${ds[1].v.toFixed(1)}%)\n`;
-    });
-
-    t += `\n${'─'.repeat(52)}\n`;
-    t += `ANNO: ${cfg.elezione.anno}\n`;
-    t += `Fonte: NOMOS ENGINE v2.0 // Commissione Psefologica Olimpica\n`;
-    t += `[Dati calcolati su base algoritmica — Solo uso narrativo/GDR]\n`;
-
     $('rp-ta').value = t;
+    setText('rp-phase-label', PHASES[phase]||'ROLEPLAY');
   }
 
-  /* ── Reset ── */
+  /* ══════════════════════════════════════
+     RESET
+  ══════════════════════════════════════ */
   function resetScrutiny() {
-    running = false; done = false; distRes = {}; final = {}; selDist = null;
-    $('btn-start').disabled = false;
-    setTB('t-stato', 'IN ATTESA');
-    document.getElementById('t-stato').className = 'tb-val c-blue';
-    $('prog-bar').style.width = '0%';
-    $('prog-lbl').textContent = '0%';
-    setText('step-lbl', '');
-    setTB('t-dist', `0/${cfg.distretti.length}`);
-    $('rp-ta').value = '';
-    buildResultPlaceholders();
-    buildLeaderboard(null);
-    $('gen-rows').innerHTML = '';
-    $('ballot-content').innerHTML = '<div class="empty-msg">Esegui lo scrutinio per calcolare il ballottaggio.</div>';
-    $('coal-list').innerHTML = '<div class="empty-msg">Esegui lo scrutinio per abilitare le coalizioni.</div>';
-    $('coal-total-box').style.display = 'none';
-    $('insp-body').innerHTML = '<div class="empty-msg">Seleziona un distretto per visualizzare i dati demografici interni.</div>';
-    document.querySelectorAll('.d-btn').forEach(b => b.classList.remove('active'));
-    $('ticker-log').innerHTML = '';
-    tick('Sistema resettato. Pronto per un nuovo scrutinio.', '');
+    running=false; done=false; distRes={}; finalScores={}; ballotFinal={}; ballotRes=null;
+    selDist=null;
+    $('btn-start').disabled = (phase !== 'generali');
+    setText('t-stato','IN ATTESA'); document.getElementById('t-stato').className='tb-val c-blue';
+    $('prog-bar').style.width='0%'; setText('prog-lbl','0%'); setText('step-lbl','');
+    setText('t-dist',`0/${cfg.distretti.length}`);
+    $('rp-ta').value='';
+    buildResultPlaceholders(); buildLeaderboard(null);
+    $('gen-rows').innerHTML='';
+    $('ballot-content').innerHTML='<div class="empty-msg">Esegui lo scrutinio Generali per sbloccare il Ballottaggio.</div>';
+    $('coal-list').innerHTML='<div class="empty-msg">Esegui lo scrutinio Generali per abilitare le coalizioni.</div>';
+    $('coal-bars').style.display='none';
+    $('insp-body').innerHTML='<div class="empty-msg">Seleziona un distretto per visualizzare i dati demografici e impostare i modificatori di Hitori.</div>';
+    document.querySelectorAll('.d-btn').forEach(b=>b.classList.remove('active'));
+    $('ticker-log').innerHTML='';
+    tick('Sistema resettato. Pronto per un nuovo scrutinio.','');
   }
 
-  /* ── Copy RP ── */
-  function copyRP() {
-    const ta = $('rp-ta');
-    if (!ta.value) return;
-    navigator.clipboard.writeText(ta.value).then(() => {
-      const btn = $('btn-copy');
-      btn.textContent = 'COPIATO!';
-      btn.classList.add('copied');
-      setTimeout(() => { btn.textContent = 'COPIA'; btn.classList.remove('copied'); }, 2200);
-    }).catch(() => {
-      ta.select(); document.execCommand('copy');
-    });
-  }
-
-  /* ── Tab Switching ── */
+  /* ══════════════════════════════════════
+     TAB SWITCHING
+  ══════════════════════════════════════ */
   function switchTab(id) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.id === `pane-${id}`));
-    setTB('t-phase', PHASE_LABELS[id] || id.toUpperCase());
+    phase = id;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab===id));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.id===`pane-${id}`));
+    setText('t-phase', PHASES[id]||id.toUpperCase());
+    /* Scrutiny btn only active in Generali (and not already done/running) */
+    $('btn-start').disabled = (id !== 'generali' || done || running);
+    /* Sync RP text */
+    if (done || id==='primarie' || id==='coalizioni') generateRP();
   }
 
-  /* ── Utilities ── */
+  /* ══════════════════════════════════════
+     COPY RP
+  ══════════════════════════════════════ */
+  function copyRP() {
+    const ta = $('rp-ta'); if(!ta.value) return;
+    navigator.clipboard.writeText(ta.value).then(() => {
+      const btn=$('btn-copy'); btn.textContent='COPIATO!'; btn.classList.add('copied');
+      setTimeout(()=>{btn.textContent='COPIA';btn.classList.remove('copied');},2200);
+    }).catch(()=>{ ta.select(); document.execCommand('copy'); });
+  }
+
+  /* ══════════════════════════════════════
+     UTILITIES
+  ══════════════════════════════════════ */
   function sortedCands(scores) {
-    const s = scores || final;
-    return cfg.candidati.map(g => ({ ...g, pct: s[g.id] || 0 })).sort((a, b) => b.pct - a.pct);
+    const s = scores || finalScores;
+    return cfg.candidati.map(g=>({...g,pct:s[g.id]||0})).sort((a,b)=>b.pct-a.pct);
   }
   function tick(msg, cls) {
-    const log = $('ticker-log');
-    const ln  = document.createElement('div');
-    const ts  = new Date();
-    ln.className = `t-line${cls ? ' ' + cls : ''}`;
-    ln.textContent = `[${pad(ts.getHours())}:${pad(ts.getMinutes())}:${pad(ts.getSeconds())}] ${msg}`;
-    log.appendChild(ln);
-    log.scrollTop = log.scrollHeight;
+    const log=$('ticker-log'), ln=document.createElement('div');
+    const ts=new Date(); ln.className=`t-line${cls?' '+cls:''}`;
+    ln.textContent=`[${pad(ts.getHours())}:${pad(ts.getMinutes())}:${pad(ts.getSeconds())}] ${msg}`;
+    log.appendChild(ln); log.scrollTop=log.scrollHeight;
   }
-  function $(id)           { return document.getElementById(id); }
-  function setText(id, v)  { const el = $(id); if (el) el.textContent = v; }
-  function setTB(id, v)    { const el = $(id); if (el) el.textContent = v; }
-  function pad(n)          { return String(n).padStart(2, '0'); }
-  function pad2(n)         { return String(n).padStart(2, ' '); }
+  function $(id){return document.getElementById(id)}
+  function setText(id,v){const e=$(id);if(e)e.textContent=v}
+  function pad(n){return String(n).padStart(2,'0')}
+  function pad2(n){return String(n).padStart(2,' ')}
 
-  return { init };
+  /* ── Expose per inline event handlers ── */
+  return { init, runDuel, setHitori, liveHitoriStyle, runBallotScrutiny };
 })();
 
 document.addEventListener('DOMContentLoaded', NE.init);
