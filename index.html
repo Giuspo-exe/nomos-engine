@@ -245,9 +245,17 @@ html{height:100%;overflow-y:scroll}body{min-height:100%;background:var(--bg0);co
 @keyframes nticker{0%{transform:translateX(120vw)}100%{transform:translateX(-120%)}}
 
 /* ── PARAM BLOCK (Lab + Modal) ── */
-.param-block{background:var(--bg0);border:1px solid var(--br);padding:5px 8px;margin-bottom:3px}
+.param-block{background:var(--bg0);border:1px solid var(--br);padding:5px 8px;margin-bottom:3px;position:relative}
 .param-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1px}
 .param-name{font-size:10px;color:var(--tx0);font-weight:600}
+.param-del{position:absolute;top:3px;right:4px;background:transparent;border:none;color:var(--red2);cursor:pointer;font-size:11px;line-height:1;padding:0 2px;opacity:.5;font-family:var(--mono)}
+.param-del:hover{opacity:1}
+#lab-add-param{border:1px dashed var(--br2);padding:6px 8px;margin-bottom:4px;background:rgba(201,168,76,.03)}
+.lab-add-row{display:flex;gap:4px;margin-top:4px;align-items:center}
+.lab-add-row .lab-input{font-size:10px;padding:2px 5px}
+#lab-param-emoji{width:34px;text-align:center;font-size:14px}
+#lab-param-name{flex:1}
+#lab-param-cat{width:110px}
 .param-quality{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
 .param-desc{font-size:8px;color:var(--tx2);margin-bottom:3px;line-height:1.3}
 .pq-nullo{color:#555}.pq-basso{color:var(--red2)}.pq-medio{color:var(--tx1)}.pq-alto{color:var(--blue2)}.pq-dominante{color:var(--gold)}
@@ -767,31 +775,20 @@ html{height:100%;overflow-y:scroll}body{min-height:100%;background:var(--bg0);co
             <label style="font-size:10px;color:var(--tx1);margin-right:12px;cursor:pointer"><input type="radio" name="lab-gen" value="M" checked style="accent-color:var(--blue2)"> ♂ Dio</label>
             <label style="font-size:10px;color:var(--tx1);cursor:pointer"><input type="radio" name="lab-gen" value="F" style="accent-color:var(--pink)"> ♀ Dea</label>
           </div>
-          <div style="margin-bottom:5px">
-            <div class="param-block">
-              <div class="param-head"><span class="param-name">🏛 Consenso Establishment</span><span class="param-quality pq-medio" id="lq-estab">Medio</span></div>
-              <div class="param-desc">Peso nelle istituzioni divine — Senato Olimpico, Consiglio dei Dodici, corporazioni sacre.</div>
-              <div class="param-slider-row"><input class="param-slider" id="ls-estab" type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-estab','lq-estab',this.value)"><span class="param-val" id="lv-estab">1.00</span></div>
-            </div>
-            <div class="param-block">
-              <div class="param-head"><span class="param-name">🌾 Populismo Rurale</span><span class="param-quality pq-medio" id="lq-popu">Medio</span></div>
-              <div class="param-desc">Presa sulle masse — ninfe delle campagne, satiri, contadini e pescatori del Mediterraneo.</div>
-              <div class="param-slider-row"><input class="param-slider" id="ls-popu" type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-popu','lq-popu',this.value)"><span class="param-val" id="lv-popu">1.00</span></div>
-            </div>
-            <div class="param-block">
-              <div class="param-head"><span class="param-name">⚔ Militarismo</span><span class="param-quality pq-medio" id="lq-mili">Medio</span></div>
-              <div class="param-desc">Appeal tra guerrieri, ciclopi armati, centauri e legioni di semidei romani.</div>
-              <div class="param-slider-row"><input class="param-slider" id="ls-mili" type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-mili','lq-mili',this.value)"><span class="param-val" id="lv-mili">1.00</span></div>
-            </div>
-            <div class="param-block">
-              <div class="param-head"><span class="param-name">📜 Intelletto Greco</span><span class="param-quality pq-medio" id="lq-intel">Medio</span></div>
-              <div class="param-desc">Favore tra semidei greci, filosofi, venti ispirati e accademie di Atene e Alessandria.</div>
-              <div class="param-slider-row"><input class="param-slider" id="ls-intel" type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-intel','lq-intel',this.value)"><span class="param-val" id="lv-intel">1.00</span></div>
-            </div>
-            <div class="param-block">
-              <div class="param-head"><span class="param-name">💀 Favore degli Inferi</span><span class="param-quality pq-medio" id="lq-under">Medio</span></div>
-              <div class="param-desc">Potere tra esclusi, titani imprigionati, ombre dell'Ade e coloni del Nuovo Mondo.</div>
-              <div class="param-slider-row"><input class="param-slider" id="ls-under" type="range" min="0" max="2" step="0.05" value="1" oninput="NE.labSlider('lv-under','lq-under',this.value)"><span class="param-val" id="lv-under">1.00</span></div>
+          <div id="lab-params-container" style="margin-bottom:4px"></div>
+          <div id="lab-add-param">
+            <div class="lab-lbl" style="color:var(--gold);font-size:9px;letter-spacing:.08em">+ AGGIUNGI INDICATORE</div>
+            <div class="lab-add-row">
+              <input id="lab-param-emoji" class="lab-input" type="text" maxlength="2" placeholder="⚡">
+              <input id="lab-param-name" class="lab-input" type="text" placeholder="Nome indicatore…">
+              <select id="lab-param-cat" class="lab-input">
+                <option value="establishment">Istituzionale</option>
+                <option value="populism_rural">Popolare</option>
+                <option value="militarism">Militare</option>
+                <option value="intellect_grec">Intellettuale</option>
+                <option value="underworld_outcast">Ctonio</option>
+              </select>
+              <button class="btn-sm" style="font-size:9px;padding:2px 7px;white-space:nowrap" onclick="NE.addLabParam()">+ ADD</button>
             </div>
           </div>
           <button class="btn-reg" onclick="NE.registerChallenger()">⚡ REGISTRA CANDIDATO</button>
@@ -1242,6 +1239,19 @@ const NE = (() => {
   let outsiderCount  = 0;
   const PHASES = {primarie:'PRIMARIE',generali:'GENERALI',ballottaggio:'BALLOTTAGGIO RE/REGINA',coalizioni:'COALIZIONI'};
 
+  const DOMAIN_LABELS = {
+    establishment:'Istituzionale', populism_rural:'Popolare',
+    militarism:'Militare', intellect_grec:'Intellettuale', underworld_outcast:'Ctonio'
+  };
+  const DEFAULT_LAB_PARAMS = [
+    {id:'estab', emoji:'🏛', name:'Consenso Establishment', paramKey:'establishment', desc:'Peso nelle istituzioni divine — Senato Olimpico, Consiglio dei Dodici, corporazioni sacre.'},
+    {id:'popu',  emoji:'🌾', name:'Populismo Rurale',       paramKey:'populism_rural', desc:'Presa sulle masse — ninfe delle campagne, satiri, contadini e pescatori del Mediterraneo.'},
+    {id:'mili',  emoji:'⚔',  name:'Militarismo',            paramKey:'militarism',     desc:'Appeal tra guerrieri, ciclopi armati, centauri e legioni di semidei romani.'},
+    {id:'intel', emoji:'📜', name:'Intelletto Greco',       paramKey:'intellect_grec', desc:'Favore tra semidei greci, filosofi, venti ispirati e accademie di Atene e Alessandria.'},
+    {id:'under', emoji:'💀', name:'Favore degli Inferi',    paramKey:'underworld_outcast', desc:"Potere tra esclusi, titani imprigionati, ombre dell'Ade e coloni del Nuovo Mondo."},
+  ];
+  let labParams = DEFAULT_LAB_PARAMS.map(p => ({...p, value:1.0}));
+
   /* ── Storage ── */
   const STORAGE_KEY = 'nomos_state_v2';
   let origCandIds = new Set();
@@ -1259,6 +1269,7 @@ const NE = (() => {
         eliminatiSet:   [...eliminatiSet],
         affinBonus,
         duels,
+        labParams,
         ts: Date.now()
       }));
     } catch(e) {}
@@ -1282,6 +1293,7 @@ const NE = (() => {
       if (saved.eliminatiSet)   eliminatiSet   = new Set(saved.eliminatiSet);
       if (saved.affinBonus)     affinBonus     = saved.affinBonus;
       if (saved.duels)          duels          = saved.duels;
+      if (saved.labParams && Array.isArray(saved.labParams)) labParams = saved.labParams;
       return true;
     } catch(e) { return false; }
   }
@@ -1378,6 +1390,7 @@ const NE = (() => {
     $('btn-sel-none').addEventListener('click', () => selectAllDistricts(false));
     document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
 
+    renderLabParams();
     switchTab('primarie');
     tick(`Pronti: ${cfg.candidati.length} candidati (params 5D), ${cfg.distretti.length} distretti.`, 'ok');
   }
@@ -1642,6 +1655,9 @@ const NE = (() => {
 
     affinBonus[winner.id] = 0.08;
     eliminatiSet.add(loser.id);
+    duels[winner.id] = { won: true,  vs: loser.id };
+    duels[loser.id]  = { won: false, vs: winner.id };
+    saveToStorage();
 
     const hist = $('duel-history');
     if (hist) {
@@ -2276,6 +2292,7 @@ const NE = (() => {
   function switchTab(id) {
     phase = id;
     if (id === 'generali') applyEliminati();
+    if (id === 'primarie') renderDuelHistory();
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab===id));
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.id===`pane-${id}`));
     setText('t-phase', PHASES[id]||id.toUpperCase());
@@ -2328,6 +2345,79 @@ const NE = (() => {
   /* ══════════════════════════════════════
      LAB DEMAGOGHI
   ══════════════════════════════════════ */
+  function renderLabParams() {
+    const container = $('lab-params-container');
+    if (!container) return;
+    container.innerHTML = '';
+    labParams.forEach((p, idx) => {
+      const block = document.createElement('div');
+      block.className = 'param-block';
+      const q = paramQuality(p.value);
+      const sid = `lp-s-${idx}`, vid = `lp-v-${idx}`, qid = `lp-q-${idx}`;
+      block.innerHTML = `
+        <button class="param-del" title="Rimuovi" onclick="NE.removeLabParam(${idx})">✕</button>
+        <div class="param-head">
+          <span class="param-name">${p.emoji} ${p.name}</span>
+          <span class="param-quality ${q.cls}" id="${qid}">${q.label}</span>
+        </div>
+        <div class="param-desc">${p.desc || DOMAIN_LABELS[p.paramKey] || p.paramKey}</div>
+        <div class="param-slider-row">
+          <input class="param-slider" id="${sid}" type="range" min="0" max="2" step="0.05" value="${p.value}"
+            oninput="NE._labParamSlider(${idx},'${vid}','${qid}',this.value)">
+          <span class="param-val" id="${vid}">${parseFloat(p.value).toFixed(2)}</span>
+        </div>`;
+      container.appendChild(block);
+    });
+  }
+
+  function _labParamSlider(idx, vid, qid, value) {
+    labParams[idx].value = parseFloat(value);
+    const ve = $(vid), qe = $(qid);
+    if (ve) ve.textContent = parseFloat(value).toFixed(2);
+    if (qe) { const q = paramQuality(value); qe.textContent = q.label; qe.className = `param-quality ${q.cls}`; }
+  }
+
+  function addLabParam() {
+    const emoji = ($('lab-param-emoji')?.value.trim()) || '⚡';
+    const name  = $('lab-param-name')?.value.trim();
+    const cat   = $('lab-param-cat')?.value || 'establishment';
+    if (!name) { tick('⚠ Inserisci un nome per il nuovo indicatore.', 'err'); return; }
+    labParams.push({ id: `custom_${Date.now()}`, emoji, name, paramKey: cat, desc: DOMAIN_LABELS[cat] || cat, value: 1.0 });
+    $('lab-param-emoji').value = '';
+    $('lab-param-name').value  = '';
+    renderLabParams();
+    saveToStorage();
+  }
+
+  function removeLabParam(idx) {
+    labParams.splice(idx, 1);
+    renderLabParams();
+    saveToStorage();
+  }
+
+  function renderDuelHistory() {
+    const hist = $('duel-history');
+    if (!hist || !cfg) return;
+    hist.innerHTML = '';
+    const shown = new Set();
+    cfg.candidati.forEach(g => {
+      const d = duels[g.id];
+      if (!d || shown.has(g.id)) return;
+      shown.add(g.id);
+      if (d.vs) shown.add(d.vs);
+      const opp    = cfg.candidati.find(c => c.id === d.vs);
+      const winner = d.won ? g   : opp;
+      const loser  = d.won ? opp : g;
+      const row = document.createElement('div');
+      row.className = 'duel-row';
+      row.innerHTML = `<span class="duel-god c-green">✓ ${winner?.nome||'?'}</span>
+        <span class="duel-sfidante">vs</span>
+        <span class="duel-god c-red" style="text-decoration:line-through">${loser?.nome||'?'}</span>
+        <span class="duel-result win">+8% aff.</span>`;
+      hist.appendChild(row);
+    });
+  }
+
   /* ══════════════════════════════════════
      LEGGE ELETTORALE
   ══════════════════════════════════════ */
@@ -2412,16 +2502,18 @@ const NE = (() => {
     const id = `outsider_${outsiderCount}`;
     const genereEl = document.querySelector('input[name="lab-gen"]:checked');
     const genere   = genereEl ? genereEl.value : 'M';
-    const newCand  = {
-      id, nome, genere,
-      params: {
-        establishment:      parseFloat($('ls-estab').value),
-        populism_rural:     parseFloat($('ls-popu').value),
-        militarism:         parseFloat($('ls-mili').value),
-        intellect_grec:     parseFloat($('ls-intel').value),
-        underworld_outcast: parseFloat($('ls-under').value)
-      }
-    };
+    const paramAgg = {};
+    const paramCount = {};
+    labParams.forEach(p => {
+      const k = p.paramKey;
+      paramAgg[k]   = (paramAgg[k]   || 0) + p.value;
+      paramCount[k] = (paramCount[k] || 0) + 1;
+    });
+    const params = {};
+    ['establishment','populism_rural','militarism','intellect_grec','underworld_outcast'].forEach(k => {
+      params[k] = paramAgg[k] != null ? paramAgg[k] / paramCount[k] : 1.0;
+    });
+    const newCand = { id, nome, genere, params };
     cfg.candidati.push(newCand);
     outsiderIds.add(id);
     candidateColors[id] = COLOR_PALETTE[Object.keys(candidateColors).length % COLOR_PALETTE.length];
@@ -2493,7 +2585,7 @@ const NE = (() => {
 
   /* ── Expose per inline event handlers ── */
   return { init, setHitori, liveHitoriStyle, runBallotScrutiny,
-           toggleLab, labSlider, modalSlider, registerChallenger, localSurvey, copyDistrictReport,
+           toggleLab, labSlider, modalSlider, registerChallenger, addLabParam, removeLabParam, _labParamSlider, localSurvey, copyDistrictReport,
            runSandboxDuel, eliminateCandidate, openEditModal, saveEditModal, closeEditModal,
            copyNationalReport, copySelectedDistrictReport, populateDuelSelects, clearStorage,
            toggleLegge, leggeSlider, saveElectoralLaw,
