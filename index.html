@@ -216,8 +216,11 @@ html{height:100%;overflow-y:scroll}body{min-height:100%;background:var(--bg0);co
 .coal-total-label.above-51{color:var(--blue2)}
 .coal-total-label.above-66{color:var(--green)}
 
+/* Right upper scrollable area */
+#right-upper{flex:1;overflow-y:auto;min-height:0}
+
 /* Leaderboard */
-#lb-sect{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+#lb-sect{flex-shrink:0;height:200px;display:flex;flex-direction:column;overflow:hidden}
 #lb-hdr{display:flex;align-items:center;justify-content:space-between;padding:0 12px;height:30px;background:var(--bg1);border-bottom:1px solid var(--br);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tx1);flex-shrink:0}
 #lb-list{flex:1;overflow-y:auto}
 .lb-row{display:flex;align-items:center;padding:4px 12px;border-bottom:1px solid rgba(51,51,51,.35);gap:6px;transition:background .1s}
@@ -643,6 +646,7 @@ html{height:100%;overflow-y:scroll}body{min-height:100%;background:var(--bg0);co
     <!-- ══ RIGHT: PHASES & LEADERBOARD ══ -->
     <section class="col">
       <div class="col-hdr">FASI ELETTORALI</div>
+      <div id="right-upper">
       <div id="phase-tabs">
         <button class="tab-btn active" data-tab="primarie">PRIMARIE</button>
         <button class="tab-btn" data-tab="generali">GENERALI</button>
@@ -794,6 +798,7 @@ html{height:100%;overflow-y:scroll}body{min-height:100%;background:var(--bg0);co
           <div id="lab-status" style="font-family:var(--mono);font-size:9px;color:var(--tx2);margin-top:4px;text-align:center;min-height:14px"></div>
         </div>
       </div>
+      </div><!-- /right-upper -->
 
       <!-- Leaderboard -->
       <div id="lb-sect">
