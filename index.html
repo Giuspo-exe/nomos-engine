@@ -1435,18 +1435,20 @@ const NE = (() => {
   }
 
   function applyEliminati() {
+    const prevElims = new Set(eliminatiSet);
     eliminatiSet = new Set();
     cfg.candidati.forEach(g => {
       if (!outsiderIds.has(g.id) && duels[g.id] && !duels[g.id].won) {
         eliminatiSet.add(g.id);
       }
     });
-    const n = eliminatiSet.size;
-    if (n > 0) {
-      const names = cfg.candidati.filter(g => eliminatiSet.has(g.id)).map(g => g.nome).join(', ');
+    /* Logga solo le eliminazioni nuove rispetto all'ultima chiamata */
+    const newElims = [...eliminatiSet].filter(id => !prevElims.has(id));
+    if (newElims.length > 0) {
+      const names = cfg.candidati.filter(g => newElims.includes(g.id)).map(g => g.nome).join(', ');
+      const n = newElims.length;
       tick(`[Primarie] ${n} candidat${n>1?'i':'o'} elimin${n>1?'ati':'ato'}: ${names}`, 'err');
     }
-    /* Ricostruisce i placeholder evidenziando eliminati */
     buildResultPlaceholders();
   }
 
@@ -2328,7 +2330,13 @@ const NE = (() => {
   ══════════════════════════════════════ */
   function switchTab(id) {
     phase = id;
-    if (id === 'generali') applyEliminati();
+    if (id === 'generali') {
+      applyEliminati();
+      /* Riempie di nuovo le barre dopo che buildResultPlaceholders le ha svuotate */
+      if (Object.keys(finalScores).length) {
+        renderResultBars(finalScores, done, projMode && !done);
+      }
+    }
     if (id === 'primarie') renderDuelHistory();
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab===id));
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.id===`pane-${id}`));
