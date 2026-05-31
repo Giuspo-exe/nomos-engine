@@ -709,8 +709,16 @@ const NE = (() => {
   function saveToStorage() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        candidati: cfg.candidati,
-        elezione:  cfg.elezione,
+        candidati:      cfg.candidati,
+        elezione:       cfg.elezione,
+        phase,
+        scrutinizedSet: [...scrutinizedSet],
+        finalScores,
+        distRes,
+        done,
+        eliminatiSet:   [...eliminatiSet],
+        affinBonus,
+        duels,
         ts: Date.now()
       }));
     } catch(e) {}
@@ -726,8 +734,40 @@ const NE = (() => {
         cfg.candidati.forEach(g => { if (!origCandIds.has(g.id)) outsiderIds.add(g.id); });
       }
       if (saved.elezione) cfg.elezione = { ...cfg.elezione, ...saved.elezione };
+      if (saved.phase)          phase          = saved.phase;
+      if (saved.scrutinizedSet) scrutinizedSet = new Set(saved.scrutinizedSet);
+      if (saved.finalScores)    finalScores    = saved.finalScores;
+      if (saved.distRes)        { distRes = saved.distRes; lastResMap = saved.distRes; }
+      if (saved.done)           done           = saved.done;
+      if (saved.eliminatiSet)   eliminatiSet   = new Set(saved.eliminatiSet);
+      if (saved.affinBonus)     affinBonus     = saved.affinBonus;
+      if (saved.duels)          duels          = saved.duels;
       return true;
     } catch(e) { return false; }
+  }
+
+  function restoreSimUI() {
+    if (!finalScores || !Object.keys(finalScores).length) return;
+    switchTab(phase || 'generali');
+    updateDistrictButtonColors();
+    updateDistrictMapColors();
+    renderResultBars(finalScores, done, false);
+    chartUpdate(finalScores);
+    buildLeaderboard(finalScores, false);
+    updateGeneraliTab(finalScores, false);
+    if (done || scrutinizedSet.size > 0) {
+      updateBallottaggio();
+      updateCoalizioniTab();
+    }
+    const pct = Math.round(scrutinizedSet.size / cfg.distretti.length * 100);
+    $('prog-bar').style.width = pct + '%';
+    setText('prog-lbl', pct + '%');
+    setText('t-dist', `${scrutinizedSet.size}/${cfg.distretti.length}`);
+    setText('t-stato', done ? 'COMPLETATO' : 'PARZIALE');
+    document.getElementById('t-stato').className = done ? 'tb-val c-green' : 'tb-val c-gold';
+    $('btn-start').disabled = done;
+    generateRP(false, finalScores);
+    tick(`↑ Simulazione ripristinata: ${scrutinizedSet.size}/${cfg.distretti.length} distretti, fase ${(phase||'generali').toUpperCase()}.`, 'ok');
   }
 
   function saveSimForMappa(resMap, cands) {
@@ -759,11 +799,11 @@ const NE = (() => {
       cfg = await r.json();
       origCandIds = new Set(cfg.candidati.map(g => g.id));
       const hadSaved = loadFromStorage();
-      saveToStorage();
       const pesoTot = cfg.distretti.reduce((s,d)=>s+d.peso_politico,0);
       tick(`Database caricato: "${cfg.elezione.nome}" — ${cfg.distretti.length} distretti — Peso totale: ${pesoTot.toLocaleString('it')}`, 'ok');
       if (hadSaved) tick(`↑ Stato ripristinato da localStorage (${cfg.candidati.length} candidati).`, 'ok');
       setupUI(pesoTot);
+      restoreSimUI();
     } catch(e) {
       tick(`ERRORE: ${e.message}`, 'err');
       $('insp-body').innerHTML = `<div style="color:var(--red2);font-family:var(--mono);font-size:11px;padding:10px">ERRORE CARICAMENTO<br>${e.message}<br><br>Aprire tramite server locale (es. Live Server in VS Code o python -m http.server).</div>`;
@@ -1182,6 +1222,7 @@ const NE = (() => {
     tick(`Sondaggio completato — ${cfg.distretti.length} distretti analizzati (${scrutinizedSet.size} ufficiali + ${cfg.distretti.length - scrutinizedSet.size} proiettati).`, 'ok');
     $('btn-survey').disabled = false;
     generateRP(true, agg);
+    saveToStorage();
   }
 
   /* ══════════════════════════════════════
@@ -1272,6 +1313,7 @@ const NE = (() => {
 
     $('btn-start').disabled  = done;
     $('btn-survey').disabled = false;
+    saveToStorage();
   }
 
   /* ══════════════════════════════════════
@@ -1681,6 +1723,7 @@ const NE = (() => {
     $('chart-legend').innerHTML = '<div class="empty-msg" style="font-size:9px">Lancia sondaggio o scrutinio per visualizzare il grafico.</div>';
     $('ticker-log').innerHTML='';
     tick('Sistema resettato. Pronto per un nuovo scrutinio.','');
+    saveToStorage();
   }
 
   /* ══════════════════════════════════════

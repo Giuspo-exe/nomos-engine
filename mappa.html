@@ -736,10 +736,7 @@ function computeSubDistrictScores(subDistrict, parentId, noiseLevel = 0.08) {
 
 function runFullSimulation(noise = 0.08) {
   cfg.distretti.forEach(d => {
-    const scores = computeDistrictScores(d, noise);
-    let winner = null, winPct = 0;
-    candidati.forEach(c => { if (scores[c.id] > winPct) { winPct = scores[c.id]; winner = c.id; } });
-    simResults[d.id] = { winner, pct: winPct, scores };
+    simResults[d.id] = computeDistrictScores(d, noise);
   });
   try { localStorage.setItem('nomos_sim_v2', JSON.stringify(simResults)); } catch(e) {}
   updateGridColors();
