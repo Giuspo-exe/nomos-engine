@@ -1877,7 +1877,9 @@ const NE = (() => {
         const d      = newDists[di];
         const winner = cfg.candidati.map(g=>({nome:g.nome,v:distRes[d.id][g.id]||0})).sort((a,b)=>b.v-a.v)[0];
         tick(`✓ ${d.id} ${d.nome} → ${winner.nome} (${winner.v.toFixed(1)}%)`, '');
-        renderResultBars(computePartialAnim(di+1, newDists, prevDists), false, false);
+        const partialScores = computePartialAnim(di+1, newDists, prevDists);
+        scrutinyHistory.push({ n: prevDists.length + di + 1, total: cfg.distretti.length, scores: Object.assign({}, partialScores) });
+        renderResultBars(partialScores, false, false);
         const totalDone = prevDists.length + di + 1;
         const pct = Math.round(totalDone / cfg.distretti.length * 100);
         $('prog-bar').style.width = pct + '%'; setText('prog-lbl', pct + '%');
@@ -1898,7 +1900,6 @@ const NE = (() => {
 
     const scrutDists = cfg.distretti.filter(d => scrutinizedSet.has(d.id));
     finalScores = aggregateDistResults(distRes, scrutDists);
-    scrutinyHistory.push({ n: scrutinizedSet.size, total: cfg.distretti.length, scores: Object.assign({}, finalScores) });
     if (typeof historyChartUpdate === 'function') historyChartUpdate();
     saveSimForMappa(distRes, getActiveCandidates());
 
