@@ -1303,6 +1303,7 @@ const NE = (() => {
     $('btn-start').disabled = done;
     generateRP(false, finalScores);
     tick(`↑ Simulazione ripristinata: ${scrutinizedSet.size}/${cfg.distretti.length} distretti, fase ${(phase||'generali').toUpperCase()}.`, 'ok');
+    document.dispatchEvent(new Event('nomos:updated'));
   }
 
   function saveSimForMappa(resMap, cands) {
@@ -1339,6 +1340,7 @@ const NE = (() => {
       if (hadSaved) tick(`↑ Stato ripristinato da localStorage (${cfg.candidati.length} candidati).`, 'ok');
       setupUI(pesoTot);
       restoreSimUI();
+      document.dispatchEvent(new Event('nomos:ready'));
     } catch(e) {
       tick(`ERRORE: ${e.message}`, 'err');
       $('insp-body').innerHTML = `<div style="color:var(--red2);font-family:var(--mono);font-size:11px;padding:10px">ERRORE CARICAMENTO<br>${e.message}<br><br>Aprire tramite server locale (es. Live Server in VS Code o python -m http.server).</div>`;
@@ -2923,10 +2925,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if(resetFilterBtn) resetFilterBtn.addEventListener('click',()=>{ activeCandFilter=null; resetFilterBtn.style.display='none'; const csEl=document.getElementById('cand-stats'); if(csEl) csEl.style.display='none'; applyCandFilter(); });
   const backGlobalBtn=document.getElementById('btn-back-global');
   if(backGlobalBtn) backGlobalBtn.addEventListener('click',()=>{ selectedDistrict=null; mapHighlightDistrict(null); document.getElementById('detail-panel').style.display='none'; document.getElementById('btn-back-global').style.display='none'; document.getElementById('global-panel').style.display=''; });
-  setTimeout(initMapSectionOnce, 600);
 });
 
+document.addEventListener('nomos:ready', initMapSectionOnce);
+document.addEventListener('nomos:ready', populateAnalyticsSelects);
 document.addEventListener('nomos:updated', refreshMapSection);
+document.addEventListener('nomos:updated', populateAnalyticsSelects);
 
 /* ═══════════════════════════════════════════════════════════════
    SEZIONE ANALYTICS — logica
@@ -3161,8 +3165,6 @@ function toggleAnSection(id) {
   const collapsed=body.classList.toggle('collapsed'); tog.classList.toggle('open',!collapsed);
 }
 
-/* populate on boot when cfg is available */
-document.addEventListener('nomos:updated', populateAnalyticsSelects);
 </script>
 </body>
 </html>
