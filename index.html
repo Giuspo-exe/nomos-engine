@@ -1335,8 +1335,8 @@ const NE = (() => {
   }
 
   function restoreSimUI() {
-    if (!finalScores || !Object.keys(finalScores).length) return;
     switchTab(phase || 'generali');
+    if (!finalScores || !Object.keys(finalScores).length) return;
     updateDistrictButtonColors();
     updateDistrictMapColors();
     renderResultBars(finalScores, done, false);
@@ -1390,10 +1390,12 @@ const NE = (() => {
       cfg = await r.json();
       origCandIds = new Set(cfg.candidati.map(g => g.id));
       const hadSaved = loadFromStorage();
+      const _savedPhase = phase; // setupUI chiama switchTab('primarie') e sovrascrive phase
       const pesoTot = cfg.distretti.reduce((s,d)=>s+d.peso_politico,0);
       tick(`Database caricato: "${cfg.elezione.nome}" — ${cfg.distretti.length} distretti — Peso totale: ${pesoTot.toLocaleString('it')}`, 'ok');
       if (hadSaved) tick(`↑ Stato ripristinato da localStorage (${cfg.candidati.length} candidati).`, 'ok');
       setupUI(pesoTot);
+      phase = _savedPhase; // ripristina la fase caricata prima che restoreSimUI la usi
       restoreSimUI();
       document.dispatchEvent(new Event('nomos:ready'));
     } catch(e) {
