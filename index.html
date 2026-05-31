@@ -1084,6 +1084,22 @@ html{height:100%;overflow-y:scroll}body{min-height:100%;background:var(--bg0);co
         </div>
       </div>
 
+      <!-- SECTION 5: Storico Scrutinio -->
+      <div class="an-section" id="an-sec-history">
+        <div class="an-section-hdr" onclick="toggleAnSection('an-sec-history')">
+          <div class="an-section-title">📈 STORICO SCRUTINIO</div>
+          <div class="an-section-toggle open" id="toggle-an-sec-history">▼</div>
+        </div>
+        <div class="an-section-body" id="body-an-sec-history">
+          <div id="history-empty" style="font-size:11px;color:var(--tx2);font-style:italic;padding:8px 0">Nessun dato — avvia almeno uno scrutinio ufficiale dalla dashboard principale.</div>
+          <div id="history-chart-wrap" style="display:none">
+            <div style="font-size:9px;color:var(--tx2);margin-bottom:8px;letter-spacing:.06em;text-transform:uppercase">Evoluzione % per candidato · un punto per ogni batch di distretti scrutinati</div>
+            <div class="chart-wrap" style="height:300px"><canvas id="history-chart"></canvas></div>
+            <div id="history-legend" style="display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;padding:8px 10px;background:var(--bg0);border:1px solid var(--br)"></div>
+          </div>
+        </div>
+      </div>
+
     </div><!-- /content -->
   </div>
 
@@ -1231,6 +1247,7 @@ const NE = (() => {
   let done           = false;
   let projMode       = false;  // true = mostrando proiezione sondaggio
   let scrutinizedSet = new Set(); // distID ufficialmente scrutinati
+  let scrutinyHistory = []; // [{n, total, scores:{godId:pct}}] — snapshot dopo ogni finishScrutiny
   let phase          = 'primarie';
   let selDist        = null;
   let eliminatiSet   = new Set();   // IDs candidati eliminati alle primarie
@@ -1274,6 +1291,7 @@ const NE = (() => {
         ballotFinal,
         ballotRes,
         outsiderCount,
+        scrutinyHistory,
         ts: Date.now()
       }));
     } catch(e) {}
@@ -1302,6 +1320,7 @@ const NE = (() => {
       if (saved.ballotFinal)    ballotFinal    = saved.ballotFinal;
       if (saved.ballotRes)      ballotRes      = saved.ballotRes;
       if (saved.outsiderCount != null) outsiderCount = saved.outsiderCount;
+      if (saved.scrutinyHistory && Array.isArray(saved.scrutinyHistory)) scrutinyHistory = saved.scrutinyHistory;
       return true;
     } catch(e) { return false; }
   }
@@ -1338,6 +1357,7 @@ const NE = (() => {
     generateRP(false, finalScores);
     restoreHitoriBadges();
     tick(`↑ Simulazione ripristinata: ${scrutinizedSet.size}/${cfg.distretti.length} distretti, fase ${(phase||'generali').toUpperCase()}.`, 'ok');
+    if (typeof historyChartUpdate === 'function') historyChartUpdate();
     document.dispatchEvent(new Event('nomos:updated'));
   }
 
@@ -1878,6 +1898,8 @@ const NE = (() => {
 
     const scrutDists = cfg.distretti.filter(d => scrutinizedSet.has(d.id));
     finalScores = aggregateDistResults(distRes, scrutDists);
+    scrutinyHistory.push({ n: scrutinizedSet.size, total: cfg.distretti.length, scores: Object.assign({}, finalScores) });
+    if (typeof historyChartUpdate === 'function') historyChartUpdate();
     saveSimForMappa(distRes, getActiveCandidates());
 
     renderResultBars(finalScores, true, false);
@@ -2292,6 +2314,7 @@ const NE = (() => {
     running = false; done = false; projMode = false;
     distRes = {}; finalScores = {}; ballotFinal = {}; ballotRes = null;
     scrutinizedSet = new Set();
+    scrutinyHistory = [];
     eliminatiSet = new Set();
     lastResMap = {};
     selDist = null;
@@ -2320,6 +2343,7 @@ const NE = (() => {
     $('duel-history').innerHTML = '';
     if (politicalChart) { politicalChart.data.labels=[]; politicalChart.data.datasets[0].data=[]; politicalChart.update(); }
     $('chart-legend').innerHTML = '<div class="empty-msg" style="font-size:9px">Lancia sondaggio o scrutinio per visualizzare il grafico.</div>';
+    if (typeof historyChartUpdate === 'function') historyChartUpdate();
     $('ticker-log').innerHTML='';
     tick('Sistema resettato. Pronto per un nuovo scrutinio.','');
     saveToStorage();
@@ -2634,10 +2658,11 @@ const NE = (() => {
            runSandboxDuel, eliminateCandidate, openEditModal, saveEditModal, closeEditModal, renderBallotProclamation,
            copyNationalReport, copySelectedDistrictReport, populateDuelSelects, clearStorage,
            toggleLegge, leggeSlider, saveElectoralLaw,
-           get cfg()             { return cfg; },
-           get candidateColors() { return candidateColors; },
-           get lastResMap()      { return lastResMap; },
-           get activeCands()     { return getActiveCandidates(); }
+           get cfg()              { return cfg; },
+           get candidateColors()  { return candidateColors; },
+           get lastResMap()       { return lastResMap; },
+           get activeCands()      { return getActiveCandidates(); },
+           get scrutinyHistory()  { return scrutinyHistory; }
          };
 })();
 
@@ -3093,6 +3118,89 @@ let s1Chart = null;
 let s2RadarChart = null;
 let s4RadarChart = null;
 let s3AllRows = [];
+let historyChart = null;
+
+function historyChartUpdate() {
+  const el      = document.getElementById('history-chart');
+  const emptyEl = document.getElementById('history-empty');
+  const wrapEl  = document.getElementById('history-chart-wrap');
+  const legEl   = document.getElementById('history-legend');
+  if (!el) return;
+
+  const history = NE.scrutinyHistory;
+  if (!history || !history.length) {
+    if (emptyEl) emptyEl.style.display = '';
+    if (wrapEl)  wrapEl.style.display  = 'none';
+    if (historyChart) { historyChart.destroy(); historyChart = null; }
+    return;
+  }
+
+  if (emptyEl) emptyEl.style.display = 'none';
+  if (wrapEl)  wrapEl.style.display  = '';
+
+  const cands  = NE.cfg ? NE.cfg.candidati : [];
+  const colors = NE.candidateColors || {};
+  const labels = history.map(s => `${s.n}/${s.total}`);
+
+  const datasets = cands.map((g, i) => ({
+    label: g.nome,
+    data: history.map(s => parseFloat((s.scores[g.id] || 0).toFixed(2))),
+    borderColor: colors[g.id] || AN_COLORS_20[i % 20],
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    pointRadius: history.length <= 12 ? 4 : 2,
+    pointHoverRadius: 5,
+    tension: 0.3,
+  }));
+
+  if (historyChart) { historyChart.destroy(); historyChart = null; }
+
+  historyChart = new Chart(el, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#111111',
+          borderColor: '#333333',
+          borderWidth: 1,
+          titleColor: '#888888',
+          bodyColor: '#cccccc',
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}%`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: '#1e1e1e' },
+          ticks: { color: '#555', font: { family: "'Roboto Mono', monospace", size: 9 } },
+          title: { display: true, text: 'Distretti scrutinati / Totale', color: '#444', font: { size: 9 } }
+        },
+        y: {
+          grid: { color: '#1e1e1e' },
+          ticks: { color: '#555', font: { family: "'Roboto Mono', monospace", size: 9 }, callback: v => v + '%' },
+          min: 0
+        }
+      }
+    }
+  });
+
+  if (legEl) {
+    const last = history[history.length - 1];
+    const sorted = [...cands].sort((a, b) => (last.scores[b.id] || 0) - (last.scores[a.id] || 0));
+    legEl.innerHTML = sorted.map(g =>
+      `<div style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--tx1)">
+        <div style="width:18px;height:2px;background:${colors[g.id] || '#555'};flex-shrink:0"></div>
+        <span style="white-space:nowrap">${g.nome}</span>
+        <span style="font-family:var(--mono);color:var(--tx0);margin-left:2px">${(last.scores[g.id] || 0).toFixed(1)}%</span>
+      </div>`
+    ).join('');
+  }
+}
 
 function anGetCfg() { return NE.cfg; }
 
