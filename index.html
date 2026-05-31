@@ -1270,6 +1270,10 @@ const NE = (() => {
         affinBonus,
         duels,
         labParams,
+        hitori,
+        ballotFinal,
+        ballotRes,
+        outsiderCount,
         ts: Date.now()
       }));
     } catch(e) {}
@@ -1294,8 +1298,21 @@ const NE = (() => {
       if (saved.affinBonus)     affinBonus     = saved.affinBonus;
       if (saved.duels)          duels          = saved.duels;
       if (saved.labParams && Array.isArray(saved.labParams)) labParams = saved.labParams;
+      if (saved.hitori)         hitori         = saved.hitori;
+      if (saved.ballotFinal)    ballotFinal    = saved.ballotFinal;
+      if (saved.ballotRes)      ballotRes      = saved.ballotRes;
+      if (saved.outsiderCount != null) outsiderCount = saved.outsiderCount;
       return true;
     } catch(e) { return false; }
+  }
+
+  function restoreHitoriBadges() {
+    Object.keys(hitori).forEach(distId => {
+      if (Object.keys(hitori[distId]||{}).length > 0 && !scrutinizedSet.has(distId)) {
+        const btn = document.querySelector(`.d-btn[data-id="${distId}"]`);
+        if (btn) btn.classList.add('has-hitori');
+      }
+    });
   }
 
   function restoreSimUI() {
@@ -1319,6 +1336,7 @@ const NE = (() => {
     document.getElementById('t-stato').className = done ? 'tb-val c-green' : 'tb-val c-gold';
     $('btn-start').disabled = done;
     generateRP(false, finalScores);
+    restoreHitoriBadges();
     tick(`↑ Simulazione ripristinata: ${scrutinizedSet.size}/${cfg.distretti.length} distretti, fase ${(phase||'generali').toUpperCase()}.`, 'ok');
     document.dispatchEvent(new Event('nomos:updated'));
   }
@@ -1587,6 +1605,7 @@ const NE = (() => {
     const btn = document.querySelector(`.d-btn[data-id="${distId}"]`);
     if (btn && !scrutinizedSet.has(distId)) btn.classList.toggle('has-hitori', hasAny);
     tick(`[Hitori] ${cfg.distretti.find(d=>d.id===distId)?.nome} · ${cfg.candidati.find(g=>g.id===godId)?.nome}: ${val||'rimosso'}`, '');
+    saveToStorage();
   }
 
   function liveHitoriStyle(el) {
@@ -1745,7 +1764,18 @@ const NE = (() => {
   function computeScoresTemp(candidateSubset) {
     const cands = candidateSubset || getActiveCandidates();
     const tempRes = {};
-    cfg.distretti.forEach(dist => computeDistrictScores(dist, cands, tempRes));
+    cfg.distretti.forEach(dist => {
+      if (scrutinizedSet.has(dist.id) && distRes[dist.id]) {
+        /* Riusa i risultati ufficiali già scrutinati, rinormalizzati sui soli candidati del subset */
+        tempRes[dist.id] = {};
+        const raw = {};
+        cands.forEach(g => { raw[g.id] = distRes[dist.id][g.id] || 0.001; });
+        const tot = Object.values(raw).reduce((s, v) => s + v, 0);
+        cands.forEach(g => { tempRes[dist.id][g.id] = raw[g.id] / tot; });
+      } else {
+        computeDistrictScores(dist, cands, tempRes);
+      }
+    });
     return aggregateDistResults(tempRes, cfg.distretti, cands);
   }
 
@@ -2060,7 +2090,27 @@ const NE = (() => {
         </div>
         <div id="ballot-result"></div>
         <button class="btn-prim" style="margin-top:8px;font-size:10px;padding:5px 10px" onclick="NE.runBallotScrutiny()">⚡ AVVIA BALLOTTAGGIO</button>`;
+      setTimeout(renderBallotProclamation, 0);
     }
+  }
+
+  function renderBallotProclamation() {
+    const br = $('ballot-result');
+    if (!br || !ballotRes || !ballotFinal) return;
+    const re     = ballotRes.re;
+    const regina = ballotRes.regina;
+    br.innerHTML = `
+      <div style="margin-top:10px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--tx2);border-top:1px solid var(--br);padding-top:8px;margin-bottom:6px">═ PROCLAMAZIONE ═</div>
+      ${re ? `<div class="ballot-winner re">
+        <span class="ballot-winner-title">RE DELL'OLIMPO</span>
+        <span class="ballot-winner-name">${re.nome}</span>
+        <span class="ballot-winner-pct">${(ballotFinal[re.id]||re.pct||0).toFixed(2)}%</span>
+      </div>` : ''}
+      ${regina ? `<div class="ballot-winner regina">
+        <span class="ballot-winner-title">REGINA DELL'OLIMPO</span>
+        <span class="ballot-winner-name">${regina.nome}</span>
+        <span class="ballot-winner-pct">${(ballotFinal[regina.id]||regina.pct||0).toFixed(2)}%</span>
+      </div>` : ''}`;
   }
 
   function runBallotScrutiny() {
@@ -2078,21 +2128,8 @@ const NE = (() => {
     const fSorted = top2F.map(c=>({...c,pct:bScores[c.id]||0})).sort((a,b)=>b.pct-a.pct);
     ballotRes     = { re: mSorted[0], regina: fSorted[0] };
 
-    const br = $('ballot-result');
-    if (br) {
-      br.innerHTML = `
-        <div style="margin-top:10px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--tx2);border-top:1px solid var(--br);padding-top:8px;margin-bottom:6px">═ PROCLAMAZIONE ═</div>
-        <div class="ballot-winner re">
-          <span class="ballot-winner-title">RE DELL'OLIMPO</span>
-          <span class="ballot-winner-name">${mSorted[0].nome}</span>
-          <span class="ballot-winner-pct">${(bScores[mSorted[0].id]||0).toFixed(2)}%</span>
-        </div>
-        <div class="ballot-winner regina">
-          <span class="ballot-winner-title">REGINA DELL'OLIMPO</span>
-          <span class="ballot-winner-name">${fSorted[0].nome}</span>
-          <span class="ballot-winner-pct">${(bScores[fSorted[0].id]||0).toFixed(2)}%</span>
-        </div>`;
-    }
+    renderBallotProclamation();
+    saveToStorage();
     tick(`PROCLAMATO RE: ${mSorted[0].nome} (${(bScores[mSorted[0].id]||0).toFixed(2)}%)`, 'ok');
     tick(`PROCLAMATA REGINA: ${fSorted[0].nome} (${(bScores[fSorted[0].id]||0).toFixed(2)}%)`, 'ok');
     generateRP(false, finalScores);
@@ -2586,7 +2623,7 @@ const NE = (() => {
   /* ── Expose per inline event handlers ── */
   return { init, setHitori, liveHitoriStyle, runBallotScrutiny,
            toggleLab, labSlider, modalSlider, registerChallenger, addLabParam, removeLabParam, _labParamSlider, localSurvey, copyDistrictReport,
-           runSandboxDuel, eliminateCandidate, openEditModal, saveEditModal, closeEditModal,
+           runSandboxDuel, eliminateCandidate, openEditModal, saveEditModal, closeEditModal, renderBallotProclamation,
            copyNationalReport, copySelectedDistrictReport, populateDuelSelects, clearStorage,
            toggleLegge, leggeSlider, saveElectoralLaw,
            get cfg()             { return cfg; },
