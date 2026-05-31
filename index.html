@@ -2662,7 +2662,18 @@ const NE = (() => {
            get candidateColors()  { return candidateColors; },
            get lastResMap()       { return lastResMap; },
            get activeCands()      { return getActiveCandidates(); },
-           get scrutinyHistory()  { return scrutinyHistory; }
+           get scrutinyHistory()  { return scrutinyHistory; },
+           simDistrict: (distId) => {
+             const dist = cfg.distretti.find(d => d.id === distId);
+             if (!dist) return {};
+             const temp = {};
+             computeDistrictScores(dist, getActiveCandidates(), temp);
+             return temp[distId] || {};
+           },
+           simNational: () => {
+             const { agg } = computeSurveyScores();
+             return agg;
+           }
          };
 })();
 
@@ -3255,8 +3266,8 @@ function runDistrictSurvey() {
   const cfg=anGetCfg(); if(!cfg) return;
   const distId=document.getElementById('s1-district-sel').value; if(!distId) return;
   const dist=cfg.distretti.find(d=>d.id===distId); if(!dist) return;
-  const candidates=cfg.candidati;
-  const scores=analyticsSimDist(dist,candidates,true);
+  const candidates=NE.activeCands;
+  const scores=NE.simDistrict(distId);
   const sorted=[...candidates].sort((a,b)=>scores[b.id]-scores[a.id]);
   document.getElementById('s1-chart-label').textContent='SONDAGGIO: '+dist.id+' — '+dist.nome.toUpperCase();
   renderS1Chart(sorted,scores,'bar'); renderS1List(sorted,scores);
@@ -3265,8 +3276,8 @@ function runDistrictSurvey() {
 
 function runNationalSurvey() {
   const cfg=anGetCfg(); if(!cfg) return;
-  const candidates=cfg.candidati;
-  const scores=analyticsSimNational(candidates);
+  const candidates=NE.activeCands;
+  const scores=NE.simNational();
   const sorted=[...candidates].sort((a,b)=>scores[b.id]-scores[a.id]);
   document.getElementById('s1-chart-label').textContent='SONDAGGIO NAZIONALE';
   renderS1Chart(sorted,scores,'doughnut'); renderS1List(sorted,scores);
